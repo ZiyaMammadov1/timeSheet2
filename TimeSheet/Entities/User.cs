@@ -19,6 +19,10 @@ namespace TimeSheet.Entities
         public int age { get; set; }
         public DateTime createdTime { get; set; }
         public string photo { get; set; }
+        public string phone1 { get; set; }
+        public string phone2 { get; set; }
+        public string phone3 { get; set; }
+        public string phone4 { get; set; }
 
         public int positionId { get; set; }
         public Position Position { get; set; }

@@ -16,6 +16,10 @@ namespace TimeSheet.Dtos.UserDto
         public int departmentId { get; set; }
         public DateTime dateOfBirthday { get; set; }
         public string photo { get; set; }
+        public string phone1 { get; set; }
+        public string phone2 { get; set; }
+        public string phone3 { get; set; }
+        public string phone4 { get; set; }
 
     }
 

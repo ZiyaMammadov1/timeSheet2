@@ -86,8 +86,11 @@ namespace TimeSheet.Controllers
                 createdTime = DateTime.UtcNow,
                 departmentId = UserPostDto.departmentId,
                 dateOfBirthday = UserPostDto.dateOfBirthday,
-                age = DateTime.UtcNow.Year - UserPostDto.dateOfBirthday.Year
-
+                age = DateTime.UtcNow.Year - UserPostDto.dateOfBirthday.Year,
+                phone1 = UserPostDto.phone1,
+                phone2 = UserPostDto.phone2,
+                phone3 = UserPostDto.phone3,
+                phone4 = UserPostDto.phone4
             };
             _context.Users.Add(newUser);
             _context.SaveChanges();
@@ -159,7 +162,11 @@ namespace TimeSheet.Controllers
                     isDeleted = false,
                     createdTime = DateTime.UtcNow,
                     departmentId = department.id,
-                    age = DateTime.UtcNow.Year - user.dateOfBirthday.Year
+                    age = DateTime.UtcNow.Year - user.dateOfBirthday.Year,
+                    phone1 = user.phone1,
+                    phone2 = user.phone2,
+                    phone3 = user.phone3,
+                    phone4 = user.phone4
                 };
 
                 if (newUser.fin != null && newUser.email != null)
@@ -198,6 +205,10 @@ namespace TimeSheet.Controllers
             exist.lastName = UserUpdateDto.lastName;
             exist.positionId = UserUpdateDto.positionId;
             exist.fullName = UserUpdateDto.firstName + " " + UserUpdateDto.lastName;
+            exist.phone1 = UserUpdateDto.phone1;
+            exist.phone2 = UserUpdateDto.phone2;
+            exist.phone3 = UserUpdateDto.phone3;
+            exist.phone4 = UserUpdateDto.phone4;
 
             _context.SaveChanges();
 

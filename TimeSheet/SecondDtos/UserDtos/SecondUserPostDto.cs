@@ -15,6 +15,10 @@ namespace TimeSheet.SecondDtos.UserDtos
         public string department { get; set; }
         public DateTime dateOfBirthday { get; set; }
         public string photo { get; set; }
+        public string phone1 { get; set; }
+        public string phone2 { get; set; }
+        public string phone3 { get; set; }
+        public string phone4 { get; set; }
     }
     public class SecondUserPostDtoValidator : AbstractValidator<SecondUserPostDto>
     {
