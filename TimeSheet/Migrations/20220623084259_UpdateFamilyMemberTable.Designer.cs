@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TimeSheet.DatabaseContext;
 
 namespace TimeSheet.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220623084259_UpdateFamilyMemberTable")]
+    partial class UpdateFamilyMemberTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,35 +40,6 @@ namespace TimeSheet.Migrations
                     b.HasKey("id");
 
                     b.ToTable("Departments");
-                });
-
-            modelBuilder.Entity("TimeSheet.Entities.FamilyMembers", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("member")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("memberAge")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("memberDoB")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("memberFullName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("userId")
-                        .HasColumnType("int");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("userId");
-
-                    b.ToTable("FamilyMembers");
                 });
 
             modelBuilder.Entity("TimeSheet.Entities.IdentityCard", b =>
@@ -350,15 +323,6 @@ namespace TimeSheet.Migrations
                     b.HasIndex("userId");
 
                     b.ToTable("MainTimeSheets");
-                });
-
-            modelBuilder.Entity("TimeSheet.Entities.FamilyMembers", b =>
-                {
-                    b.HasOne("TimeSheet.Entities.User", "User")
-                        .WithMany("userFamilyMembers")
-                        .HasForeignKey("userId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("TimeSheet.Entities.IdentityCard", b =>

@@ -19,6 +19,7 @@ namespace TimeSheet.DatabaseContext
         public DbSet<mainTimeSheet> MainTimeSheets { get; set; }
         public DbSet<Salary> Salaries { get; set; }
         public DbSet<IdentityCard> IdentityCards { get; set; }
+        public DbSet<FamilyMembers> FamilyMembers { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
