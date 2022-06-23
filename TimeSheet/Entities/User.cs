@@ -33,6 +33,7 @@ namespace TimeSheet.Entities
         public List<Salary> userSalaries { get; set; } = new List<Salary>();
         public List<IdentityCard> userIdentityCards { get; set; } = new List<IdentityCard>();
         public List<mainTimeSheet> userTimeSheet { get; set; } = new List<mainTimeSheet>();
+        public List<FamilyMembers> userFamilyMembers { get; set; } = new List<FamilyMembers>();
 
 
     }
