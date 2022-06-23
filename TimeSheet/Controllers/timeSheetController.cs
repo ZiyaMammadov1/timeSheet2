@@ -161,7 +161,7 @@ namespace TimeSheet.Controllers
                     };
                     TimeGetList.Add(timeSheet);
                 }
-                return getFinishObject = new Answer<TimeSheetGetDto>(200, "Ok", TimeGetList);
+                return getFinishObject = new Answer<TimeSheetGetDto>(200, "TimeSheet added", TimeGetList);
 
             }
             else
