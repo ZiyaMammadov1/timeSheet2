@@ -9,7 +9,7 @@ namespace TimeSheet.Dtos.FamilyDtos
         public string member { get; set; }
         public string memberFullname { get; set; }
         public DateTime memberDoB{ get; set; }
-        public DateTime memberAge{ get; set; }
+        public int memberAge{ get; set; }
     }
 
     public class MemberPostDtoValidator : AbstractValidator<MemberPostDto>
