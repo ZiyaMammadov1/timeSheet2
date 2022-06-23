@@ -53,7 +53,7 @@ namespace TimeSheet.Controllers
 
             if (User == null)
             {
-                return loginfinishObject = new Answer<UserLoginDto>(200, "User not found", null);
+                return loginfinishObject = new Answer<UserLoginDto>(400, "User not found", null);
 
             }
             if (User.Password != Hashing.ToSHA256(userLoginDto.password))

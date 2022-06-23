@@ -46,7 +46,7 @@ namespace TimeSheet.Controllers
             }
             else
             {
-                return getFinishObject = new Answer<UserGetDto>(200, "User is empty", null);
+                return getFinishObject = new Answer<UserGetDto>(400, "User is empty", null);
             }
         }
 
@@ -69,6 +69,36 @@ namespace TimeSheet.Controllers
         [HttpPost]
         public ActionResult<Answer<UserGetDto>> CreateUser(UserPostDto UserPostDto)
         {
+            Position position = _context.Positions.FirstOrDefault(x=>x.name.ToLower() == UserPostDto.position.ToLower());
+            if(position==null)
+            {
+                Position newPosition = new Position()
+                {
+                    isDeleted = false,
+                    uuid = Guid.NewGuid().ToString(),
+                    name = UserPostDto.position
+                };
+
+                _context.Positions.Add(newPosition);
+                _context.SaveChanges();
+            }
+            position = _context.Positions.FirstOrDefault(x => x.name.ToLower() == UserPostDto.position.ToLower());
+
+            Department department = _context.Departments.FirstOrDefault(x => x.name == UserPostDto.department);
+            if (department == null)
+            {
+                Department newDepartment = new Department()
+                {
+                    isDeleted = false,
+                    uuid = Guid.NewGuid().ToString(),
+                    name = UserPostDto.position
+                };
+
+                _context.Departments.Add(newDepartment);
+                _context.SaveChanges();
+            }
+             department = _context.Departments.FirstOrDefault(x => x.name == UserPostDto.department);
+
 
             User newUser = new User()
             {
@@ -80,11 +110,11 @@ namespace TimeSheet.Controllers
                 lastName = UserPostDto.lastName,
                 fullName = UserPostDto.firstName + " " + UserPostDto.lastName,
                 Password = Hashing.ToSHA256(UserPostDto.password),
-                positionId = UserPostDto.positionId,
+                positionId = position.id,
                 isDeleted = false,
                 photo = UserPostDto.photo,
                 createdTime = DateTime.UtcNow,
-                departmentId = UserPostDto.departmentId,
+                departmentId = department.id,
                 dateOfBirthday = UserPostDto.dateOfBirthday,
                 age = DateTime.UtcNow.Year - UserPostDto.dateOfBirthday.Year,
                 phone1 = UserPostDto.phone1,
@@ -184,7 +214,7 @@ namespace TimeSheet.Controllers
         [HttpPut]
         public ActionResult<Answer<UserGetDto>> UpdateUser(UserUpdateDto UserUpdateDto)
         {
-            var exist = _context.Users.FirstOrDefault(x => x.id == UserUpdateDto.id && x.isDeleted == false);
+            var exist = _context.Users.FirstOrDefault(x => x.uuid == UserUpdateDto.id && x.isDeleted == false);
 
             if (exist == null)
             {
@@ -197,7 +227,6 @@ namespace TimeSheet.Controllers
                 return getFinishObject = new Answer<UserGetDto>(200, "Position id is not correct", null);
             }
 
-            exist.uuid = UserUpdateDto.uuid;
             exist.cid = UserUpdateDto.cid;
             exist.fin = UserUpdateDto.fin;
             exist.email = UserUpdateDto.email;
@@ -212,16 +241,16 @@ namespace TimeSheet.Controllers
 
             _context.SaveChanges();
 
-            return getFinishObject = new Answer<UserGetDto>(204, "no Content", null);
+            return getFinishObject = new Answer<UserGetDto>(204, "No Content", null);
         }
 
         [HttpDelete("{id}")]
-        public ActionResult<Answer<UserGetDto>> DeletedUser(int id)
+        public ActionResult<Answer<UserGetDto>> DeletedUser(string id)
         {
-            var exist = _context.Users.FirstOrDefault(x => x.id == id && x.isDeleted == false);
+            var exist = _context.Users.FirstOrDefault(x => x.uuid == id && x.isDeleted == false);
             if (exist == null)
             {
-                return getFinishObject = new Answer<UserGetDto>(200, "User not found", null);
+                return getFinishObject = new Answer<UserGetDto>(400, "User not found", null);
             }
             exist.isDeleted = true;
             _context.SaveChanges();
@@ -236,7 +265,7 @@ namespace TimeSheet.Controllers
 
             if (exist == null)
             {
-                return getFinishObject = new Answer<UserGetDto>(200, "User not found", null);
+                return getFinishObject = new Answer<UserGetDto>(400, "User not found", null);
             }
             if (ChangeDto.NewPassword != ChangeDto.ConfirmPassword)
             {
