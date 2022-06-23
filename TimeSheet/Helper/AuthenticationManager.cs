@@ -9,7 +9,9 @@ namespace TimeSheet.Helper
 {
     public interface IAuthenticationManager
     {
-        Answer<string> Manager(string token);
+        JwtSecurityToken CurrentClaim(string token);
+        User tokenOwner(JwtSecurityToken tokenS);
+        Answer<string> Manager(User user, JwtSecurityToken tokenS);
     }
 
     public class AuthenticationManager : IAuthenticationManager
@@ -19,13 +21,25 @@ namespace TimeSheet.Helper
         {
             _context = context;
         }
-
-        public Answer<string> Manager(string token)
+        
+        public JwtSecurityToken CurrentClaim(string token)
         {
-            Answer<string> getFinishObject;
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = handler.ReadToken(token);
             var tokenS = jsonToken as JwtSecurityToken;
+
+            if (tokenS == null)
+            {
+                return null;
+            }
+            else 
+            {
+                return tokenS;
+            }
+        }
+
+        public User tokenOwner(JwtSecurityToken tokenS)
+        {
 
             var claim = tokenS.Claims.FirstOrDefault(x => x.Type == "Key").Value;
 
@@ -37,8 +51,15 @@ namespace TimeSheet.Helper
             }
             if (user == null)
             {
-                return getFinishObject = new Answer<string>(404, "User not found", null);
+                return null;
             }
+            return user;
+        }
+
+        public Answer<string> Manager(User user,JwtSecurityToken tokenS)
+        {
+            Answer<string> getFinishObject;
+
 
             var currentRefreshToken = _context.RefreshTokens.FirstOrDefault(a => a.Userid == user.id);
 
@@ -54,6 +75,7 @@ namespace TimeSheet.Helper
 
             return getFinishObject = new Answer<string>(200, "Token is active", null);
         }
+
     }
 }
 

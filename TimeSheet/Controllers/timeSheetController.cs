@@ -70,66 +70,24 @@ namespace TimeSheet.Controllers
             }
         }
 
-
         [HttpPost]
-        [Route("monthly")]
-        public ActionResult<Answer<TimeSheetGetDto>> GetAllMonthly(TimeIntervalGetDto? timeInterval)
+        public ActionResult<Answer<TimeSheetGetDto>> CreateTimeSheet([FromHeader] string token,TimeSheetPostDto TimeSheetPostDto)
         {
 
 
-            List<mainTimeSheet> times = new List<mainTimeSheet>();
-
-            if (timeInterval.startDate != null )
+            AuthenticationManager authentication = new AuthenticationManager(_context);
+            var tokenS = authentication.CurrentClaim(token);
+            if (tokenS == null)
             {
-                times = _context.MainTimeSheets.Where(x => x.createdTime >= timeInterval.startDate && x.isDeleted == false).ToList();
-            }
-            else
-            {
-                DateTime date = DateTime.UtcNow;
-
-                int currentMonth = DateTime.UtcNow.Month;
-
-                DateTime startDate = new DateTime(date.Year, date.Month, 1).AddDays(-10);
-
-                DateTime endDate = new DateTime(date.Year, date.Month, 1).AddMonths(1).AddDays(10);
-
-                times = _context.MainTimeSheets.Where(x => x.createdTime >= startDate && x.createdTime <= endDate && x.isDeleted == false).ToList();
+                return getFinishObject = new Answer<TimeSheetGetDto>(400, "Token not right", null);
             }
 
-
-            if (times != null)
+            User tokenOwner = authentication.tokenOwner(tokenS);
+            if (tokenOwner == null)
             {
-                List<TimeSheetGetDto> TimeGetList = new List<TimeSheetGetDto>();
-                foreach (var time in times)
-                {
-                    var worktype = _context.WorkType.FirstOrDefault(x => x.uuid == time.workTypeid);
-                    TimeSheetGetDto timeSheet = new TimeSheetGetDto()
-                    {
-                        id = time.uuid,
-                        start = time.startDate,
-                        createdTime = time.createdTime,
-                        description = time.description,
-                        hours = time.hours,
-                        projectid = time.projectid,
-                        workTypeId = time.workTypeid,
-                        Calendar = worktype.value
-                    };
-                    TimeGetList.Add(timeSheet);
-                }
-                return getFinishObject = new Answer<TimeSheetGetDto>(200, "Ok", TimeGetList);
-
-
+                return getFinishObject = new Answer<TimeSheetGetDto>(400, "Token owner not found", null);
             }
-            else
-            {
-                return getFinishObject = new Answer<TimeSheetGetDto>(200, "Ok", null);
-            }
-        }
 
-
-        [HttpPost]
-        public ActionResult<Answer<TimeSheetGetDto>> CreateTimeSheet(TimeSheetPostDto TimeSheetPostDto)
-        {
             var project = _context.Projects.FirstOrDefault(x => x.uuid == TimeSheetPostDto.projectid);
 
             if (project == null)
@@ -169,6 +127,7 @@ namespace TimeSheet.Controllers
                 createdTime = DateTime.UtcNow,
                 description = TimeSheetPostDto.description,
                 isDeleted = false,
+                userId = tokenOwner.id,
                 hours = TimeSheetPostDto.hours
 
             };
@@ -269,5 +228,103 @@ namespace TimeSheet.Controllers
             }
 
         }
+
+
+
+
+
+
+
+        //[HttpPost]
+        //[Route("monthly")]
+        //public ActionResult<Answer<TimeSheetGetDto>> GetAllMonthly(TimeIntervalGetDto? timeInterval)
+        //{
+        //    return GetMonthlyData(timeInterval);
+        //}
+
+        //[HttpPost]
+        //[Route("personal")]
+        //public ActionResult<Answer<TimeSheetGetDto>> GetCurrentUserTimeSheet([FromHeader] string token, TimeIntervalGetDto? timeInterval)
+        //{
+        //    Answer<TimeSheetGetDto> getFinishObject;
+
+        //    AuthenticationManager authentication = new AuthenticationManager(_context);
+        //    var tokenS = authentication.CurrentClaim(token);
+        //    if (tokenS == null)
+        //    {
+        //        return getFinishObject = new Answer<TimeSheetGetDto>(400, "Token not right", null);
+        //    }
+
+        //    User tokenOwner = authentication.tokenOwner(tokenS);
+        //    if (tokenOwner == null)
+        //    {
+        //        return getFinishObject = new Answer<TimeSheetGetDto>(400, "Token owner not found", null);
+        //    }
+
+
+        //    //return GetMonthlyData(timeInterval);
+
+        //}
+
+
+        //public Answer<TimeSheetGetDto> GetMonthlyData(TimeIntervalGetDto? timeInterval, User user)
+        //{
+        //    Answer<TimeSheetGetDto> getFinishObject;
+
+        //    List<mainTimeSheet> times = new List<mainTimeSheet>();
+
+        //    if (timeInterval.startDate != null && timeInterval.endDate != null)
+        //    {
+        //        if(user == null)
+        //        {
+        //            times = _context.MainTimeSheets.Where(x => x.createdTime >= timeInterval.startDate && x.createdTime <= timeInterval.endDate && x.isDeleted == false).ToList();
+        //        }
+        //        else
+        //        {
+        //            times = _context.MainTimeSheets.Where(x => x.createdTime >= timeInterval.startDate && x.createdTime <= timeInterval.endDate && x.isDeleted == false).ToList();
+        //        }
+        //    }
+        //    else
+        //    {
+        //        DateTime date = DateTime.UtcNow;
+
+        //        int currentMonth = DateTime.UtcNow.Month;
+
+        //        DateTime startDate = new DateTime(date.Year, date.Month, 1).AddDays(-10);
+
+        //        DateTime endDate = new DateTime(date.Year, date.Month, 1).AddMonths(1).AddDays(10);
+
+        //        times = _context.MainTimeSheets.Where(x => x.createdTime >= startDate && x.createdTime <= endDate && x.isDeleted == false).ToList();
+        //    }
+
+
+        //    if (times != null)
+        //    {
+        //        List<TimeSheetGetDto> TimeGetList = new List<TimeSheetGetDto>();
+        //        foreach (var time in times)
+        //        {
+        //            var worktype = _context.WorkType.FirstOrDefault(x => x.uuid == time.workTypeid);
+        //            TimeSheetGetDto timeSheet = new TimeSheetGetDto()
+        //            {
+        //                id = time.uuid,
+        //                start = time.startDate,
+        //                createdTime = time.createdTime,
+        //                description = time.description,
+        //                hours = time.hours,
+        //                projectid = time.projectid,
+        //                workTypeId = time.workTypeid,
+        //                Calendar = worktype.value
+        //            };
+        //            TimeGetList.Add(timeSheet);
+        //        }
+        //        return getFinishObject = new Answer<TimeSheetGetDto>(200, "Ok", TimeGetList);
+
+
+        //    }
+        //    else
+        //    {
+        //        return getFinishObject = new Answer<TimeSheetGetDto>(200, "Ok", null);
+        //    }
+        //}
     }
 }

@@ -115,12 +115,12 @@ namespace TimeSheet.Controllers
 
         }
 
-        [HttpGet]
-        public ActionResult Test([FromHeader] string token)
-        {
-            Helper.AuthenticationManager authm = new AuthenticationManager(_context);
-            return Ok(authm.Manager(token));
-        }
+        //[HttpGet]
+        //public ActionResult Test([FromHeader] string token)
+        //{
+        //    Helper.AuthenticationManager authm = new AuthenticationManager(_context);
+        //    return Ok(authm.Manager(token));
+        //}
 
     }
 }
