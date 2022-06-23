@@ -1,5 +1,8 @@
 ﻿using FluentValidation;
 using System;
+using System.Collections.Generic;
+using TimeSheet.Dtos.FamilyDtos;
+using TimeSheet.Entities;
 
 namespace TimeSheet.SecondDtos.UserDtos
 {
@@ -19,6 +22,7 @@ namespace TimeSheet.SecondDtos.UserDtos
         public string phone2 { get; set; }
         public string phone3 { get; set; }
         public string phone4 { get; set; }
+        public List<MemberPostDto> FamilyMembers { get; set; }
     }
     public class SecondUserPostDtoValidator : AbstractValidator<SecondUserPostDto>
     {

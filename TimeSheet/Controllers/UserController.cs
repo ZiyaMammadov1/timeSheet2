@@ -69,8 +69,8 @@ namespace TimeSheet.Controllers
         [HttpPost]
         public ActionResult<Answer<UserGetDto>> CreateUser(UserPostDto UserPostDto)
         {
-            Position position = _context.Positions.FirstOrDefault(x=>x.name.ToLower() == UserPostDto.position.ToLower());
-            if(position==null)
+            Position position = _context.Positions.FirstOrDefault(x => x.name.ToLower() == UserPostDto.position.ToLower());
+            if (position == null)
             {
                 Position newPosition = new Position()
                 {
@@ -97,7 +97,7 @@ namespace TimeSheet.Controllers
                 _context.Departments.Add(newDepartment);
                 _context.SaveChanges();
             }
-             department = _context.Departments.FirstOrDefault(x => x.name == UserPostDto.department);
+            department = _context.Departments.FirstOrDefault(x => x.name == UserPostDto.department);
 
 
             User newUser = new User()
@@ -132,7 +132,7 @@ namespace TimeSheet.Controllers
         public ActionResult<Answer<UserGetDto>> CreateUserFromList(List<SecondUserPostDto> users)
         {
             List<User> UserList = new List<User>();
-
+            //List<int> userIds = new List<int>();
 
             foreach (var user in users)
             {
@@ -154,12 +154,7 @@ namespace TimeSheet.Controllers
 
                 }
 
-
-
-
                 Department department = _context.Departments.FirstOrDefault(x => x.name.ToLower() == user.department.ToLower());
-
-
 
                 if (department == null)
                 {
@@ -167,7 +162,7 @@ namespace TimeSheet.Controllers
                     {
                         name = user.department,
                         isDeleted = false,
-                        uuid= Guid.NewGuid().ToString()
+                        uuid = Guid.NewGuid().ToString()
                     };
 
                     _context.Departments.Add(newDepartment);
@@ -199,13 +194,64 @@ namespace TimeSheet.Controllers
                     phone4 = user.phone4
                 };
 
-                if (newUser.fin != null && newUser.email != null)
-                    UserList.Add(newUser);
+                if (newUser.fin != null)
+                {
+                    _context.Users.Add(newUser);
+                    _context.SaveChanges();
+                    User currentUser = _context.Users.FirstOrDefault(x => x.fin == user.fin);
+
+                    if (user.FamilyMembers.Count() > 0)
+                    {
+                        foreach (var member in user.FamilyMembers)
+                        {
+
+                            FamilyMembers familymember = new FamilyMembers()
+                            {
+                                member = member.member,
+                                memberAge = member.memberAge,
+                                memberDoB = member.memberDoB,
+                                memberFullName = member.memberFullname,
+                                userId = currentUser.id
+                            };
+
+                        _context.FamilyMembers.Add(familymember);
+                        }
+                        _context.SaveChanges();
+                    }
+
+                }
+                else
+                {
+                    getFinishObject = new Answer<UserGetDto>(200, "Users fin is empty", null);
+                }
+
+
+
+
+
 
             }
 
-            _context.Users.AddRange(UserList);
-            _context.SaveChanges();
+            //_context.Users.AddRange(UserList);
+            //userIds.AddRange(UserList.Select(x=>x.id));
+            //_context.SaveChanges();
+
+
+            //foreach (var user in users)
+            //{
+            //    foreach (var member in user.FamilyMembers)
+            //    {
+            //        FamilyMembers familymember = new FamilyMembers()
+            //        {
+            //            member = member.member,
+            //            memberAge = member.memberAge,
+            //            memberDoB = member.memberDoB,
+            //            memberFullName = member.memberFullname,
+            //            userId = user.id
+            //        };
+            //    }
+            //}
+
 
             return getFinishObject = new Answer<UserGetDto>(201, "Users created", null);
 
