@@ -11,7 +11,6 @@ namespace TimeSheet.Dtos.TimeSheetDtos
         public string workTypeId { get; set; }
         public DateTime? startDate { get; set; }
         public string description { get; set; }
-        public bool isDeleted { get; set; }
         public decimal? hours{ get; set; }
         public DateTime createdTime { get; set; }
     }
