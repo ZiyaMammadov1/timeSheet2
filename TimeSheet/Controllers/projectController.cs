@@ -77,13 +77,19 @@ namespace TimeSheet.Controllers
         [HttpPost]
         public ActionResult<Answer<ProjectGetDto>> CreateProject(ProjectPostDto ProjectPostDto)
         {
+            Company company = _context.Companies.FirstOrDefault(x=>x.uuid == ProjectPostDto.companyId);
+            if(company == null)
+            {
+                return getFinishObject = new Answer<ProjectGetDto>(400, "Company not found", null);
+            }
 
             Project newProject = new Project()
             {
                 uuid = Guid.NewGuid().ToString(),
                 isDeleted = false,
                 name = ProjectPostDto.name,
-                code = ProjectPostDto.code
+                code = ProjectPostDto.code,
+                companyId = company.id,
             };
             _context.Projects.Add(newProject);
             _context.SaveChanges();
@@ -96,24 +102,53 @@ namespace TimeSheet.Controllers
         public ActionResult <Answer<ProjectGetDto>> CreateProjectFromList(List<ProjectPostDto> projects)
         {
             List<Project> newProjects = new List<Project>();
+            List<ProjectGetDto> notFoundCompany = new List<ProjectGetDto>();
 
             foreach (var project in projects)
             {
-                Project projectList = new Project()
+                Company company = _context.Companies.FirstOrDefault(x => x.uuid == project.companyId);
+                if (company == null)
                 {
-                    uuid= Guid.NewGuid().ToString(),
-                    name = project.name,
-                    code = project.code,
-                    isDeleted = false
-                };
+                    ProjectGetDto projectGetDto = new ProjectGetDto()
+                    {
+                        name = project.name,
+                        code = project.code
+                    };
+                    notFoundCompany.Add(projectGetDto);
+                }
+                else
+                {
+                    if ((project.name == "" || project.code == "" || project.companyId == "")||(project.name == null || project.code == null || project.companyId == null))
+                    {
+                        ProjectGetDto projectGetDto = new ProjectGetDto()
+                        {
+                            name = project.name,
+                            code = project.code,
+                            id = project.companyId
+                        };
+                        notFoundCompany.Add(projectGetDto);
+                    }
+                    else
+                    {
+                        Project currentProject = new Project()
+                        {
+                            uuid = Guid.NewGuid().ToString(),
+                            name = project.name,
+                            code = project.code,
+                            isDeleted = false,
+                            companyId = company.id
+                        };
 
-                newProjects.Add(projectList);
+                        newProjects.Add(currentProject);
+                    }
+                }
+                
             }
 
             _context.Projects.AddRange(newProjects);
             _context.SaveChanges();
 
-            return getFinishObject = new Answer<ProjectGetDto>(201, "Projects created", null);
+            return getFinishObject = new Answer<ProjectGetDto>(200, "Correct project added. Incorrect entered datas:", notFoundCompany);
 
         }
 

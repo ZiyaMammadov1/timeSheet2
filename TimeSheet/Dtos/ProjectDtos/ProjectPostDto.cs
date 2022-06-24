@@ -6,6 +6,7 @@ namespace TimeSheet.Dtos.ProjectDtos
     {
         public string name { get; set; }
         public string code { get; set; }
+        public string companyId { get; set; }
 
     }
 

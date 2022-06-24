@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using TimeSheet.DatabaseContext;
 using TimeSheet.Dtos.CompanyDtos;
 using TimeSheet.Entities;
@@ -23,21 +25,46 @@ namespace TimeSheet.Controllers
         }
 
 
-        [HttpPost]
-        public ActionResult<Answer<CompanyGetDto>> CreateCompany(CompanyPostDto companiesPostDto)
-        {
 
-            Company newCompany = new Company()
+        [HttpPost]
+        [Route("addlist")]
+        public ActionResult<Answer<CompanyGetDto>> CreateCompaniesFromList(List<CompanyPostDto> companiesPostDto)
+        {
+            List<Company> correctCompanies = new List<Company>();
+            List<CompanyGetDto> errorCompanies = new List<CompanyGetDto>();
+            Answer<CompanyGetDto> innerFinishObject;
+
+
+            foreach (var company in companiesPostDto)
             {
-                uuid = Guid.NewGuid().ToString(),
-                isDeleted = false,
-                name = companiesPostDto.name,
-                tin = companiesPostDto.tin,
-                voen = companiesPostDto.voen,
-            };
-            _context.Companies.Add(newCompany);
+                if((company.name == "" || company.tin == "" || company.voen == "")|| (company.name == null || company.tin == null || company.voen == null))
+                {
+                    CompanyGetDto currentCompany = new CompanyGetDto()
+                    {
+                        name = company.name,
+                        tin = company.tin,
+                        voen = company.voen
+                    };
+                    errorCompanies.Add(currentCompany);
+                }
+                else
+                {
+                    Company newCompany = new Company()
+                    {
+                        uuid = Guid.NewGuid().ToString(),
+                        isDeleted = false,
+                        name = company.name,
+                        tin = company.tin,
+                        voen = company.voen,
+                    };
+                    correctCompanies.Add(newCompany);
+                }
+
+            }
+
+            _context.Companies.AddRange(correctCompanies);
             _context.SaveChanges();
-            return getFinishObject = new Answer<CompanyGetDto>(201, "Company added", null);
+            return innerFinishObject = new Answer<CompanyGetDto>(200, "Correct companies added. Incorrect entered datas:", errorCompanies);
         }
 
     }
