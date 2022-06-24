@@ -9,6 +9,7 @@ namespace TimeSheet.Entities
         public string name { get; set; }
         public string tin { get; set; }
         public bool isDeleted { get; set; }
+        public string code { get; set; }
 
         public List<Project> companyProjects { get; set; } = new List<Project>();
 
