@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 using System.Linq;
 using TimeSheet.DatabaseContext;
 using TimeSheet.Dtos.LoginDtos;
@@ -53,13 +54,13 @@ namespace TimeSheet.Controllers
 
             if (User == null)
             {
-                return loginfinishObject = new Answer<UserLoginDto>(400, "User not found", null);
+                return loginfinishObject = new Answer<UserLoginDto>(400, "FIN or password is incorrect", null);
 
             }
             if (User.Password != Hashing.ToSHA256(userLoginDto.password))
             {
 
-                return loginfinishObject = new Answer<UserLoginDto>(409, "Password not matched", null);
+                return loginfinishObject = new Answer<UserLoginDto>(409, "FIN or password is incorrect", null);
             }
             UserLoginDto UserLoginDto = new UserLoginDto()
             {
@@ -68,10 +69,10 @@ namespace TimeSheet.Controllers
             };
 
             Token token = tokenInitilizing.Init(UserLoginDto, _config, User.id);
-            token.Detail = _mapper.Map<UserGetDto>(User);
+            token.User = _mapper.Map<UserGetDto>(User);
 
-            var position = _context.Positions.FirstOrDefault(x => x.id == token.Detail.positionId);
-            token.Detail.Position = _mapper.Map<PositionGetDto>(position);
+            var position = _context.Positions.FirstOrDefault(x => x.id == token.User.positionId);
+            token.User.Position = _mapper.Map<PositionGetDto>(position);
 
             return StatusCode(200, token);
         }

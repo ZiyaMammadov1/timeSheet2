@@ -34,12 +34,26 @@ namespace TimeSheet.Controllers
                 uuid = Guid.NewGuid().ToString(),
                 tin = CompanyPostDto.tin,
                 isDeleted = false,
-                name = CompanyPostDto.name
+                name = CompanyPostDto.name,
+                code = CompanyPostDto.code
             };
             _context.Companies.Add(newCompany);
             _context.SaveChanges();
 
-            return getFinishObject = new Answer<CompanyGetDto>(201, "Department created", null);
+            return getFinishObject = new Answer<CompanyGetDto>(201, "Company created", null);
+        }
+
+
+
+        [HttpGet("{tin}")]
+        public ActionResult<Answer<CompanyGetDto>> Get(string tin)
+        {
+            Company exist = _context.Companies.FirstOrDefault(x => x.tin == tin && x.isDeleted == false);
+            if (exist == null)
+            {
+                return getFinishObject = new Answer<CompanyGetDto>(200, "Position doesn't exist", null);
+            }
+            return getFinishObject = new Answer<CompanyGetDto>(200, "Ok", new List<CompanyGetDto> { _mapper.Map<CompanyGetDto>(exist) });
         }
 
 
