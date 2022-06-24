@@ -21,7 +21,7 @@ namespace TimeSheet.DatabaseContext
         public DbSet<IdentityCard> IdentityCards { get; set; }
         public DbSet<FamilyMembers> FamilyMembers { get; set; }
         public DbSet<Company> Companies { get; set; }
-        public DbSet<OrderTypes> Orders { get; set; }
+        public DbSet<OrderTypes> OrderTypes { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

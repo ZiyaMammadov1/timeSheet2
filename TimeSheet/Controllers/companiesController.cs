@@ -12,17 +12,18 @@ namespace TimeSheet.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class companiesController : ControllerBase
+    public class companyController : ControllerBase
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
         Answer<CompanyGetDto> getFinishObject;
 
-        public companiesController(DataContext context, IMapper mapper)
+        public companyController(DataContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
+
 
 
 

@@ -11,7 +11,7 @@ namespace TimeSheet.Entities
         [Column(TypeName = "decimal(18,2)")]
         public decimal salary { get; set; }
         public DateTime incrementTime { get; set; }
-
+        public bool isDeleted { get; set; }
 
         public int userId { get; set; }
         public User User { get; set; }
