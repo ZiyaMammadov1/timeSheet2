@@ -15,6 +15,7 @@ namespace TimeSheet.Dtos.UserDto
         public string lastName { get; set; }
         public string positionCode { get; set; }
         public string projectCode { get; set; }
+        public string tin { get; set; }
 
         public DateTime createdTime { get; set; }
         public string departmentCode { get; set; }

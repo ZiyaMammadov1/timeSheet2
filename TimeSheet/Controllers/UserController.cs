@@ -70,6 +70,7 @@ namespace TimeSheet.Controllers
         public ActionResult<Answer<UserGetDto>> CreateUser(UserPostDto UserPostDto)
         {
             Position position = _context.Positions.FirstOrDefault(x => x.code == UserPostDto.positionCode);
+            Company company = _context.Companies.FirstOrDefault(x => x.tin == UserPostDto.tin);
 
             Department department = _context.Departments.FirstOrDefault(x => x.code == UserPostDto.departmentCode);
 
@@ -92,6 +93,7 @@ namespace TimeSheet.Controllers
                 createdTime = DateTime.UtcNow,
                 departmentId = department.id,
                 projectId = project.id,
+                companyId = company.id,
                 dateOfBirthday = UserPostDto.dob,
                 age = DateTime.UtcNow.Year - UserPostDto.dob.Year,
                 phone1 = UserPostDto.phone1,
