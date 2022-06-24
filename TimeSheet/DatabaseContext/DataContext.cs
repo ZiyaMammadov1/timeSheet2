@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using TimeSheet.Entities;
 
 namespace TimeSheet.DatabaseContext
@@ -30,6 +31,13 @@ namespace TimeSheet.DatabaseContext
             modelBuilder.Entity<User>()
                 .HasIndex(a => a.fin)
                 .IsUnique();
+
+            foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            {
+                relationship.DeleteBehavior = DeleteBehavior.Restrict;
+            }
+
+
 
         }
     }
