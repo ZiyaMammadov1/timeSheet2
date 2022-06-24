@@ -26,6 +26,22 @@ namespace TimeSheet.Controllers
 
 
 
+        [HttpPost]
+        public ActionResult<Answer<CompanyGetDto>> CreateProject(CompanyPostDto CompanyPostDto)
+        {
+            Company newCompany = new Company()
+            {
+                uuid = Guid.NewGuid().ToString(),
+                tin = CompanyPostDto.tin,
+                isDeleted = false,
+                name = CompanyPostDto.name
+            };
+            _context.Companies.Add(newCompany);
+            _context.SaveChanges();
+
+            return getFinishObject = new Answer<CompanyGetDto>(201, "Department created", null);
+        }
+
 
     }
 }
