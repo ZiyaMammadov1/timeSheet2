@@ -22,7 +22,6 @@ namespace TimeSheet.Dtos.UserDto
         public string phone2 { get; set; }
         public string phone3 { get; set; }
         public string phone4 { get; set; }
-        public List<FamilyMembers> FamilyMembers { get; set; }
 
     }
 

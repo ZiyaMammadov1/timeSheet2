@@ -84,20 +84,20 @@ namespace TimeSheet.Controllers
             }
             position = _context.Positions.FirstOrDefault(x => x.name.ToLower() == UserPostDto.position.ToLower());
 
-            Department department = _context.Departments.FirstOrDefault(x => x.name == UserPostDto.department);
+            Department department = _context.Departments.FirstOrDefault(x => x.name.ToLower() == UserPostDto.department.ToLower());
             if (department == null)
             {
                 Department newDepartment = new Department()
                 {
                     isDeleted = false,
                     uuid = Guid.NewGuid().ToString(),
-                    name = UserPostDto.position
+                    name = UserPostDto.department
                 };
 
                 _context.Departments.Add(newDepartment);
                 _context.SaveChanges();
             }
-            department = _context.Departments.FirstOrDefault(x => x.name == UserPostDto.department);
+            department = _context.Departments.FirstOrDefault(x => x.name.ToLower() == UserPostDto.department.ToLower());
 
 
             User newUser = new User()
