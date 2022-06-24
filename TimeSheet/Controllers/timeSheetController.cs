@@ -71,7 +71,7 @@ namespace TimeSheet.Controllers
         }
 
         [HttpPost]
-        public ActionResult<Answer<TimeSheetGetDto>> CreateTimeSheet([FromHeader] string token,TimeSheetPostDto TimeSheetPostDto)
+        public ActionResult<Answer<TimeSheetGetDto>> CreateTimeSheet([FromHeader] string token, TimeSheetPostDto TimeSheetPostDto)
         {
 
 
@@ -311,7 +311,7 @@ namespace TimeSheet.Controllers
                         hours = time.hours,
                         projectid = time.projectid,
                         workTypeId = time.workTypeid,
-                        Calendar = worktype.value                        
+                        Calendar = worktype.value
                     };
                     TimeGetList.Add(timeSheet);
                 }

@@ -10,7 +10,7 @@ namespace TimeSheet.DatabaseContext
 
         }
 
-        public DbSet<User> Users { get; set; }
+        public DbSet<User> Employees { get; set; }
         public DbSet<Position> Positions { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<Department> Departments { get; set; }
@@ -21,6 +21,7 @@ namespace TimeSheet.DatabaseContext
         public DbSet<IdentityCard> IdentityCards { get; set; }
         public DbSet<FamilyMembers> FamilyMembers { get; set; }
         public DbSet<Company> Companies { get; set; }
+        public DbSet<OrderTypes> Orders { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

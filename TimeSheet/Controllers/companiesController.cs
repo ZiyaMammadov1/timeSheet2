@@ -26,46 +26,5 @@ namespace TimeSheet.Controllers
 
 
 
-        [HttpPost]
-        [Route("addlist")]
-        public ActionResult<Answer<CompanyGetDto>> CreateCompaniesFromList(List<CompanyPostDto> companiesPostDto)
-        {
-            List<Company> correctCompanies = new List<Company>();
-            List<CompanyGetDto> errorCompanies = new List<CompanyGetDto>();
-            Answer<CompanyGetDto> innerFinishObject;
-
-
-            foreach (var company in companiesPostDto)
-            {
-                if((company.name == "" || company.tin == "" || company.voen == "")|| (company.name == null || company.tin == null || company.voen == null))
-                {
-                    CompanyGetDto currentCompany = new CompanyGetDto()
-                    {
-                        name = company.name,
-                        tin = company.tin,
-                        voen = company.voen
-                    };
-                    errorCompanies.Add(currentCompany);
-                }
-                else
-                {
-                    Company newCompany = new Company()
-                    {
-                        uuid = Guid.NewGuid().ToString(),
-                        isDeleted = false,
-                        name = company.name,
-                        tin = company.tin,
-                        voen = company.voen,
-                    };
-                    correctCompanies.Add(newCompany);
-                }
-
-            }
-
-            _context.Companies.AddRange(correctCompanies);
-            _context.SaveChanges();
-            return innerFinishObject = new Answer<CompanyGetDto>(200, "Correct companies added. Incorrect entered datas:", errorCompanies);
-        }
-
     }
 }

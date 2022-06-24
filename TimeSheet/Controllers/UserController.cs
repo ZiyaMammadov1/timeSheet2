@@ -32,7 +32,7 @@ namespace TimeSheet.Controllers
         [HttpGet]
         public ActionResult<Answer<UserGetDto>> GetAll()
         {
-            List<User> users = _context.Users.Where(x => x.isDeleted == false).ToList();
+            List<User> users = _context.Employees.Where(x => x.isDeleted == false).ToList();
 
             List<UserGetDto> UserGetList = new List<UserGetDto>();
             foreach (var user in users)
@@ -53,7 +53,7 @@ namespace TimeSheet.Controllers
         [HttpGet("{id}")]
         public ActionResult<Answer<UserGetDto>> Get(string id)
         {
-            var exist = _context.Users.FirstOrDefault(x => x.uuid == id && x.isDeleted == false);
+            var exist = _context.Employees.FirstOrDefault(x => x.uuid == id && x.isDeleted == false);
 
             if (exist != null)
             {
@@ -122,145 +122,17 @@ namespace TimeSheet.Controllers
                 phone3 = UserPostDto.phone3,
                 phone4 = UserPostDto.phone4
             };
-            _context.Users.Add(newUser);
+            _context.Employees.Add(newUser);
             _context.SaveChanges();
             return getFinishObject = new Answer<UserGetDto>(201, "User created", null);
         }
 
-        [HttpPost]
-        [Route("addlist")]
-        public ActionResult<Answer<UserGetDto>> CreateUserFromList(List<SecondUserPostDto> users)
-        {
-            List<User> UserList = new List<User>();
-            //List<int> userIds = new List<int>();
 
-            foreach (var user in users)
-            {
-                Position position = _context.Positions.FirstOrDefault(x => x.name.ToLower() == user.position.ToLower());
-
-                if (position == null)
-                {
-                    Position newPosition = new Position()
-                    {
-                        name = user.position,
-                        isDeleted = false,
-                        uuid = Guid.NewGuid().ToString()
-                    };
-
-                    _context.Positions.Add(newPosition);
-                    _context.SaveChanges();
-
-                    position = _context.Positions.FirstOrDefault(x => x.name == newPosition.name);
-
-                }
-
-                Department department = _context.Departments.FirstOrDefault(x => x.name.ToLower() == user.department.ToLower());
-
-                if (department == null)
-                {
-                    Department newDepartment = new Department()
-                    {
-                        name = user.department,
-                        isDeleted = false,
-                        uuid = Guid.NewGuid().ToString()
-                    };
-
-                    _context.Departments.Add(newDepartment);
-                    _context.SaveChanges();
-
-                    department = _context.Departments.FirstOrDefault(x => x.name == newDepartment.name);
-
-                }
-
-                User newUser = new User()
-                {
-                    uuid = Guid.NewGuid().ToString(),
-                    cid = user.cid,
-                    email = user.email,
-                    fin = user.fin.ToLower(),
-                    firstName = user.firstName,
-                    lastName = user.lastName,
-                    photo = user.photo,
-                    Password = Hashing.ToSHA256(user.fin.ToLower()),
-                    fullName = user.firstName + " " + user.lastName,
-                    positionId = position.id,
-                    isDeleted = false,
-                    createdTime = DateTime.UtcNow,
-                    departmentId = department.id,
-                    age = DateTime.UtcNow.Year - user.dateOfBirthday.Year,
-                    phone1 = user.phone1,
-                    phone2 = user.phone2,
-                    phone3 = user.phone3,
-                    phone4 = user.phone4
-                };
-
-                if (newUser.fin != null)
-                {
-                    _context.Users.Add(newUser);
-                    _context.SaveChanges();
-                    User currentUser = _context.Users.FirstOrDefault(x => x.fin == user.fin);
-
-                    if (user.FamilyMembers.Count() > 0)
-                    {
-                        foreach (var member in user.FamilyMembers)
-                        {
-
-                            FamilyMembers familymember = new FamilyMembers()
-                            {
-                                member = member.member,
-                                memberAge = member.memberAge,
-                                memberDoB = member.memberDoB,
-                                memberFullName = member.memberFullname,
-                                userId = currentUser.id
-                            };
-
-                        _context.FamilyMembers.Add(familymember);
-                        }
-                        _context.SaveChanges();
-                    }
-
-                }
-                else
-                {
-                    getFinishObject = new Answer<UserGetDto>(200, "Users fin is empty", null);
-                }
-
-
-
-
-
-
-            }
-
-            //_context.Users.AddRange(UserList);
-            //userIds.AddRange(UserList.Select(x=>x.id));
-            //_context.SaveChanges();
-
-
-            //foreach (var user in users)
-            //{
-            //    foreach (var member in user.FamilyMembers)
-            //    {
-            //        FamilyMembers familymember = new FamilyMembers()
-            //        {
-            //            member = member.member,
-            //            memberAge = member.memberAge,
-            //            memberDoB = member.memberDoB,
-            //            memberFullName = member.memberFullname,
-            //            userId = user.id
-            //        };
-            //    }
-            //}
-
-
-            return getFinishObject = new Answer<UserGetDto>(201, "Users created", null);
-
-        }
 
         [HttpPut]
         public ActionResult<Answer<UserGetDto>> UpdateUser(UserUpdateDto UserUpdateDto)
         {
-            var exist = _context.Users.FirstOrDefault(x => x.uuid == UserUpdateDto.id && x.isDeleted == false);
+            var exist = _context.Employees.FirstOrDefault(x => x.uuid == UserUpdateDto.id && x.isDeleted == false);
 
             if (exist == null)
             {
@@ -293,7 +165,7 @@ namespace TimeSheet.Controllers
         [HttpDelete("{id}")]
         public ActionResult<Answer<UserGetDto>> DeletedUser(string id)
         {
-            var exist = _context.Users.FirstOrDefault(x => x.uuid == id && x.isDeleted == false);
+            var exist = _context.Employees.FirstOrDefault(x => x.uuid == id && x.isDeleted == false);
             if (exist == null)
             {
                 return getFinishObject = new Answer<UserGetDto>(400, "User not found", null);
@@ -307,7 +179,7 @@ namespace TimeSheet.Controllers
         [Route("changePass")]
         public ActionResult<Answer<UserGetDto>> ChangePassword(PasswordChangeDto ChangeDto)
         {
-            var exist = _context.Users.FirstOrDefault(x => x.id == ChangeDto.id && x.isDeleted == false);
+            var exist = _context.Employees.FirstOrDefault(x => x.id == ChangeDto.id && x.isDeleted == false);
 
             if (exist == null)
             {

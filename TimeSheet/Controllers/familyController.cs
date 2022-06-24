@@ -25,20 +25,20 @@ namespace TimeSheet.Controllers
 
 
         [HttpPost]
-        public ActionResult <Answer<MemberGetDto>> CreateMember(MemberPostDto memberPostDto)
+        public ActionResult<Answer<MemberGetDto>> CreateMember(MemberPostDto memberPostDto)
         {
-            User user = _context.Users.FirstOrDefault(a=>a.fin.ToLower() == memberPostDto.fin.ToLower());
-            if(user == null)
+            User user = _context.Employees.FirstOrDefault(a => a.fin.ToLower() == memberPostDto.fin.ToLower());
+            if (user == null)
             {
-                return getFinishObject = new Answer<MemberGetDto>(400,"User not found.",null);
+                return getFinishObject = new Answer<MemberGetDto>(400, "User not found.", null);
             }
 
             FamilyMembers newMember = new FamilyMembers()
             {
                 member = memberPostDto.member,
-                memberAge = memberPostDto.memberAge,
-                memberDoB = memberPostDto.memberDoB,
-                memberFullName = memberPostDto.memberFullname,
+                age = memberPostDto.memberAge,
+                dob = memberPostDto.memberDoB,
+                fullName = memberPostDto.memberFullname,
                 userId = user.id
             };
 
@@ -53,55 +53,18 @@ namespace TimeSheet.Controllers
         [HttpDelete]
         public ActionResult<Answer<MemberGetDto>> DeleteMember(string fin)
         {
-            User user = _context.Users.FirstOrDefault(x => x.fin.ToLower() == fin.ToLower());
+            User user = _context.Employees.FirstOrDefault(x => x.fin.ToLower() == fin.ToLower());
 
             if (user == null)
             {
                 return getFinishObject = new Answer<MemberGetDto>(400, "User not found.", null);
             }
 
-            List<FamilyMembers> UsersFamily = _context.FamilyMembers.Where(x=>x.userId == user.id).ToList();
+            List<FamilyMembers> UsersFamily = _context.FamilyMembers.Where(x => x.userId == user.id).ToList();
             _context.FamilyMembers.RemoveRange(UsersFamily);
             _context.SaveChanges();
 
             return getFinishObject = new Answer<MemberGetDto>(204, "User family members deleted.", null);
-
-        }
-
-
-        [HttpPost]
-        [Route("addlist")]
-        public ActionResult<Answer<MemberGetDto>> CreateFamilies(List<MemberPostDto> memberPostDtos)
-        {
-            List<FamilyMembers> addedMember = new List<FamilyMembers>();
-            List<MemberPostDto> notFoundUserMembers = new List<MemberPostDto>();
-            Answer<MemberGetDto> getFinishObjectWithPost;
-
-            foreach (var memberPostDto in memberPostDtos)
-            {
-                User user = _context.Users.FirstOrDefault(a => a.fin.ToLower() == memberPostDto.fin.ToLower());
-                if (user == null)
-                {
-                    notFoundUserMembers.Add(memberPostDto);
-                }
-                else 
-                { 
-                    FamilyMembers newMember = new FamilyMembers()
-                    {
-                        member = memberPostDto.member,
-                        memberAge = memberPostDto.memberAge,
-                        memberDoB = memberPostDto.memberDoB,
-                        memberFullName = memberPostDto.memberFullname,
-                        userId = user.id
-                    };
-
-                    addedMember.Add(newMember);
-                }
-            }
-            _context.FamilyMembers.AddRange(addedMember);
-            _context.SaveChanges();
-
-            return getFinishObjectWithPost = new Answer<MemberGetDto>(201, "Families created. Who are not found User", _mapper.Map<List<MemberGetDto>>(notFoundUserMembers));
 
         }
 
@@ -113,15 +76,15 @@ namespace TimeSheet.Controllers
             {
                 return getFinishObject = new Answer<MemberGetDto>(400, "Fin is empty", null);
             }
-            User user = _context.Users.FirstOrDefault(x=>x.fin.ToLower() == fin.ToLower());
+            User user = _context.Employees.FirstOrDefault(x => x.fin.ToLower() == fin.ToLower());
 
-            if(user == null)
+            if (user == null)
             {
-                return getFinishObject = new Answer<MemberGetDto>(400,"User not found", null);
+                return getFinishObject = new Answer<MemberGetDto>(400, "User not found", null);
             }
             else
             {
-                List<FamilyMembers> UserFamily = _context.FamilyMembers.Where(a=>a.userId == user.id).ToList();
+                List<FamilyMembers> UserFamily = _context.FamilyMembers.Where(a => a.userId == user.id).ToList();
                 List<MemberGetDto> UserFamilyGet = new List<MemberGetDto>();
 
                 if (UserFamily.Count > 0)
@@ -131,9 +94,9 @@ namespace TimeSheet.Controllers
                         MemberGetDto memberGet = new MemberGetDto()
                         {
                             member = member.member,
-                            memberAge = member.memberAge,
-                            memberDoB = member.memberDoB,
-                            memberFullname = member.memberFullName
+                            memberAge = member.age,
+                            memberDoB = member.dob,
+                            memberFullname = member.fullName
                         };
                         UserFamilyGet.Add(memberGet);
                     }

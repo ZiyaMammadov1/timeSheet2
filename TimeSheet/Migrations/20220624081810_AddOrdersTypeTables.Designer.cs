@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TimeSheet.DatabaseContext;
 
 namespace TimeSheet.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220624081810_AddOrdersTypeTables")]
+    partial class AddOrdersTypeTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,6 +38,9 @@ namespace TimeSheet.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("uuid")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("voen")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
@@ -71,16 +76,16 @@ namespace TimeSheet.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("age")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("dob")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("fullName")
+                    b.Property<string>("member")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("member")
+                    b.Property<int>("memberAge")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("memberDoB")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("memberFullName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("userId")
@@ -334,7 +339,7 @@ namespace TimeSheet.Migrations
 
                     b.HasIndex("positionId");
 
-                    b.ToTable("Employees");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("TimeSheet.Entities.WorkType", b =>

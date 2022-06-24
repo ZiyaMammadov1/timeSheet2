@@ -21,7 +21,7 @@ namespace TimeSheet.Helper
         {
             _context = context;
         }
-        
+
         public JwtSecurityToken CurrentClaim(string token)
         {
             var handler = new JwtSecurityTokenHandler();
@@ -32,7 +32,7 @@ namespace TimeSheet.Helper
             {
                 return null;
             }
-            else 
+            else
             {
                 return tokenS;
             }
@@ -43,11 +43,11 @@ namespace TimeSheet.Helper
 
             var claim = tokenS.Claims.FirstOrDefault(x => x.Type == "Key").Value;
 
-            var user = _context.Users.FirstOrDefault(x => x.fin == claim);
+            var user = _context.Employees.FirstOrDefault(x => x.fin == claim);
 
             if (user == null)
             {
-                user = _context.Users.FirstOrDefault(x => x.email == claim);
+                user = _context.Employees.FirstOrDefault(x => x.email == claim);
             }
             if (user == null)
             {
@@ -56,7 +56,7 @@ namespace TimeSheet.Helper
             return user;
         }
 
-        public Answer<string> Manager(User user,JwtSecurityToken tokenS)
+        public Answer<string> Manager(User user, JwtSecurityToken tokenS)
         {
             Answer<string> getFinishObject;
 

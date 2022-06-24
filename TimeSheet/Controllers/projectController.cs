@@ -77,8 +77,8 @@ namespace TimeSheet.Controllers
         [HttpPost]
         public ActionResult<Answer<ProjectGetDto>> CreateProject(ProjectPostDto ProjectPostDto)
         {
-            Company company = _context.Companies.FirstOrDefault(x=>x.uuid == ProjectPostDto.companyId);
-            if(company == null)
+            Company company = _context.Companies.FirstOrDefault(x => x.uuid == ProjectPostDto.companyId);
+            if (company == null)
             {
                 return getFinishObject = new Answer<ProjectGetDto>(400, "Company not found", null);
             }
@@ -99,7 +99,7 @@ namespace TimeSheet.Controllers
 
         [HttpPost]
         [Route("addlist")]
-        public ActionResult <Answer<ProjectGetDto>> CreateProjectFromList(List<ProjectPostDto> projects)
+        public ActionResult<Answer<ProjectGetDto>> CreateProjectFromList(List<ProjectPostDto> projects)
         {
             List<Project> newProjects = new List<Project>();
             List<ProjectGetDto> notFoundCompany = new List<ProjectGetDto>();
@@ -118,7 +118,7 @@ namespace TimeSheet.Controllers
                 }
                 else
                 {
-                    if ((project.name == "" || project.code == "" || project.companyId == "")||(project.name == null || project.code == null || project.companyId == null))
+                    if ((project.name == "" || project.code == "" || project.companyId == "") || (project.name == null || project.code == null || project.companyId == null))
                     {
                         ProjectGetDto projectGetDto = new ProjectGetDto()
                         {
@@ -142,7 +142,7 @@ namespace TimeSheet.Controllers
                         newProjects.Add(currentProject);
                     }
                 }
-                
+
             }
 
             _context.Projects.AddRange(newProjects);

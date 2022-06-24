@@ -45,10 +45,10 @@ namespace TimeSheet.Controllers
             {
                 return loginfinishObject = new Answer<UserLoginDto>(404, "Username empty", null);
             }
-            var User = _context.Users.FirstOrDefault(x => x.fin.ToLower() == userLoginDto.key.ToLower());
+            var User = _context.Employees.FirstOrDefault(x => x.fin.ToLower() == userLoginDto.key.ToLower());
             if (User == null)
             {
-                User = _context.Users.FirstOrDefault(x => x.email.ToLower() == userLoginDto.key.ToLower());
+                User = _context.Employees.FirstOrDefault(x => x.email.ToLower() == userLoginDto.key.ToLower());
             }
 
             if (User == null)
@@ -69,7 +69,7 @@ namespace TimeSheet.Controllers
 
             Token token = tokenInitilizing.Init(UserLoginDto, _config, User.id);
             token.Detail = _mapper.Map<UserGetDto>(User);
-            
+
             var position = _context.Positions.FirstOrDefault(x => x.id == token.Detail.positionId);
             token.Detail.Position = _mapper.Map<PositionGetDto>(position);
 
@@ -86,7 +86,7 @@ namespace TimeSheet.Controllers
             if (token == null)
                 return loginfinishObject = new Answer<UserLoginDto>(200, "Refresh token not found. Sign in with user", null);
 
-            var user = _context.Users.FirstOrDefault(x => x.id == token.Userid);
+            var user = _context.Employees.FirstOrDefault(x => x.id == token.Userid);
 
             if (user == null)
                 return loginfinishObject = new Answer<UserLoginDto>(200, "User not found. Sign in another user", null);

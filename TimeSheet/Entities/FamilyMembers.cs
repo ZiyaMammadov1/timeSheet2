@@ -6,9 +6,9 @@ namespace TimeSheet.Entities
     {
         public int id { get; set; }
         public string member { get; set; }
-        public string memberFullName { get; set; }
-        public DateTime memberDoB { get; set; }
-        public int memberAge { get; set; }
+        public string fullName { get; set; }
+        public DateTime dob { get; set; }
+        public int age { get; set; }
 
         public int userId { get; set; }
         public User User { get; set; }

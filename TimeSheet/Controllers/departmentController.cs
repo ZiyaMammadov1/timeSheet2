@@ -10,7 +10,7 @@ using TimeSheet.Dtos.DepartmentDtos;
 using TimeSheet.Entities;
 
 namespace TimeSheet.Controllers
-{ 
+{
     [Route("api/[controller]")]
     [ApiController]
     [EnableCors("AllowOrigin")]
@@ -56,7 +56,7 @@ namespace TimeSheet.Controllers
         {
             var exist = _context.Departments.FirstOrDefault(x => x.uuid == id && x.isDeleted == false);
 
-           
+
 
             if (exist != null)
             {
