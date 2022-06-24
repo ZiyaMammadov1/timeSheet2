@@ -7,5 +7,10 @@
         public string name { get; set; }
         public string code { get; set; }
         public bool isDeleted { get; set; }
+
+
+
+        public int companyId { get; set; }
+        public Company Company { get; set; }
     }
 }

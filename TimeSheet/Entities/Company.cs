@@ -1,4 +1,6 @@
-﻿namespace TimeSheet.Entities
+﻿using System.Collections.Generic;
+
+namespace TimeSheet.Entities
 {
     public class Company
     {
@@ -8,5 +10,8 @@
         public string voen { get; set; }
         public string tin { get; set; }
         public bool isDeleted { get; set; }
+
+        public List<Project> companyProjects { get; set; } = new List<Project>();
+
     }
 }

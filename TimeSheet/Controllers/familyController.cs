@@ -109,6 +109,10 @@ namespace TimeSheet.Controllers
         [HttpGet]
         public ActionResult<Answer<MemberGetDto>> GetUserFamily(string fin)
         {
+            if (fin == null)
+            {
+                return getFinishObject = new Answer<MemberGetDto>(400, "Fin is empty", null);
+            }
             User user = _context.Users.FirstOrDefault(x=>x.fin.ToLower() == fin.ToLower());
 
             if(user == null)
@@ -137,7 +141,7 @@ namespace TimeSheet.Controllers
                 }
                 else
                 {
-                    return getFinishObject = new Answer<MemberGetDto>(200, "User family is empty", null);
+                    return getFinishObject = new Answer<MemberGetDto>(200, "User families found", null);
                 }
             }
         }
