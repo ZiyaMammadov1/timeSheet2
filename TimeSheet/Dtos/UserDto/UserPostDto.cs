@@ -13,10 +13,12 @@ namespace TimeSheet.Dtos.UserDto
         public string password { get; set; }
         public string firstName { get; set; }
         public string lastName { get; set; }
-        public string position { get; set; }
+        public string positionCode { get; set; }
+        public string projectCode { get; set; }
+
         public DateTime createdTime { get; set; }
-        public string department { get; set; }
-        public DateTime dateOfBirthday { get; set; }
+        public string departmentCode { get; set; }
+        public DateTime dob { get; set; }
         public string photo { get; set; }
         public string phone1 { get; set; }
         public string phone2 { get; set; }
@@ -34,9 +36,8 @@ namespace TimeSheet.Dtos.UserDto
             RuleFor(x => x.password).NotEmpty().MaximumLength(150);
             RuleFor(x => x.firstName).NotEmpty().MaximumLength(50);
             RuleFor(x => x.lastName).NotEmpty().MaximumLength(50);
-            RuleFor(x => x.position).NotEmpty().MaximumLength(300);
-            RuleFor(x => x.department).NotEmpty().MaximumLength(300);
-            RuleFor(x => x.dateOfBirthday).NotEmpty();
+            RuleFor(x => x.positionCode).NotEmpty().MaximumLength(300);
+            RuleFor(x => x.departmentCode).NotEmpty().MaximumLength(300);
         }
     }
 

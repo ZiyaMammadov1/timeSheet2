@@ -33,6 +33,9 @@ namespace TimeSheet.Entities
         public int companyId { get; set; }
         public Company Company { get; set; }
 
+        public int projectId { get; set; }
+        public Project Project { get; set; }
+
         public List<Salary> userSalaries { get; set; } = new List<Salary>();
         public List<IdentityCard> userIdentityCards { get; set; } = new List<IdentityCard>();
         public List<mainTimeSheet> userTimeSheet { get; set; } = new List<mainTimeSheet>();

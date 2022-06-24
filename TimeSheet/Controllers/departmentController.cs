@@ -74,14 +74,19 @@ namespace TimeSheet.Controllers
         }
 
         [HttpPost]
-        public ActionResult<Answer<DepartmentGetDto>> CreateProject(DepartmentPostDto DepartmentPostDto)
+        public ActionResult<Answer<DepartmentGetDto>> CreateDepartment(DepartmentPostDto DepartmentPostDto)
         {
-
+            Company company = _context.Companies.FirstOrDefault(x=>x.tin.ToLower() == DepartmentPostDto.tin.ToLower());
+            if (company==null) 
+            {
+                return getFinishObject = new Answer<DepartmentGetDto>(400, "Company not found", null);
+            }
             Department newDepartment = new Department()
             {
                 uuid = Guid.NewGuid().ToString(),
                 isDeleted = false,
-                name = DepartmentPostDto.name
+                name = DepartmentPostDto.name,
+                CompanyId = company.id
             };
             _context.Departments.Add(newDepartment);
             _context.SaveChanges();
@@ -90,7 +95,7 @@ namespace TimeSheet.Controllers
         }
 
         [HttpPut]
-        public ActionResult<Answer<DepartmentGetDto>> UpdateProject(DepartmentUpdateDto DepartmentUpdateDto)
+        public ActionResult<Answer<DepartmentGetDto>> UpdateDepartment(DepartmentUpdateDto DepartmentUpdateDto)
         {
             var exist = _context.Departments.FirstOrDefault(x => x.uuid == DepartmentUpdateDto.id && x.isDeleted == false);
 

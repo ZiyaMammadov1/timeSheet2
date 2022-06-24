@@ -69,36 +69,12 @@ namespace TimeSheet.Controllers
         [HttpPost]
         public ActionResult<Answer<UserGetDto>> CreateUser(UserPostDto UserPostDto)
         {
-            Position position = _context.Positions.FirstOrDefault(x => x.name.ToLower() == UserPostDto.position.ToLower());
-            if (position == null)
-            {
-                Position newPosition = new Position()
-                {
-                    isDeleted = false,
-                    uuid = Guid.NewGuid().ToString(),
-                    name = UserPostDto.position
-                };
+            Position position = _context.Positions.FirstOrDefault(x => x.code == UserPostDto.positionCode);
 
-                _context.Positions.Add(newPosition);
-                _context.SaveChanges();
-            }
-            position = _context.Positions.FirstOrDefault(x => x.name.ToLower() == UserPostDto.position.ToLower());
+            Department department = _context.Departments.FirstOrDefault(x => x.code == UserPostDto.departmentCode);
 
-            Department department = _context.Departments.FirstOrDefault(x => x.name.ToLower() == UserPostDto.department.ToLower());
-            if (department == null)
-            {
-                Department newDepartment = new Department()
-                {
-                    isDeleted = false,
-                    uuid = Guid.NewGuid().ToString(),
-                    name = UserPostDto.department
-                };
-
-                _context.Departments.Add(newDepartment);
-                _context.SaveChanges();
-            }
-            department = _context.Departments.FirstOrDefault(x => x.name.ToLower() == UserPostDto.department.ToLower());
-
+            Project project = _context.Projects.FirstOrDefault(x => x.code == UserPostDto.projectCode);
+           
 
             User newUser = new User()
             {
@@ -115,8 +91,9 @@ namespace TimeSheet.Controllers
                 photo = UserPostDto.photo,
                 createdTime = DateTime.UtcNow,
                 departmentId = department.id,
-                dateOfBirthday = UserPostDto.dateOfBirthday,
-                age = DateTime.UtcNow.Year - UserPostDto.dateOfBirthday.Year,
+                projectId = project.id,
+                dateOfBirthday = UserPostDto.dob,
+                age = DateTime.UtcNow.Year - UserPostDto.dob.Year,
                 phone1 = UserPostDto.phone1,
                 phone2 = UserPostDto.phone2,
                 phone3 = UserPostDto.phone3,

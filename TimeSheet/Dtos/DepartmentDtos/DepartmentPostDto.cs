@@ -5,6 +5,7 @@ namespace TimeSheet.Dtos.DepartmentDtos
     public class DepartmentPostDto
     {
         public string name { get; set; }
+        public string tin { get; set; }
     }
 
     public class DepartmentPostDtoValidator : AbstractValidator<DepartmentPostDto>

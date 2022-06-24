@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TimeSheet.DatabaseContext;
 
 namespace TimeSheet.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220624131532_AddReferenceDepartmentCompanyId")]
+    partial class AddReferenceDepartmentCompanyId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,9 +57,6 @@ namespace TimeSheet.Migrations
 
                     b.Property<int>("CompanyId")
                         .HasColumnType("int");
-
-                    b.Property<string>("code")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
                         .HasColumnType("bit");
@@ -181,9 +180,6 @@ namespace TimeSheet.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("code")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
                         .HasColumnType("bit");
@@ -344,9 +340,6 @@ namespace TimeSheet.Migrations
                     b.Property<int>("positionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("projectId")
-                        .HasColumnType("int");
-
                     b.Property<string>("uuid")
                         .HasColumnType("nvarchar(max)");
 
@@ -361,8 +354,6 @@ namespace TimeSheet.Migrations
                         .HasFilter("[fin] IS NOT NULL");
 
                     b.HasIndex("positionId");
-
-                    b.HasIndex("projectId");
 
                     b.ToTable("Employees");
                 });
@@ -509,12 +500,6 @@ namespace TimeSheet.Migrations
                     b.HasOne("TimeSheet.Entities.Position", "Position")
                         .WithMany()
                         .HasForeignKey("positionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("TimeSheet.Entities.Project", "Project")
-                        .WithMany()
-                        .HasForeignKey("projectId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
