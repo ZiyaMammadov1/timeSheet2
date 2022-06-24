@@ -116,5 +116,21 @@ namespace TimeSheet.Controllers
             return getFinishObject = new Answer<WorkGetDto>(204, "Worktype deleted", null);
 
         }
+
+
+        [HttpGet]
+        [Route("properties")]
+        public ActionResult<Answer<string>> GetProperty()
+        {
+            Answer<string> innerFinishObject;
+
+            List<string> AllProperty = new List<string>();
+            foreach (var property in typeof(WorkType).GetProperties())
+            {
+                AllProperty.Add(property.Name);
+            }
+            return innerFinishObject = new Answer<string>(200, "Ok", AllProperty);
+        }
+
     }
 }

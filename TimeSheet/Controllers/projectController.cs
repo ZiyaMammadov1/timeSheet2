@@ -182,5 +182,20 @@ namespace TimeSheet.Controllers
             _context.SaveChanges();
             return getFinishObject = new Answer<ProjectGetDto>(204, "No Content", null);
         }
+
+        [HttpGet]
+        [Route("properties")]
+        public ActionResult<Answer<string>> GetProperty()
+        {
+            Answer<string> innerFinishObject;
+
+            List<string> AllProperty = new List<string>();
+            foreach (var property in typeof(Project).GetProperties())
+            {
+                AllProperty.Add(property.Name);
+            }
+            return innerFinishObject = new Answer<string>(200, "Ok", AllProperty);
+        }
+
     }
 }

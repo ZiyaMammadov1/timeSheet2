@@ -27,7 +27,7 @@ namespace TimeSheet.Controllers
 
 
         [HttpPost]
-        public ActionResult<Answer<CompanyGetDto>> CreateProject(CompanyPostDto CompanyPostDto)
+        public ActionResult<Answer<CompanyGetDto>> CreateCompany(CompanyPostDto CompanyPostDto)
         {
             Company newCompany = new Company()
             {
@@ -51,9 +51,24 @@ namespace TimeSheet.Controllers
             Company exist = _context.Companies.FirstOrDefault(x => x.tin == tin && x.isDeleted == false);
             if (exist == null)
             {
-                return getFinishObject = new Answer<CompanyGetDto>(200, "Position doesn't exist", null);
+                return getFinishObject = new Answer<CompanyGetDto>(200, "Company doesn't exist", null);
             }
             return getFinishObject = new Answer<CompanyGetDto>(200, "Ok", new List<CompanyGetDto> { _mapper.Map<CompanyGetDto>(exist) });
+        }
+
+
+        [HttpGet]
+        [Route("properties")]
+        public ActionResult<Answer<string>> GetProperty()
+        {
+            Answer<string> innerFinishObject;
+
+            List<string> AllProperty = new List<string>();
+            foreach (var property in typeof(Company).GetProperties())
+            {
+                AllProperty.Add(property.Name);   
+            }
+            return innerFinishObject = new Answer<string>(200, "Ok", AllProperty);
         }
 
 

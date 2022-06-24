@@ -197,5 +197,21 @@ namespace TimeSheet.Controllers
         }
 
 
+        [HttpGet]
+        [Route("properties")]
+        public ActionResult<Answer<string>> GetProperty()
+        {
+            Answer<string> innerFinishObject;
+
+            List<string> AllProperty = new List<string>();
+            foreach (var property in typeof(User).GetProperties())
+            {
+                AllProperty.Add(property.Name);
+            }
+            return innerFinishObject = new Answer<string>(200, "Ok", AllProperty);
+        }
+
+
+
     }
 }
