@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using TimeSheet.Dtos.CompanyDtos;
 using TimeSheet.Dtos.DepartmentDtos;
 using TimeSheet.Dtos.FamilyDtos;
 using TimeSheet.Dtos.PositionDtos;
@@ -24,6 +25,7 @@ namespace TimeSheet.Profiles
             CreateMap<FamilyMembers, MemberGetDto>();
             CreateMap<MemberGetDto, FamilyMembers>();
             CreateMap<MemberPostDto, MemberGetDto>();
+            CreateMap<Company, CompanyGetDto>();
         }
     }
 }
