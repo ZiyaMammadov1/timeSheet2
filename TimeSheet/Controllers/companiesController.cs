@@ -71,6 +71,23 @@ namespace TimeSheet.Controllers
             return innerFinishObject = new Answer<string>(200, "Ok", AllProperty);
         }
 
+        [HttpDelete]
+        public ActionResult <Answer<CompanyGetDto>> Delete(string tin)
+        {
+            Company company = _context.Companies.FirstOrDefault(a => a.tin.ToLower() == tin.ToLower() && a.isDeleted == false);
+            if(company == null)
+            {
+                return new Answer<CompanyGetDto>(400,"Company not found",null);
+            }
+            else
+            {
+                company.isDeleted = true;
+                _context.SaveChanges();
+                return new Answer<CompanyGetDto>(200, "Company is deleted", null);
+
+            }
+        }
+
 
     }
 }
