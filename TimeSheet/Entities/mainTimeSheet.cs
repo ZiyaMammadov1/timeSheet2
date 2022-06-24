@@ -13,6 +13,8 @@ namespace TimeSheet.Entities
         public DateTime createdTime { get; set; }
         public decimal? hours { get; set; }
         public string description { get; set; }
+        public string codeUR { get; set; }
+
         public bool isDeleted { get; set; }
 
         public int userId { get; set; }

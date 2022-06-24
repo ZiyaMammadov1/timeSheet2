@@ -10,6 +10,7 @@ namespace TimeSheet.Entities
         public string tin { get; set; }
         public bool isDeleted { get; set; }
         public string code { get; set; }
+        public string codeUR { get; set; }
 
         public List<Project> companyProjects { get; set; } = new List<Project>();
         public List<User> companyUsers { get; set; } = new List<User>();

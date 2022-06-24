@@ -14,6 +14,8 @@ namespace TimeSheet.Entities
         public string fullName { get; set; }
         public string firstName { get; set; }
         public string lastName { get; set; }
+        public string codeUR { get; set; }
+
         public bool isDeleted { get; set; }
         public DateTime dateOfBirthday { get; set; }
         public int age { get; set; }

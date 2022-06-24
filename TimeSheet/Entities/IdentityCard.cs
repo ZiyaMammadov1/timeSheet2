@@ -14,6 +14,7 @@ namespace TimeSheet.Entities
         public string govermentName { get; set; }
         public string Address { get; set; }
         public bool isDeleted { get; set; }
+        public string codeUR { get; set; }
 
         public int userId { get; set; }
         public User User { get; set; }

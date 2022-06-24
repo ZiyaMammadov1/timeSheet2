@@ -12,6 +12,7 @@ namespace TimeSheet.Entities
         public decimal salary { get; set; }
         public DateTime incrementTime { get; set; }
         public bool isDeleted { get; set; }
+        public string codeUR { get; set; }
 
         public int userId { get; set; }
         public User User { get; set; }
