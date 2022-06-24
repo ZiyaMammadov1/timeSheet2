@@ -104,5 +104,44 @@ namespace TimeSheet.Controllers
             return getFinishObjectWithPost = new Answer<MemberGetDto>(201, "Families created. Who are not found User", _mapper.Map<List<MemberGetDto>>(notFoundUserMembers));
 
         }
+
+
+        [HttpGet]
+        public ActionResult<Answer<MemberGetDto>> GetUserFamily(string fin)
+        {
+            User user = _context.Users.FirstOrDefault(x=>x.fin.ToLower() == fin.ToLower());
+
+            if(user == null)
+            {
+                return getFinishObject = new Answer<MemberGetDto>(400,"User not found", null);
+            }
+            else
+            {
+                List<FamilyMembers> UserFamily = _context.FamilyMembers.Where(a=>a.userId == user.id).ToList();
+                List<MemberGetDto> UserFamilyGet = new List<MemberGetDto>();
+
+                if (UserFamily.Count > 0)
+                {
+                    foreach (var member in UserFamily)
+                    {
+                        MemberGetDto memberGet = new MemberGetDto()
+                        {
+                            member = member.member,
+                            memberAge = member.memberAge,
+                            memberDoB = member.memberDoB,
+                            memberFullname = member.memberFullName
+                        };
+                        UserFamilyGet.Add(memberGet);
+                    }
+                    return getFinishObject = new Answer<MemberGetDto>(200, "User family is empty", UserFamilyGet);
+                }
+                else
+                {
+                    return getFinishObject = new Answer<MemberGetDto>(200, "User family is empty", null);
+                }
+            }
+        }
     }
 }
+
+
