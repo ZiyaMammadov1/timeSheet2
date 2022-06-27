@@ -11,7 +11,7 @@ namespace TimeSheet.DatabaseContext
 
         }
         public DbSet<Database> Database { get; set; }
-        //public DbSet<User> Employees { get; set; }
+        public DbSet<Employee> Employees { get; set; }
         public DbSet<Position> Positions { get; set; }
         //public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<Department> Departments { get; set; }
@@ -79,6 +79,18 @@ namespace TimeSheet.DatabaseContext
             modelBuilder.Entity<Company>()
                 .Property(p => p.isActive)
                 .HasDefaultValue(true);
+
+            modelBuilder.Entity<Employee>()
+             .Property(p => p.uuid)
+             .HasDefaultValueSql("NEWID()");
+
+            modelBuilder.Entity<Employee>()
+                .Property(p => p.isDeleted)
+                .HasDefaultValue(false);
+
+            modelBuilder.Entity<Employee>()
+                .HasIndex(p => p.fin)
+                .IsUnique(true);
 
             //modelBuilder.Entity<User>()
             //    .HasIndex(a => a.fin)

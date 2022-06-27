@@ -5,6 +5,6 @@ namespace TimeSheet.Entities
     public class UserWithTimeInterval
     {
         public TimeIntervalGetDto timeInterval { get; set; }
-        public User user { get; set; }
+        public Employee user { get; set; }
     }
 }

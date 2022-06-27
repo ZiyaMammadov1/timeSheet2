@@ -11,7 +11,7 @@ namespace TimeSheet.Entities
         public int age { get; set; }
 
         public int userId { get; set; }
-        public User User { get; set; }
+        public Employee User { get; set; }
 
     }
 }

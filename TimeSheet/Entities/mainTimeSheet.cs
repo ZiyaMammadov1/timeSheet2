@@ -18,7 +18,7 @@ namespace TimeSheet.Entities
         public bool isDeleted { get; set; }
 
         public int userId { get; set; }
-        public User User { get; set; }
+        public Employee User { get; set; }
 
     }
 }
