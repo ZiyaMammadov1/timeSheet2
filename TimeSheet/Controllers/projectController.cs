@@ -1,148 +1,113 @@
-﻿//using AutoMapper;
-//using Microsoft.AspNetCore.Cors;
-//using Microsoft.AspNetCore.Http;
-//using Microsoft.AspNetCore.Mvc;
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using TimeSheet.DatabaseContext;
-//using TimeSheet.Dtos.ProjectDtos;
-//using TimeSheet.Entities;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using TimeSheet.DatabaseContext;
+using TimeSheet.Dtos.ProjectDtos;
+using TimeSheet.Entities;
 
-//namespace TimeSheet.Controllers
-//{
-//    [Route("api/[controller]")]
-//    [ApiController]
-//    [EnableCors("AllowOrigin")]
+namespace TimeSheet.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    [EnableCors("AllowOrigin")]
 
-//    public class projectController : ControllerBase
-//    {
-//        private readonly DataContext _context;
-//        private readonly IMapper _mapper;
-//        private Answer<ProjectGetDto> getFinishObject;
+    public class projectController : ControllerBase
+    {
+        private readonly DataContext _context;
+        private readonly IMapper _mapper;
+        private Answer<ProjectGetDto> getFinishObject;
 
-//        public projectController(DataContext context, IMapper mapper)
-//        {
-//            _context = context;
-//            _mapper = mapper;
-//        }
+        public projectController(DataContext context, IMapper mapper)
+        {
+            _context = context;
+            _mapper = mapper;
+        }
 
-//        [HttpGet]
-//        public ActionResult<Answer<ProjectGetDto>> GetAll()
-//        {
+        [HttpGet]
+        public ActionResult<Answer<ProjectGetDto>> GetAll()
+        {
+            List<Project> projects = _context.Projects.Where(x => x.isDeleted == false).ToList();
+            if (projects.Count > 0)
+            {
+                List<ProjectGetDto> projectList = projects.Select(x => new ProjectGetDto() { uuid = x.uuid, name = x.name }).ToList();
+                return getFinishObject = new Answer<ProjectGetDto>(200, "Project founded", projectList);
+            }
+            return getFinishObject = new Answer<ProjectGetDto>(400, "Projects not founded", null);
+        }
 
-//            List<Project> projects = _context.Projects.Where(x => x.isDeleted == false).ToList();
-//            List<ProjectGetDto> ProjectGetList = new List<ProjectGetDto>();
-//            foreach (var project in projects)
-//            {
-//                ProjectGetDto projectGetDto = new ProjectGetDto()
-//                {
-//                    id = project.uuid,
-//                    name = project.name,
-//                    code = project.code
-//                };
-//                ProjectGetList.Add(projectGetDto);
-//            }
+        [HttpGet("{code}")]
+        public ActionResult<Answer<ProjectGetDto>> Get(string code)
+        {
+            Project project = _context.Projects.FirstOrDefault(x => x.code.ToLower() == code.ToLower() && x.isDeleted == false);
 
-//            if (projects.Count > 0)
-//            {
-//                return getFinishObject = new Answer<ProjectGetDto>(200, "Ok", ProjectGetList);
-//            }
-//            else
-//            {
-//                return getFinishObject = new Answer<ProjectGetDto>(200, "Project not found", null);
-//            }
-//        }
+            if (project != null)
+            {
+                return getFinishObject = new Answer<ProjectGetDto>(200, "Project founded", new List<ProjectGetDto> { _mapper.Map<ProjectGetDto>(project) });
+            }
+            else
+            {
+                return getFinishObject = new Answer<ProjectGetDto>(400, "Project not found", null);
+            }
+        }
 
-//        [HttpGet("{id}")]
-//        public ActionResult<Answer<ProjectGetDto>> Get(string id)
-//        {
-//            var exist = _context.Projects.FirstOrDefault(x => x.uuid == id && x.isDeleted == false);
-//            if (exist != null)
-//            {
-//                ProjectGetDto projectGetDto = new ProjectGetDto()
-//                {
-//                    id = exist.uuid,
-//                    name = exist.name,
-//                    code = exist.code
-//                };
-//                return getFinishObject = new Answer<ProjectGetDto>(200, "Ok", new List<ProjectGetDto> { projectGetDto });
-//            }
-//            else
-//            {
-//                return getFinishObject = new Answer<ProjectGetDto>(200, "Project doesn't exist", null);
-//            }
-//        }
+        [HttpPost]
+        public ActionResult<Answer<ProjectGetDto>> CreateProject (ProjectPostDto ProjectPostDto)
+        {
+            Database database = _context.Database.FirstOrDefault(x => x.code.ToLower() == ProjectPostDto.dbCode.ToLower());
 
-//        [HttpPost]
-//        public ActionResult<Answer<ProjectGetDto>> CreateProject(ProjectPostDto ProjectPostDto)
-//        {
-//            Company company = _context.Companies.FirstOrDefault(x => x.tin == ProjectPostDto.tin);
-//            if (company == null)
-//            {
-//                return getFinishObject = new Answer<ProjectGetDto>(400, "Company not found", null);
-//            }
+            if (_context.Projects.Any(x => x.name.ToLower() == ProjectPostDto.name.ToLower() && x.databaseId == database.id))
+            {
+                return getFinishObject = new Answer<ProjectGetDto>(409, "This project existed", null);
+            }
 
-//            Project newProject = new Project()
-//            {
-//                uuid = Guid.NewGuid().ToString(),
-//                isDeleted = false,
-//                name = ProjectPostDto.name,
-//                code = ProjectPostDto.code,
-//                companyId = company.id,
-//            };
-//            _context.Projects.Add(newProject);
-//            _context.SaveChanges();
-//            return getFinishObject = new Answer<ProjectGetDto>(201, "Project created", null);
+            if (database == null)
+            {
+                return getFinishObject = new Answer<ProjectGetDto>(400, "Project not found", null);
+            }
 
-//        }
+            Project project = new Project() { name = ProjectPostDto.name, code = ProjectPostDto.code, databaseId = database.id };
 
-      
+            _context.Projects.Add(project);
+            _context.SaveChanges();
 
-//        [HttpPut]
-//        public ActionResult<Answer<ProjectGetDto>> UpdateProject(ProjectUpdateDto ProjectUpdateDto)
-//        {
-//            var exist = _context.Projects.FirstOrDefault(x => x.uuid == ProjectUpdateDto.id && x.isDeleted == false);
+            return getFinishObject = new Answer<ProjectGetDto>(201, "Project created", null);
+        }
 
-//            if (exist == null)
-//            {
-//                return getFinishObject = new Answer<ProjectGetDto>(200, "Project doesn't exist", null);
-//            }
+        [HttpPut]
+        public ActionResult<Answer<ProjectGetDto>> UpdateDepartment(ProjectUpdateDto ProjectUpdateDto)
+        {
+            Project project = _context.Projects.FirstOrDefault(x => x.code.ToLower() == ProjectUpdateDto.code.ToLower() && x.isDeleted == false);
 
-//            exist.name = ProjectUpdateDto.name;
-//            exist.code = ProjectUpdateDto.code;
+            if (project == null)
+            {
+                return getFinishObject = new Answer<ProjectGetDto>(400, "Project not found", null);
+            }
 
-//            _context.SaveChanges();
+            project.name = ProjectUpdateDto.name;
 
-//            return getFinishObject = new Answer<ProjectGetDto>(204, "No Content", null);
-//        }
+            _context.SaveChanges();
 
-//        [HttpDelete("{id}")]
-//        public ActionResult<Answer<ProjectGetDto>> DeletedProject(string id)
-//        {
-//            var exist = _context.Projects.FirstOrDefault(x => x.uuid == id && x.isDeleted == false);
-//            if (exist == null)
-//            {
-//                return getFinishObject = new Answer<ProjectGetDto>(200, "Project not found", null);
-//            }
-//            exist.isDeleted = true;
-//            _context.SaveChanges();
-//            return getFinishObject = new Answer<ProjectGetDto>(204, "No Content", null);
-//        }
+            return getFinishObject = new Answer<ProjectGetDto>(204, "Project updated", null);
+        }
 
-//        [HttpGet]
-//        [Route("properties")]
-//        public ActionResult<Answer<string>> GetProperty()
-//        {
-//            Answer<string> innerFinishObject;
+        [HttpDelete("{code}")]
+        public ActionResult<Answer<ProjectGetDto>> DeleteDepartment(string code)
+        {
+            Project project = _context.Projects.FirstOrDefault(x => x.code.ToLower() == code.ToLower() && x.isDeleted == false);
 
-//            List<string> AllProperty = new List<string>();
-//            foreach (var property in typeof(Project).GetProperties())
-//            {
-//                AllProperty.Add(property.Name);
-//            }
-//            return innerFinishObject = new Answer<string>(200, "Ok", AllProperty);
-//        }
+            if (project == null)
+            {
+                return getFinishObject = new Answer<ProjectGetDto>(400, "Project not found", null);
+            }
 
-//    }
-//}
+            project.isDeleted = true;
+            _context.SaveChanges();
+            return getFinishObject = new Answer<ProjectGetDto>(204, "Project deleted", null);
+        }
+
+    }
+}
