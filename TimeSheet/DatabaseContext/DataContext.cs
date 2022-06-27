@@ -10,7 +10,7 @@ namespace TimeSheet.DatabaseContext
         {
 
         }
-
+        public DbSet<Database> Database { get; set; }
         //public DbSet<User> Employees { get; set; }
         //public DbSet<Position> Positions { get; set; }
         //public DbSet<RefreshToken> RefreshTokens { get; set; }
@@ -27,7 +27,16 @@ namespace TimeSheet.DatabaseContext
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Database>()
+                .Property(p => p.uuid)
+                .HasDefaultValueSql("NEWID()");
+
+            modelBuilder.Entity<Database>()
+                .Property(p => p.isDeleted)
+                .HasDefaultValue(false);
+
+
             //modelBuilder.Entity<User>()
             //    .HasIndex(a => a.fin)
             //    .IsUnique();
@@ -36,7 +45,7 @@ namespace TimeSheet.DatabaseContext
             //{
             //    relationship.DeleteBehavior = DeleteBehavior.Restrict;
             //}
-            
+
 
 
         }
