@@ -57,14 +57,14 @@ namespace TimeSheet.Controllers
         {
             Database database = _context.Database.FirstOrDefault(x => x.code.ToLower() == CompanyPostDto.dbCode.ToLower() && x.isDeleted == false);
 
-            if (_context.Companies.Any(x => x.name.ToLower() == CompanyPostDto.name.ToLower() && x.databaseId == database.id))
-            {
-                return getFinishObject = new Answer<CompanyGetDto>(409, "This company existed", null);
-            }
-
             if (database == null)
             {
                 return getFinishObject = new Answer<CompanyGetDto>(400, "Database not found", null);
+            }
+
+            if (_context.Companies.Any(x => x.name.ToLower() == CompanyPostDto.name.ToLower() && x.databaseId == database.id))
+            {
+                return getFinishObject = new Answer<CompanyGetDto>(409, "This company existed", null);
             }
 
             Company company = new Company() { name = CompanyPostDto.name, code = CompanyPostDto.code, databaseId = database.id, tin = CompanyPostDto.tin  };
@@ -90,13 +90,13 @@ namespace TimeSheet.Controllers
 
             _context.SaveChanges();
 
-            return getFinishObject = new Answer<CompanyGetDto>(204, "Position updated", null);
+            return getFinishObject = new Answer<CompanyGetDto>(204, "Company updated", null);
         }
 
-        [HttpGet("{deactive}")]
-        public ActionResult<Answer<CompanyGetDto>> SetDeactive(string code)
+        [HttpPost("{deactive}")]
+        public ActionResult<Answer<CompanyGetDto>> SetDeactive(string deactive)
         {
-            Company company = _context.Companies.FirstOrDefault(x => x.code.ToLower() == code.ToLower() && x.isDeleted == false);
+            Company company = _context.Companies.FirstOrDefault(x => x.code.ToLower() == deactive.ToLower() && x.isDeleted == false);
 
             if (company != null)
             {
@@ -110,7 +110,7 @@ namespace TimeSheet.Controllers
             }
         }
 
-        [HttpDelete("{code}")]
+        [HttpDelete]
         public ActionResult<Answer<CompanyGetDto>> Delete(string code)
         {
             Company company = _context.Companies.FirstOrDefault(a => a.code.ToLower() == code.ToLower() && a.isDeleted == false);

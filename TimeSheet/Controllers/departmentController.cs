@@ -58,14 +58,14 @@ namespace TimeSheet.Controllers
         {
             Database database = _context.Database.FirstOrDefault(x => x.code.ToLower() == DepartmentPostDto.dbCode.ToLower());
 
-            if (_context.Departments.Any(x => x.name.ToLower() == DepartmentPostDto.name.ToLower() && x.databaseId == database.id))
-            {
-                return getFinishObject = new Answer<DepartmentGetDto>(409, "This department existed", null);
-            }
-
             if (database == null)
             {
                 return getFinishObject = new Answer<DepartmentGetDto>(400, "Database not found", null);
+            }
+
+            if (_context.Departments.Any(x => x.name.ToLower() == DepartmentPostDto.name.ToLower() && x.databaseId == database.id))
+            {
+                return getFinishObject = new Answer<DepartmentGetDto>(409, "This department existed", null);
             }
 
             Department department = new Department() { name = DepartmentPostDto.name, code = DepartmentPostDto.code, databaseId = database.id };

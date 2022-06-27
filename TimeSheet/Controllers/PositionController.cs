@@ -56,14 +56,14 @@ namespace TimeSheet.Controllers
         {
             Database database = _context.Database.FirstOrDefault(x => x.code.ToLower() == PositionPostDto.dbCode.ToLower() && x.isDeleted == false);
 
-            if (_context.Positions.Any(x => x.name.ToLower() == PositionPostDto.name.ToLower() && x.databaseId == database.id))
-            {
-                return getFinishObject = new Answer<PositionGetDto>(409, "This position existed", null);
-            }
-
             if (database == null)
             {
                 return getFinishObject = new Answer<PositionGetDto>(400, "Database not found", null);
+            }
+
+            if (_context.Positions.Any(x => x.name.ToLower() == PositionPostDto.name.ToLower() && x.databaseId == database.id))
+            {
+                return getFinishObject = new Answer<PositionGetDto>(409, "This position existed", null);
             }
 
             Position position = new Position() { name = PositionPostDto.name, code = PositionPostDto.code, databaseId = database.id };

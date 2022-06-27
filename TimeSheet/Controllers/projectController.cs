@@ -59,14 +59,14 @@ namespace TimeSheet.Controllers
         {
             Database database = _context.Database.FirstOrDefault(x => x.code.ToLower() == ProjectPostDto.dbCode.ToLower());
 
-            if (_context.Projects.Any(x => x.name.ToLower() == ProjectPostDto.name.ToLower() && x.databaseId == database.id))
-            {
-                return getFinishObject = new Answer<ProjectGetDto>(409, "This project existed", null);
-            }
-
             if (database == null)
             {
                 return getFinishObject = new Answer<ProjectGetDto>(400, "Database not found", null);
+            }
+
+            if (_context.Projects.Any(x => x.name.ToLower() == ProjectPostDto.name.ToLower() && x.databaseId == database.id))
+            {
+                return getFinishObject = new Answer<ProjectGetDto>(409, "This project existed", null);
             }
 
             Project project = new Project() { name = ProjectPostDto.name, code = ProjectPostDto.code, databaseId = database.id };
