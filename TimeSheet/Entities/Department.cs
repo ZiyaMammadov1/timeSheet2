@@ -1,15 +1,10 @@
 ﻿namespace TimeSheet.Entities
 {
-    public class Department
+    public class Department : BaseEntity
     {
-        public int id { get; set; }
-        public string uuid { get; set; }
         public string name { get; set; }
-        public bool  isDeleted { get; set; }
-        public string code { get; set; }
-        public string codeUR { get; set; }
 
-        public int CompanyId { get; set; }
-        public Company Company { get; set; }
+        public int databaseId { get; set; }
+        public Database Database { get; set; }
     }
 }

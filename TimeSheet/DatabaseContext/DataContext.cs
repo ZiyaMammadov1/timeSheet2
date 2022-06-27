@@ -14,8 +14,8 @@ namespace TimeSheet.DatabaseContext
         //public DbSet<User> Employees { get; set; }
         //public DbSet<Position> Positions { get; set; }
         //public DbSet<RefreshToken> RefreshTokens { get; set; }
-        //public DbSet<Department> Departments { get; set; }
-        //public DbSet<Project> Projects { get; set; }
+        public DbSet<Department> Departments { get; set; }
+        public DbSet<Project> Projects { get; set; }
         //public DbSet<WorkType> WorkType { get; set; }
         //public DbSet<mainTimeSheet> MainTimeSheets { get; set; }
         //public DbSet<Salary> Salaries { get; set; }
@@ -36,6 +36,21 @@ namespace TimeSheet.DatabaseContext
                 .Property(p => p.isDeleted)
                 .HasDefaultValue(false);
 
+            modelBuilder.Entity<Department>()
+                .Property(p => p.uuid)
+                .HasDefaultValueSql("NEWID()");
+
+            modelBuilder.Entity<Department>()
+                .Property(p => p.isDeleted)
+                .HasDefaultValue(false);
+            
+            modelBuilder.Entity<Project>()
+                .Property(p => p.uuid)
+                .HasDefaultValueSql("NEWID()");
+
+            modelBuilder.Entity<Project>()
+                .Property(p => p.isDeleted)
+                .HasDefaultValue(false);
 
             //modelBuilder.Entity<User>()
             //    .HasIndex(a => a.fin)

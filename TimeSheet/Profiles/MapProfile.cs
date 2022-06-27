@@ -17,17 +17,17 @@ namespace TimeSheet.Profiles
     {
         public MapProfile()
         {
-            CreateMap<User, UserGetDto>();
-            CreateMap<UserGetDto, User>();
-            CreateMap<Position, PositionGetDto>();
-            CreateMap<Project, ProjectGetDto>();
+            //CreateMap<User, UserGetDto>();
+            //CreateMap<UserGetDto, User>();
+            //CreateMap<Position, PositionGetDto>();
+            //CreateMap<Project, ProjectGetDto>();
             CreateMap<Department, DepartmentGetDto>();
-            CreateMap<WorkType, WorkGetDto>();
-            CreateMap<mainTimeSheet, TimeSheetGetDto>();
-            CreateMap<FamilyMembers, MemberGetDto>();
-            CreateMap<MemberGetDto, FamilyMembers>();
-            CreateMap<MemberPostDto, MemberGetDto>();
-            CreateMap<Company, CompanyGetDto>();
+            //CreateMap<WorkType, WorkGetDto>();
+            //CreateMap<mainTimeSheet, TimeSheetGetDto>();
+            //CreateMap<FamilyMembers, MemberGetDto>();
+            //CreateMap<MemberGetDto, FamilyMembers>();
+            //CreateMap<MemberPostDto, MemberGetDto>();
+            //CreateMap<Company, CompanyGetDto>();
             CreateMap<DatabasePostDto, Database>();
             CreateMap<Database, DatabaseGetDto>();
         }

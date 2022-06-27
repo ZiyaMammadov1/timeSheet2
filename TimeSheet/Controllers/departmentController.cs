@@ -1,144 +1,115 @@
-﻿//using AutoMapper;
-//using Microsoft.AspNetCore.Cors;
-//using Microsoft.AspNetCore.Http;
-//using Microsoft.AspNetCore.Mvc;
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using TimeSheet.DatabaseContext;
-//using TimeSheet.Dtos.DepartmentDtos;
-//using TimeSheet.Entities;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using TimeSheet.DatabaseContext;
+using TimeSheet.Dtos.DepartmentDtos;
+using TimeSheet.Entities;
 
-//namespace TimeSheet.Controllers
-//{
-//    [Route("api/[controller]")]
-//    [ApiController]
-//    [EnableCors("AllowOrigin")]
-//    public class departmentController : ControllerBase
-//    {
-//        private readonly DataContext _context;
-//        private readonly IMapper _mapper;
-//        Answer<DepartmentGetDto> getFinishObject;
+namespace TimeSheet.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    [EnableCors("AllowOrigin")]
+    public class departmentController : ControllerBase
+    {
+        private readonly DataContext _context;
+        private readonly IMapper _mapper;
+        Answer<DepartmentGetDto> getFinishObject;
 
-//        public departmentController(DataContext context, IMapper mapper)
-//        {
-//            _context = context;
-//            _mapper = mapper;
-//        }
+        public departmentController(DataContext context, IMapper mapper)
+        {
+            _context = context;
+            _mapper = mapper;
+        }
 
-//        [HttpGet]
-//        public ActionResult<Answer<DepartmentGetDto>> GetAll()
-//        {
-//            List<Department> departments = _context.Departments.Where(x => x.isDeleted == false).ToList();
-//            List<DepartmentGetDto> DepartmentGetList = new List<DepartmentGetDto>();
-//            foreach (var department in departments)
-//            {
-//                DepartmentGetDto department1 = new DepartmentGetDto()
-//                {
-//                    id = department.uuid,
-//                    name = department.name
-//                };
-//                DepartmentGetList.Add(department1);
-//            }
+        [HttpGet]
+        public ActionResult<Answer<DepartmentGetDto>> GetAll()
+        {
+            List<Department> departments = _context.Departments.Where(x => x.isDeleted == false).ToList();
+            if (departments.Count > 0)
+            {
+                List<DepartmentGetDto> departmentList = departments.Select(x => new DepartmentGetDto() { uuid = x.uuid, name = x.name }).ToList();
+                return getFinishObject = new Answer<DepartmentGetDto>(200, "Departments founded", departmentList);
+            }
+            return getFinishObject = new Answer<DepartmentGetDto>(400, "Departments not founded", null);
+        }
 
-//            if (departments.Count > 0)
-//            {
-//                return getFinishObject = new Answer<DepartmentGetDto>(200, "Ok", DepartmentGetList);
-//            }
-//            else
-//            {
-//                return getFinishObject = new Answer<DepartmentGetDto>(200, "Department is empty", null);
-//            }
-//        }
+        [HttpGet("{code}")]
+        public ActionResult<Answer<DepartmentGetDto>> Get(string code)
+        {
+            Department department = _context.Departments.FirstOrDefault(x => x.code.ToLower() == code.ToLower() && x.isDeleted == false);
 
-//        [HttpGet("{id}")]
-//        public ActionResult<Answer<DepartmentGetDto>> Get(string id)
-//        {
-//            var exist = _context.Departments.FirstOrDefault(x => x.uuid == id && x.isDeleted == false);
+            if (department != null)
+            {
+                return getFinishObject = new Answer<DepartmentGetDto>(200, "Department founded", new List<DepartmentGetDto> { _mapper.Map<DepartmentGetDto>(department) });
+            }
+            else
+            {
+                return getFinishObject = new Answer<DepartmentGetDto>(400, "Department not found", null);
+            }
+        }
 
+        [HttpPost]
+        public ActionResult<Answer<DepartmentGetDto>> CreateDepartment(DepartmentPostDto DepartmentPostDto)
+        {
+            Database database = _context.Database.FirstOrDefault(x => x.code.ToLower() == DepartmentPostDto.dbCode.ToLower());
 
+            if (_context.Departments.Any(x => x.name.ToLower() == DepartmentPostDto.name.ToLower() && x.databaseId == database.id))
+            {
+                return getFinishObject = new Answer<DepartmentGetDto>(409, "This department existed", null);
+            }
 
-//            if (exist != null)
-//            {
-//                DepartmentGetDto department = new DepartmentGetDto()
-//                {
-//                    id = exist.uuid,
-//                    name = exist.name
-//                };
-//                return getFinishObject = new Answer<DepartmentGetDto>(200, "Ok", new List<DepartmentGetDto> { _mapper.Map<DepartmentGetDto>(department) });
-//            }
-//            else
-//            {
-//                return getFinishObject = new Answer<DepartmentGetDto>(200, "Department doesn't exist", null);
-//            }
-//        }
+            if (database == null)
+            {
+                return getFinishObject = new Answer<DepartmentGetDto>(400, "Database not found", null);
+            }
 
-//        [HttpPost]
-//        public ActionResult<Answer<DepartmentGetDto>> CreateDepartment(DepartmentPostDto DepartmentPostDto)
-//        {
-//            Company company = _context.Companies.FirstOrDefault(x=>x.tin.ToLower() == DepartmentPostDto.tin.ToLower());
-//            if (company==null) 
-//            {
-//                return getFinishObject = new Answer<DepartmentGetDto>(400, "Company not found", null);
-//            }
-//            Department newDepartment = new Department()
-//            {
-//                uuid = Guid.NewGuid().ToString(),
-//                isDeleted = false,
-//                name = DepartmentPostDto.name,
-//                CompanyId = company.id
-//            };
-//            _context.Departments.Add(newDepartment);
-//            _context.SaveChanges();
+            Department department = new Department() { name = DepartmentPostDto.name, code = DepartmentPostDto.code, databaseId = database.id };
 
-//            return getFinishObject = new Answer<DepartmentGetDto>(201, "Department created", null);
-//        }
+            _context.Departments.Add(department);
+            _context.SaveChanges();
 
-//        [HttpPut]
-//        public ActionResult<Answer<DepartmentGetDto>> UpdateDepartment(DepartmentUpdateDto DepartmentUpdateDto)
-//        {
-//            var exist = _context.Departments.FirstOrDefault(x => x.uuid == DepartmentUpdateDto.id && x.isDeleted == false);
+            return getFinishObject = new Answer<DepartmentGetDto>(201, "Department created", null);
+        }
 
-//            if (exist == null)
-//            {
-//                return getFinishObject = new Answer<DepartmentGetDto>(200, "Department not found", null);
-//            }
+        [HttpPut]
+        public ActionResult<Answer<DepartmentGetDto>> UpdateDepartment(DepartmentUpdateDto DepartmentUpdateDto)
+        {
+            Department department = _context.Departments.FirstOrDefault(x => x.code.ToLower() == DepartmentUpdateDto.code.ToLower() && x.isDeleted == false);
 
-//            exist.name = DepartmentUpdateDto.name;
+            if (department == null)
+            {
+                return getFinishObject = new Answer<DepartmentGetDto>(400, "Department not found", null);
+            }
 
-//            _context.SaveChanges();
+            department.name = DepartmentUpdateDto.name;
 
-//            return getFinishObject = new Answer<DepartmentGetDto>(204, "No Content", null);
-//        }
+            _context.SaveChanges();
 
-//        [HttpDelete("{id}")]
-//        public ActionResult<Answer<DepartmentGetDto>> DeletedDepartment(int id)
-//        {
-//            var exist = _context.Departments.FirstOrDefault(x => x.id == id && x.isDeleted == false);
-//            if (exist == null)
-//            {
-//                return getFinishObject = new Answer<DepartmentGetDto>(200, "Department not found", null);
-//            }
-//            exist.isDeleted = true;
-//            _context.SaveChanges();
-//            return getFinishObject = new Answer<DepartmentGetDto>(204, "No Content", null);
-//        }
+            return getFinishObject = new Answer<DepartmentGetDto>(204, "Department updated", null);
+        }
+
+        [HttpDelete("{code}")]
+        public ActionResult<Answer<DepartmentGetDto>> DeleteDepartment(string code)
+        {
+            Department department = _context.Departments.FirstOrDefault(x => x.code.ToLower() == code.ToLower() && x.isDeleted == false);
+
+            if (department == null)
+            {
+                return getFinishObject = new Answer<DepartmentGetDto>(400, "Department not found", null);
+            }
+
+            department.isDeleted = true;
+            _context.SaveChanges();
+            return getFinishObject = new Answer<DepartmentGetDto>(204, "Department deleted", null);
+        }
 
 
-//        [HttpGet]
-//        [Route("properties")]
-//        public ActionResult<Answer<string>> GetProperty()
-//        {
-//            Answer<string> innerFinishObject;
-
-//            List<string> AllProperty = new List<string>();
-//            foreach (var property in typeof(Department).GetProperties())
-//            {
-//                AllProperty.Add(property.Name);
-//            }
-//            return innerFinishObject = new Answer<string>(200, "Ok", AllProperty);
-//        }
 
 
-//    }
-//}
+    }
+}

@@ -29,7 +29,7 @@ namespace TimeSheet.Controllers
         {
             if(_db.Database.Any(x=>x.name.ToLower() == DatabasePostDto.name.ToLower()))
             {
-                return getFinishedObject = new Answer<DatabaseGetDto>(201, "This database existed", null);
+                return getFinishedObject = new Answer<DatabaseGetDto>(409, "This database existed", null);
             }
             Database database = _mp.Map<Database>(DatabasePostDto);
             _db.Database.Add(database);
