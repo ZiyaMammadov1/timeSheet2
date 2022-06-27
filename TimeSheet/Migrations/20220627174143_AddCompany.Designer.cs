@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TimeSheet.DatabaseContext;
 
 namespace TimeSheet.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220627174143_AddCompany")]
+    partial class AddCompany
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,9 +34,7 @@ namespace TimeSheet.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("isActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasColumnType("bit");
 
                     b.Property<bool>("isDeleted")
                         .ValueGeneratedOnAdd()
@@ -220,7 +220,7 @@ namespace TimeSheet.Migrations
             modelBuilder.Entity("TimeSheet.Entities.Company", b =>
                 {
                     b.HasOne("TimeSheet.Entities.Database", "Database")
-                        .WithMany("Companies")
+                        .WithMany()
                         .HasForeignKey("databaseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

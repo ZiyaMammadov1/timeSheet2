@@ -1,11 +1,9 @@
 ﻿namespace TimeSheet.Dtos.CompanyDtos
 {
-    public class CompanyGetDto
+    public class CompanyUpdateDto
     {
-        public string uuid { get; set; }
+        public string code { get; set; }
         public string name { get; set; }
         public string tin { get; set; }
-        public bool isActive { get; set; }
-
     }
 }

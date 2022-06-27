@@ -28,7 +28,7 @@ namespace TimeSheet.Profiles
             //CreateMap<FamilyMembers, MemberGetDto>();
             //CreateMap<MemberGetDto, FamilyMembers>();
             //CreateMap<MemberPostDto, MemberGetDto>();
-            //CreateMap<Company, CompanyGetDto>();
+            CreateMap<Company, CompanyGetDto>();
             CreateMap<DatabasePostDto, Database>();
             CreateMap<Database, DatabaseGetDto>();
             CreateMap<typeOfOrderPostDto, typeOfOrder>();

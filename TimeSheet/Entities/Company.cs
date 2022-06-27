@@ -2,19 +2,13 @@
 
 namespace TimeSheet.Entities
 {
-    public class Company
+    public class Company : BaseEntity
     {
-        public int id { get; set; }
-        public string uuid { get; set; }
-        public string name { get; set; }
         public string tin { get; set; }
-        public bool isDeleted { get; set; }
-        public string code { get; set; }
-        public string codeUR { get; set; }
+        public string name { get; set; }
+        public bool isActive { get; set; }
 
-        public List<Project> companyProjects { get; set; } = new List<Project>();
-        public List<User> companyUsers { get; set; } = new List<User>();
-        public List<Department> companyDepartment { get; set; } = new List<Department>();
-
+        public int databaseId { get; set; }
+        public Database Database { get; set; }
     }
 }
