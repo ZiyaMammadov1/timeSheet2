@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using System.Collections.Generic;
 using TimeSheet.Dtos.CompanyDtos;
 using TimeSheet.Dtos.DatabaseDtos;
 using TimeSheet.Dtos.DepartmentDtos;
@@ -28,6 +29,7 @@ namespace TimeSheet.Profiles
             CreateMap<MemberPostDto, MemberGetDto>();
             CreateMap<Company, CompanyGetDto>();
             CreateMap<DatabasePostDto, Database>();
+            CreateMap<Database, DatabaseGetDto>();
         }
     }
 }
