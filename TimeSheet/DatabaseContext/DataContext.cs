@@ -22,7 +22,7 @@ namespace TimeSheet.DatabaseContext
         //public DbSet<IdentityCard> IdentityCards { get; set; }
         //public DbSet<FamilyMembers> FamilyMembers { get; set; }
         //public DbSet<Company> Companies { get; set; }
-        //public DbSet<OrderTypes> OrderTypes { get; set; }
+        public DbSet<typeOfOrder> typeOfOrders { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -57,6 +57,14 @@ namespace TimeSheet.DatabaseContext
               .HasDefaultValueSql("NEWID()");
 
             modelBuilder.Entity<Position>()
+                .Property(p => p.isDeleted)
+                .HasDefaultValue(false);
+
+            modelBuilder.Entity<typeOfOrder>()
+             .Property(p => p.uuid)
+             .HasDefaultValueSql("NEWID()");
+
+            modelBuilder.Entity<typeOfOrder>()
                 .Property(p => p.isDeleted)
                 .HasDefaultValue(false);
 

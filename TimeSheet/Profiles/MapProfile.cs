@@ -7,6 +7,7 @@ using TimeSheet.Dtos.FamilyDtos;
 using TimeSheet.Dtos.PositionDtos;
 using TimeSheet.Dtos.ProjectDtos;
 using TimeSheet.Dtos.TimeSheetDtos;
+using TimeSheet.Dtos.TypeOfOrderDtos;
 using TimeSheet.Dtos.UserDto;
 using TimeSheet.Dtos.WorkTypeDtos;
 using TimeSheet.Entities;
@@ -30,6 +31,7 @@ namespace TimeSheet.Profiles
             //CreateMap<Company, CompanyGetDto>();
             CreateMap<DatabasePostDto, Database>();
             CreateMap<Database, DatabaseGetDto>();
+            CreateMap<typeOfOrderPostDto, typeOfOrder>();
         }
     }
 }
