@@ -52,7 +52,7 @@ namespace TimeSheet.Controllers
         }
 
         [HttpGet]
-        public ActionResult<Answer<typeOfOrderGetDto>> GetAllDatabase()
+        public ActionResult<Answer<typeOfOrderGetDto>> GetAllOrderType()
         {
             List<typeOfOrder> types = _db.typeOfOrders.Where(x => x.isDeleted == false).ToList();
             if (types.Count <= 0)
@@ -78,7 +78,7 @@ namespace TimeSheet.Controllers
         }
 
         [HttpPut]
-        public ActionResult<Answer<typeOfOrderGetDto>> DatabaseUpdate(typeOfOrderUpdateDto typeOfOrderUpdateDto)
+        public ActionResult<Answer<typeOfOrderGetDto>> OrderTypeUpdate(typeOfOrderUpdateDto typeOfOrderUpdateDto)
         {
             typeOfOrder type = _db.typeOfOrders.FirstOrDefault(x => x.code.ToLower() == typeOfOrderUpdateDto.code.ToLower() && x.isDeleted == false);
             if (type == null)

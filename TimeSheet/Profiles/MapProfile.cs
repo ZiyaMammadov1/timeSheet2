@@ -32,6 +32,7 @@ namespace TimeSheet.Profiles
             CreateMap<DatabasePostDto, Database>();
             CreateMap<Database, DatabaseGetDto>();
             CreateMap<typeOfOrderPostDto, typeOfOrder>();
+            CreateMap<typeOfOrder, typeOfOrderGetDto>();
         }
     }
 }
