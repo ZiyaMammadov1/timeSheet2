@@ -89,7 +89,7 @@ namespace TimeSheet.Controllers
         [HttpDelete]
         public ActionResult<Answer<UserGetDto>> DeletedUser(string code)
         {
-            Employee employee = _context.Employees.FirstOrDefault(x => x.uuid.ToLower() == code.ToLower() && x.isDeleted == false);
+            Employee employee = _context.Employees.FirstOrDefault(x => x.code.ToLower() == code.ToLower() && x.isDeleted == false);
             if (employee == null)
             {
                 return getFinishObject = new Answer<UserGetDto>(400, "Employee not found", null);

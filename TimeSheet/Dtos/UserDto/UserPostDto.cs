@@ -8,7 +8,6 @@ namespace TimeSheet.Dtos.UserDto
     public class UserPostDto
     {
         public string code { get; set; }
-        public string password { get; set; }
         public string fin { get; set; }
     }
 
