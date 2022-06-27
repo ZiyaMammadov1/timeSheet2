@@ -66,7 +66,7 @@ namespace TimeSheet.Controllers
 
             if (database == null)
             {
-                return getFinishObject = new Answer<ProjectGetDto>(400, "Project not found", null);
+                return getFinishObject = new Answer<ProjectGetDto>(400, "Database not found", null);
             }
 
             Project project = new Project() { name = ProjectPostDto.name, code = ProjectPostDto.code, databaseId = database.id };
@@ -78,7 +78,7 @@ namespace TimeSheet.Controllers
         }
 
         [HttpPut]
-        public ActionResult<Answer<ProjectGetDto>> UpdateDepartment(ProjectUpdateDto ProjectUpdateDto)
+        public ActionResult<Answer<ProjectGetDto>> UpdateProject(ProjectUpdateDto ProjectUpdateDto)
         {
             Project project = _context.Projects.FirstOrDefault(x => x.code.ToLower() == ProjectUpdateDto.code.ToLower() && x.isDeleted == false);
 
@@ -95,7 +95,7 @@ namespace TimeSheet.Controllers
         }
 
         [HttpDelete("{code}")]
-        public ActionResult<Answer<ProjectGetDto>> DeleteDepartment(string code)
+        public ActionResult<Answer<ProjectGetDto>> DeleteProject(string code)
         {
             Project project = _context.Projects.FirstOrDefault(x => x.code.ToLower() == code.ToLower() && x.isDeleted == false);
 

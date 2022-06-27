@@ -1,125 +1,111 @@
-﻿//using AutoMapper;
-//using Microsoft.AspNetCore.Cors;
-//using Microsoft.AspNetCore.Mvc;
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using TimeSheet.DatabaseContext;
-//using TimeSheet.Dtos.PositionDtos;
-//using TimeSheet.Entities;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using TimeSheet.DatabaseContext;
+using TimeSheet.Dtos.PositionDtos;
+using TimeSheet.Entities;
 
-//namespace TimeSheet.Controllers
-//{
-//    [Route("api/[controller]")]
-//    [ApiController]
-//    [EnableCors("AllowOrigin")]
-//    public class positionController : ControllerBase
-//    {
-//        private readonly DataContext _context;
-//        private readonly IMapper _mapper;
-//        Answer<PositionGetDto> getFinishObject;
-//        public positionController(DataContext context, IMapper mapper)
-//        {
-//            _context = context;
-//            _mapper = mapper;
-//        }
+namespace TimeSheet.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    [EnableCors("AllowOrigin")]
+    public class positionController : ControllerBase
+    {
+        private readonly DataContext _context;
+        private readonly IMapper _mapper;
+        Answer<PositionGetDto> getFinishObject;
+        public positionController(DataContext context, IMapper mapper)
+        {
+            _context = context;
+            _mapper = mapper;
+        }
 
-//        [HttpGet]
-//        public ActionResult<Answer<PositionGetDto>> GetAll()
-//        {
-//            List<Position> positions = _context.Positions.Where(x => x.isDeleted == false).ToList();
-//            List<PositionGetDto> positionsDto = new List<PositionGetDto>();
-//            if (positions.Count < 0)
-//            {
-//                return getFinishObject = new Answer<PositionGetDto>(200, "Position is empty", null);
-//            }
-//            foreach (var position in positions)
-//            {
-//                positionsDto.Add(_mapper.Map<PositionGetDto>(position));
-//            }
-//            return getFinishObject = new Answer<PositionGetDto>(200, "Ok", positionsDto);
+        [HttpGet]
+        public ActionResult<Answer<PositionGetDto>> GetAll()
+        {
+            List<Position> position = _context.Positions.Where(x => x.isDeleted == false).ToList();
+            if (position.Count > 0)
+            {
+                List<PositionGetDto> positionList = position.Select(x => new PositionGetDto() { uuid = x.uuid, name = x.name }).ToList();
+                return getFinishObject = new Answer<PositionGetDto>(200, "Position founded", positionList);
+            }
+            return getFinishObject = new Answer<PositionGetDto>(400, "Position not founded", null);
+        }
 
-//        }
+        [HttpGet("{code}")]
+        public ActionResult<Answer<PositionGetDto>> Get(string code)
+        {
+            Position position = _context.Positions.FirstOrDefault(x => x.code.ToLower() == code.ToLower() && x.isDeleted == false);
 
-//        [HttpGet("{id}")]
-//        public ActionResult<Answer<PositionGetDto>> Get(string id)
-//        {
-//            var exist = _context.Positions.FirstOrDefault(x => x.uuid == id && x.isDeleted == false);
-//            if (exist == null)
-//            {
-//                return getFinishObject = new Answer<PositionGetDto>(200, "Position doesn't exist", null);
-//            }
-//            return getFinishObject = new Answer<PositionGetDto>(200, "Ok", new List<PositionGetDto> { _mapper.Map<PositionGetDto>(exist) });
-//        }
+            if (position != null)
+            {
+                return getFinishObject = new Answer<PositionGetDto>(200, "Position founded", new List<PositionGetDto> { _mapper.Map<PositionGetDto>(position) });
+            }
+            else
+            {
+                return getFinishObject = new Answer<PositionGetDto>(400, "Position not found", null);
+            }
+        }
 
-//        [HttpPost]
-//        public ActionResult<Answer<PositionGetDto>> CreatePosition(PositionPostDto PositionPostDto)
-//        {
-//            Position newPosition = new Position()
-//            {
-//                name = PositionPostDto.name,
-//                uuid = Guid.NewGuid().ToString(),
-//                isDeleted = false
-//            };
+        [HttpPost]
+        public ActionResult<Answer<PositionGetDto>> CreatePosition(PositionPostDto PositionPostDto)
+        {
+            Database database = _context.Database.FirstOrDefault(x => x.code.ToLower() == PositionPostDto.dbCode.ToLower() && x.isDeleted == false);
 
-//            _context.Positions.Add(newPosition);
+            if (_context.Positions.Any(x => x.name.ToLower() == PositionPostDto.name.ToLower() && x.databaseId == database.id))
+            {
+                return getFinishObject = new Answer<PositionGetDto>(409, "This position existed", null);
+            }
 
-//            _context.SaveChanges();
+            if (database == null)
+            {
+                return getFinishObject = new Answer<PositionGetDto>(400, "Database not found", null);
+            }
 
-//            return getFinishObject = new Answer<PositionGetDto>(201, "Poition created", null);
-//        }
+            Position position = new Position() { name = PositionPostDto.name, code = PositionPostDto.code, databaseId = database.id };
 
+            _context.Positions.Add(position);
+            _context.SaveChanges();
 
-//        [HttpDelete("{id}")]
-//        public ActionResult<Answer<PositionGetDto>> DeletePosition(string id)
-//        {
-//            var exist = _context.Positions.FirstOrDefault(x => x.uuid == id && x.isDeleted == false);
+            return getFinishObject = new Answer<PositionGetDto>(201, "Position created", null);
+        }
 
-//            if (exist == null)
-//            {
-//                return getFinishObject = new Answer<PositionGetDto>(200, "Position not found", null);
-//            }
+        [HttpPut]
+        public ActionResult<Answer<PositionGetDto>> UpdatePosition(PositionUpdateDto PositionUpdateDto)
+        {
+            Position position = _context.Positions.FirstOrDefault(x => x.code.ToLower() == PositionUpdateDto.code.ToLower() && x.isDeleted == false);
 
-//            exist.isDeleted = true;
+            if (position == null)
+            {
+                return getFinishObject = new Answer<PositionGetDto>(400, "Position not found", null);
+            }
 
-//            _context.SaveChanges();
+            position.name = PositionUpdateDto.name;
 
-//            return getFinishObject = new Answer<PositionGetDto>(204, "No Content", null);
-//        }
+            _context.SaveChanges();
 
-//        [HttpPut]
-//        public ActionResult<Answer<PositionGetDto>> UpdatePosition(PositionUpdateDto PositionUpdateDto)
-//        {
-//            var exist = _context.Positions.FirstOrDefault(x => x.uuid == PositionUpdateDto.id && x.isDeleted == false);
+            return getFinishObject = new Answer<PositionGetDto>(204, "Position updated", null);
+        }
 
-//            if (exist == null)
-//            {
-//                return getFinishObject = new Answer<PositionGetDto>(200, "Position not found", null);
-//            }
+        [HttpDelete("{code}")]
+        public ActionResult<Answer<PositionGetDto>> DeletePosition(string code)
+        {
+            Position position = _context.Positions.FirstOrDefault(x => x.code.ToLower() == code.ToLower() && x.isDeleted == false);
 
-//            exist.name = PositionUpdateDto.name;
+            if (position == null)
+            {
+                return getFinishObject = new Answer<PositionGetDto>(400, "Position not found", null);
+            }
 
-//            _context.SaveChanges();
-
-//            return getFinishObject = new Answer<PositionGetDto>(204, "No Content", null);
-
-//        }
-
-
-//        [HttpGet]
-//        [Route("properties")]
-//        public ActionResult<Answer<string>> GetProperty()
-//        {
-//            Answer<string> innerFinishObject;
-
-//            List<string> AllProperty = new List<string>();
-//            foreach (var property in typeof(Position).GetProperties())
-//            {
-//                AllProperty.Add(property.Name);
-//            }
-//            return innerFinishObject = new Answer<string>(200, "Ok", AllProperty);
-//        }
+            position.isDeleted = true;
+            _context.SaveChanges();
+            return getFinishObject = new Answer<PositionGetDto>(204, "Position deleted", null);
+        }
 
 
-//    }
-//}
+    }
+}

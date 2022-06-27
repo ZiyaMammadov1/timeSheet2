@@ -19,7 +19,7 @@ namespace TimeSheet.Profiles
         {
             //CreateMap<User, UserGetDto>();
             //CreateMap<UserGetDto, User>();
-            //CreateMap<Position, PositionGetDto>();
+            CreateMap<Position, PositionGetDto>();
             CreateMap<Project, ProjectGetDto>();
             CreateMap<Department, DepartmentGetDto>();
             //CreateMap<WorkType, WorkGetDto>();

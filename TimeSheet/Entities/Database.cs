@@ -9,6 +9,7 @@ namespace TimeSheet.Entities
 
         public List<Department> Departments { get; set; } = new List<Department>();
         public List<Project> Projects { get; set; } = new List<Project>();
+        public List<Position> Positions { get; set; } = new List<Position>();
 
     }
 }

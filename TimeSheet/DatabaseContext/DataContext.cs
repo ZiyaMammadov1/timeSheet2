@@ -12,7 +12,7 @@ namespace TimeSheet.DatabaseContext
         }
         public DbSet<Database> Database { get; set; }
         //public DbSet<User> Employees { get; set; }
-        //public DbSet<Position> Positions { get; set; }
+        public DbSet<Position> Positions { get; set; }
         //public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Project> Projects { get; set; }
@@ -49,6 +49,14 @@ namespace TimeSheet.DatabaseContext
                 .HasDefaultValueSql("NEWID()");
 
             modelBuilder.Entity<Project>()
+                .Property(p => p.isDeleted)
+                .HasDefaultValue(false);
+
+            modelBuilder.Entity<Position>()
+              .Property(p => p.uuid)
+              .HasDefaultValueSql("NEWID()");
+
+            modelBuilder.Entity<Position>()
                 .Property(p => p.isDeleted)
                 .HasDefaultValue(false);
 
