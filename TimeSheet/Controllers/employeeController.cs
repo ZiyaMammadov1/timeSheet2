@@ -18,32 +18,32 @@ namespace TimeSheet.Controllers
     [ApiController]
     //[Authorize]
     [EnableCors("AllowOrigin")]
-    public class userController : ControllerBase
+    public class employeeController : ControllerBase
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
         Answer<EmployeeGetDto> getFinishObject;
-        public userController(DataContext context, IMapper mapper)
+        public employeeController(DataContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
 
         [HttpGet]
-        public ActionResult<Answer<EmployeeGetDto>> GetAll()
-        {
-            List<Employee> employees = _context.Employees.Where(x => x.isDeleted == false).ToList();
-            if (employees.Count > 0)
-            {
-                List<EmployeeGetDto> UserGetList = employees.Select(x => new EmployeeGetDto() { fin = x.fin, dbCode = x.dbCode, photo = x.photo, seriya = x.seriya, adress = x.adress, email = x.email, date = x.date, expireDate = x.expireDate, firstName = x.firstName, issiedBy = x.issiedBy, number = x.number, lastName = x.lastName, phone1 = x.phone1, phone2 = x.phone2, phone3 = x.phone3, phone4 = x.phone4 }).ToList();
+        //public ActionResult<Answer<EmployeeGetDto>> GetAll()
+        //{
+        //    List<Employee> employees = _context.Employees.Where(x => x.isDeleted == false).ToList();
+        //    if (employees.Count > 0)
+        //    {
+        //        List<EmployeeGetDto> UserGetList = employees.Select(x => new EmployeeGetDto() { fin = x.fin, dbCode = x.dbCode, photo = x.photo, seriya = x.seriya, adress = x.adress, email = x.email, date = x.date, expireDate = x.expireDate, firstName = x.firstName, issiedBy = x.issiedBy, number = x.number, lastName = x.lastName, phone1 = x.phone1, phone2 = x.phone2, phone3 = x.phone3, phone4 = x.phone4 }).ToList();
 
-                return getFinishObject = new Answer<EmployeeGetDto>(200, "Employee founded", UserGetList);
-            }
-            else
-            {
-                return getFinishObject = new Answer<EmployeeGetDto>(400, "Employee not found", null);
-            }
-        }
+        //        return getFinishObject = new Answer<EmployeeGetDto>(200, "Employee founded", UserGetList);
+        //    }
+        //    else
+        //    {
+        //        return getFinishObject = new Answer<EmployeeGetDto>(400, "Employee not found", null);
+        //    }
+        //}
 
         [HttpGet("{code}")]
         public ActionResult<Answer<EmployeeGetDto>> Get(string code)
@@ -63,11 +63,13 @@ namespace TimeSheet.Controllers
         [HttpPost]
         public ActionResult<Answer<EmployeeGetDto>> CreateEmployee(EmployeePostDto UserPostDto)
         {
-         
-            if (UserPostDto.fin == null)
+            User user = _context.Users.FirstOrDefault(x => x.fin.ToLower() == UserPostDto.fin.ToLower());
+
+            if (user == null)
             {
-                return getFinishObject = new Answer<EmployeeGetDto>(400, "Entry fin ", null);
+                return getFinishObject = new Answer<EmployeeGetDto>(400, "User not found", null);
             }
+
             Database database = _context.Database.FirstOrDefault(x => x.code.ToLower() == UserPostDto.dbCode.ToLower());
 
             if (database == null)
@@ -75,30 +77,45 @@ namespace TimeSheet.Controllers
                 return getFinishObject = new Answer<EmployeeGetDto>(400, "Database not found ", null);
             }
 
-            Employee employee = new Employee() 
+            User newUser = new User()
             {
-                fin = UserPostDto.fin,
-                password = Hashing.ToSHA256(UserPostDto.fin).ToString(),
-                adress = UserPostDto.adress,
+                 fin = UserPostDto.fin
+            };
+            _context.Users.Add(newUser);
+            _context.SaveChanges();
+
+            User currentUser = _context.Users.FirstOrDefault(x=>x.fin.ToLower() == UserPostDto.fin.ToLower());
+
+            Card newCard = new Card()
+            {
+                address = UserPostDto.adress,
                 date = UserPostDto.date,
-                dbCode = UserPostDto.dbCode,
-                email = UserPostDto.email,
-                expireDate = UserPostDto.expireDate,
-                issiedBy = UserPostDto.issiedBy,
+                expireTime = UserPostDto.expireDate,
                 firstName = UserPostDto.firstName,
                 lastName = UserPostDto.lastName,
                 number = UserPostDto.number,
+                issiedBy = UserPostDto.issiedBy,
+                series = UserPostDto.seriya,
+                employeeId = currentUser.id
+            };
+            _context.IdentityCards.Add(newCard);
+            _context.SaveChanges();
+
+            Contact newContact = new Contact()
+            {
+                fin = UserPostDto.fin,
+                dbCode = database.code,
                 phone1 = UserPostDto.phone1,
                 phone2 = UserPostDto.phone2,
                 phone3 = UserPostDto.phone3,
                 phone4 = UserPostDto.phone4,
-                seriya = UserPostDto.seriya,
-                photo = UserPostDto.photo
-                
+                email = UserPostDto.email,
             };
-            _context.Employees.Add(employee);
+            _context.Contacts.Add(newContact);
             _context.SaveChanges();
-            return getFinishObject = new Answer<EmployeeGetDto>(201, "Employee created", null);
+
+            return getFinishObject = new Answer<EmployeeGetDto>(201, "Employees created", null);
+
         }
 
         //[HttpPut]
@@ -110,7 +127,7 @@ namespace TimeSheet.Controllers
         //    {
         //        return getFinishObject = new Answer<EmployeeGetDto>(400, "Employee not found", null);
         //    }
-           
+
         //    employee.fin = UserUpdateDto.fin;
 
         //    _context.SaveChanges();
@@ -135,7 +152,7 @@ namespace TimeSheet.Controllers
         [Route("changePass")]
         public ActionResult<Answer<EmployeeGetDto>> ChangePassword(PasswordChangeDto ChangeDto)
         {
-            Employee employee = _context.Employees.FirstOrDefault(x => x.code.ToLower() == ChangeDto.code.ToLower() && x.isDeleted == false);
+            User employee = _context.Users.FirstOrDefault(x => x.code.ToLower() == ChangeDto.code.ToLower() && x.isDeleted == false);
 
             if (employee == null)
             {
@@ -145,7 +162,7 @@ namespace TimeSheet.Controllers
             {
                 return getFinishObject = new Answer<EmployeeGetDto>(409, "Password and ConfirmPassword isn't match", null);
             }
-            employee.password = Hashing.ToSHA256(ChangeDto.NewPassword);
+            employee = Hashing.ToSHA256(ChangeDto.NewPassword);
 
             _context.SaveChanges();
 

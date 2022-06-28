@@ -13,7 +13,7 @@ namespace TimeSheet.Dtos.UserDto
         public string firstName { get; set; }
         public DateTime date { get; set; }
         public DateTime expireDate { get; set; }
-        public int number { get; set; }
+        public string number { get; set; }
         public string seriya { get; set; }
         public string adress { get; set; }
         public string issiedBy { get; set; }

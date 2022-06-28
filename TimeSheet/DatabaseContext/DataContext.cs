@@ -11,17 +11,15 @@ namespace TimeSheet.DatabaseContext
 
         }
         public DbSet<Database> Database { get; set; }
-        public DbSet<Employee> Employees { get; set; }
         public DbSet<DbEmployee> DbEmployees { get; set; }
+        //public DbSet<Employee> Employees{ get; set; }
         public DbSet<Position> Positions { get; set; }
+        public DbSet<Card> Cards { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<Department> Departments { get; set; }
+        public DbSet<User> Users { get; set; }
         public DbSet<Project> Projects { get; set; }
-        //public DbSet<WorkType> WorkType { get; set; }
-        //public DbSet<mainTimeSheet> MainTimeSheets { get; set; }
-        //public DbSet<Salary> Salaries { get; set; }
         public DbSet<Card> IdentityCards { get; set; }
-        //public DbSet<FamilyMembers> FamilyMembers { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<typeOfOrder> typeOfOrders { get; set; }
         public DbSet<Order> Orders { get; set; }
@@ -83,17 +81,17 @@ namespace TimeSheet.DatabaseContext
                 .Property(p => p.isActive)
                 .HasDefaultValue(true);
 
-            modelBuilder.Entity<Employee>()
-             .Property(p => p.uuid)
-             .HasDefaultValueSql("NEWID()");
+            //modelBuilder.Entity<Employee>()
+            // .Property(p => p.uuid)
+            // .HasDefaultValueSql("NEWID()");
 
-            modelBuilder.Entity<Employee>()
-                .Property(p => p.isDeleted)
-                .HasDefaultValue(false);
+            //modelBuilder.Entity<Employee>()
+            //    .Property(p => p.isDeleted)
+            //    .HasDefaultValue(false);
 
-            modelBuilder.Entity<Employee>()
-                .HasIndex(p => p.fin)
-                .IsUnique(true);
+            //modelBuilder.Entity<Employee>()
+            //    .HasIndex(p => p.fin)
+            //    .IsUnique(true);
 
             modelBuilder.Entity<Database>()
                .HasIndex(p => p.code)
@@ -139,6 +137,29 @@ namespace TimeSheet.DatabaseContext
             .Property(p => p.isDeleted)
             .HasDefaultValue(false);
 
+            modelBuilder.Entity<User>()
+          .Property(p => p.uuid)
+          .HasDefaultValueSql("NEWID()");
+
+            modelBuilder.Entity<User>()
+            .Property(p => p.isDeleted)
+            .HasDefaultValue(false);
+
+            modelBuilder.Entity<User>()
+             .HasIndex(p => p.code)
+             .IsUnique(true);
+
+            modelBuilder.Entity<Card>()
+               .Property(p => p.isDeleted)
+               .HasDefaultValue(false);
+            
+            modelBuilder.Entity<Card>()
+               .Property(p => p.isActive)
+               .HasDefaultValue(false);
+
+            modelBuilder.Entity<Card>()
+          .Property(p => p.uuid)
+          .HasDefaultValueSql("NEWID()");
 
             foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
             {
