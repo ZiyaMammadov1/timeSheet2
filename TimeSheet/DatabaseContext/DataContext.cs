@@ -20,7 +20,7 @@ namespace TimeSheet.DatabaseContext
         //public DbSet<WorkType> WorkType { get; set; }
         //public DbSet<mainTimeSheet> MainTimeSheets { get; set; }
         //public DbSet<Salary> Salaries { get; set; }
-        //public DbSet<IdentityCard> IdentityCards { get; set; }
+        public DbSet<Card> IdentityCards { get; set; }
         //public DbSet<FamilyMembers> FamilyMembers { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<typeOfOrder> typeOfOrders { get; set; }
@@ -104,6 +104,20 @@ namespace TimeSheet.DatabaseContext
             modelBuilder.Entity<DbEmployee>()
                .Property(p => p.isActive)
                .HasDefaultValue(true);
+
+            modelBuilder.Entity<Card>()
+             .Property(p => p.uuid)
+           .HasDefaultValueSql("NEWID()");
+
+            modelBuilder.Entity<Card>()
+               .Property(p => p.isActive)
+               .HasDefaultValue(true);
+
+            modelBuilder.Entity<Card>()
+              .Property(p => p.isDeleted)
+              .HasDefaultValue(false);
+
+
 
             foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
             {
