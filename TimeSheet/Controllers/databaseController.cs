@@ -57,7 +57,7 @@ namespace TimeSheet.Controllers
             {
                 return getFinishedObject = new Answer<DatabaseGetDto>(400, "Database items not found", null);
             }
-            List<DatabaseGetDto> databaseGetDto = database.Select(x => new DatabaseGetDto() { uuid = x.uuid, name = x.name }).ToList();
+            List<DatabaseGetDto> databaseGetDto = database.Select(x => new DatabaseGetDto() { uuid = x.uuid, name = x.name, port = x.port, server = x.server}).ToList();
             return getFinishedObject = new Answer<DatabaseGetDto>(200, "Database items founded", databaseGetDto);
         }
 

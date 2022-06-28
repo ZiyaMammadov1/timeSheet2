@@ -6,6 +6,7 @@
         public string name { get; set; }
         public string tin { get; set; }
         public bool isActive { get; set; }
+        public int dbId { get; set; }
 
     }
 }

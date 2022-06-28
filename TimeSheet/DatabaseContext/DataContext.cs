@@ -95,6 +95,10 @@ namespace TimeSheet.DatabaseContext
                 .HasIndex(p => p.fin)
                 .IsUnique(true);
 
+            modelBuilder.Entity<Database>()
+               .HasIndex(p => p.code)
+               .IsUnique(true);
+
             modelBuilder.Entity<DbEmployee>()
                .Property(p => p.uuid)
              .HasDefaultValueSql("NEWID()");
