@@ -7,6 +7,9 @@ namespace TimeSheet.Entities
     {
         public string fin { get; set; }
         public string password { get; set; }
+
+        public List<DbEmployee> DbEmployees { get; set; } = new List<DbEmployee>();
+
     }
 
 }

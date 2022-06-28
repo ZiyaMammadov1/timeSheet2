@@ -11,6 +11,7 @@ namespace TimeSheet.Entities
         public List<Project> Projects { get; set; } = new List<Project>();
         public List<Position> Positions { get; set; } = new List<Position>();
         public List<Company> Companies { get; set; } = new List<Company>();
+        public List<DbEmployee> DbEmployees { get; set; } = new List<DbEmployee>();
 
     }
 }

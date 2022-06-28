@@ -12,6 +12,7 @@ namespace TimeSheet.DatabaseContext
         }
         public DbSet<Database> Database { get; set; }
         public DbSet<Employee> Employees { get; set; }
+        public DbSet<DbEmployee> DbEmployees { get; set; }
         public DbSet<Position> Positions { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<Department> Departments { get; set; }
@@ -43,7 +44,7 @@ namespace TimeSheet.DatabaseContext
             modelBuilder.Entity<Department>()
                 .Property(p => p.isDeleted)
                 .HasDefaultValue(false);
-            
+
             modelBuilder.Entity<Project>()
                 .Property(p => p.uuid)
                 .HasDefaultValueSql("NEWID()");
@@ -74,8 +75,8 @@ namespace TimeSheet.DatabaseContext
 
             modelBuilder.Entity<Company>()
                 .Property(p => p.isDeleted)
-                .HasDefaultValue(false); 
-            
+                .HasDefaultValue(false);
+
             modelBuilder.Entity<Company>()
                 .Property(p => p.isActive)
                 .HasDefaultValue(true);
@@ -92,14 +93,28 @@ namespace TimeSheet.DatabaseContext
                 .HasIndex(p => p.fin)
                 .IsUnique(true);
 
+            modelBuilder.Entity<DbEmployee>()
+               .Property(p => p.uuid)
+             .HasDefaultValueSql("NEWID()");
+
+            modelBuilder.Entity<DbEmployee>()
+             .Property(p => p.isDeleted)
+             .HasDefaultValue(false);
+
+            modelBuilder.Entity<DbEmployee>()
+               .Property(p => p.isActive)
+               .HasDefaultValue(true);
+
+            foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            {
+                relationship.DeleteBehavior = DeleteBehavior.Restrict;
+            }
+
             //modelBuilder.Entity<User>()
             //    .HasIndex(a => a.fin)
             //    .IsUnique();
 
-            //foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
-            //{
-            //    relationship.DeleteBehavior = DeleteBehavior.Restrict;
-            //}
+
 
 
 

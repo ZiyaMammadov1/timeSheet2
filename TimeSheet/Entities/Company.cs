@@ -10,5 +10,8 @@ namespace TimeSheet.Entities
 
         public int databaseId { get; set; }
         public Database Database { get; set; }
+
+        public List<DbEmployee> DbEmployees { get; set; } = new List<DbEmployee>();
+
     }
 }
