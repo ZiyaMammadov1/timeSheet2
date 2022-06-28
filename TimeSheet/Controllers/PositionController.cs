@@ -54,6 +54,10 @@ namespace TimeSheet.Controllers
         [HttpPost]
         public ActionResult<Answer<PositionGetDto>> CreatePosition(PositionPostDto PositionPostDto)
         {
+            if (PositionPostDto.dbCode == null)
+            {
+                return getFinishObject = new Answer<PositionGetDto>(400, "Entry correct dbCode", null);
+            }
             Database database = _context.Database.FirstOrDefault(x => x.code.ToLower() == PositionPostDto.dbCode.ToLower() && x.isDeleted == false);
 
             if (database == null)

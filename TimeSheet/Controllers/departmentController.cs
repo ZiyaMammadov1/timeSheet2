@@ -56,6 +56,10 @@ namespace TimeSheet.Controllers
         [HttpPost]
         public ActionResult<Answer<DepartmentGetDto>> CreateDepartment(DepartmentPostDto DepartmentPostDto)
         {
+            if (DepartmentPostDto.dbCode == null)
+            {
+                return getFinishObject = new Answer<DepartmentGetDto>(400, "Entry correct dbCode", null);
+            }
             Database database = _context.Database.FirstOrDefault(x => x.code.ToLower() == DepartmentPostDto.dbCode.ToLower());
 
             if (database == null)

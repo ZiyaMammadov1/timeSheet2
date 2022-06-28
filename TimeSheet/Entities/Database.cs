@@ -6,6 +6,8 @@ namespace TimeSheet.Entities
     public class Database : BaseEntity
     {
         public string name { get; set; }
+        public string server { get; set; }
+        public string port { get; set; }
 
         public List<Department> Departments { get; set; } = new List<Department>();
         public List<Project> Projects { get; set; } = new List<Project>();

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using System.Collections.Generic;
+using TimeSheet.Dtos.CardDtos;
 using TimeSheet.Dtos.CompanyDtos;
 using TimeSheet.Dtos.DatabaseDtos;
 using TimeSheet.Dtos.DepartmentDtos;
@@ -33,6 +34,7 @@ namespace TimeSheet.Profiles
             CreateMap<Database, DatabaseGetDto>();
             CreateMap<typeOfOrderPostDto, typeOfOrder>();
             CreateMap<typeOfOrder, typeOfOrderGetDto>();
+            CreateMap<CardPostDto, Card>();
         }
     }
 }

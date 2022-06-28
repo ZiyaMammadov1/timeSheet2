@@ -55,6 +55,10 @@ namespace TimeSheet.Controllers
         [HttpPost]
         public ActionResult<Answer<CompanyGetDto>> CreateCompany(CompanyPostDto CompanyPostDto)
         {
+            if (CompanyPostDto.dbCode == null)
+            {
+                return getFinishObject = new Answer<CompanyGetDto>(400, "Entry correct dbCode", null);
+            }
             Database database = _context.Database.FirstOrDefault(x => x.code.ToLower() == CompanyPostDto.dbCode.ToLower() && x.isDeleted == false);
 
             if (database == null)

@@ -27,7 +27,7 @@ namespace TimeSheet.Controllers
         [HttpPost]
         public ActionResult<Answer<DatabaseGetDto>> CreateDatabase(DatabasePostDto DatabasePostDto)
         {
-            if(_db.Database.Any(x=>x.name.ToLower() == DatabasePostDto.name.ToLower()))
+            if (_db.Database.Any(x=>x.name.ToLower() == DatabasePostDto.name.ToLower()))
             {
                 return getFinishedObject = new Answer<DatabaseGetDto>(409, "This database existed", null);
             }

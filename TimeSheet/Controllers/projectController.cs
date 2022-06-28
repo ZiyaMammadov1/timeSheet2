@@ -57,6 +57,12 @@ namespace TimeSheet.Controllers
         [HttpPost]
         public ActionResult<Answer<ProjectGetDto>> CreateProject (ProjectPostDto ProjectPostDto)
         {
+
+            if (ProjectPostDto.dbCode == null)
+            {
+                return getFinishObject = new Answer<ProjectGetDto>(400, "Entry correct dbCode", null);
+            }
+
             Database database = _context.Database.FirstOrDefault(x => x.code.ToLower() == ProjectPostDto.dbCode.ToLower());
 
             if (database == null)

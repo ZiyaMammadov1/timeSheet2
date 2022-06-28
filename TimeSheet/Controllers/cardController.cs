@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Cors;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -14,24 +15,30 @@ namespace TimeSheet.Controllers
     [ApiController]
     [EnableCors("AllowOrigin")]
 
-    
-   
+
+
     public class cardController : ControllerBase
     {
         private readonly DataContext _db;
-        public cardController(DataContext db)
+        private readonly IMapper _mp;
+        Answer<CardGetDto> getFinishedObject;
+        public cardController(DataContext db, IMapper mp)
         {
             _db = db;
+            _mp = mp;
         }
-        public ActionResult CreateCard(CardPostDto cardPostDto)
+
+        [HttpPost]
+        public ActionResult<Answer<CardGetDto>> CreateCard(CardPostDto cardPostDto)
         {
-            Employee employee = _db.Employees.FirstOrDefault(x=>x.fin.ToLower()==cardPostDto.fin.ToLower());
-            if(employee == null)
+            
+            Employee employee = _db.Employees.FirstOrDefault(x => x.fin.ToLower() == cardPostDto.fin.ToLower());
+            if (employee == null)
             {
-                Employee newEmployee = new Employee() 
+                Employee newEmployee = new Employee()
                 {
-                   fin = cardPostDto.fin,
-                   password = Hashing.ToSHA256(cardPostDto.fin)
+                    fin = cardPostDto.fin,
+                    password = Hashing.ToSHA256(cardPostDto.fin)
                 };
                 _db.Employees.Add(newEmployee);
                 _db.SaveChanges();
@@ -39,31 +46,27 @@ namespace TimeSheet.Controllers
 
             employee = _db.Employees.FirstOrDefault(x => x.fin.ToLower() == cardPostDto.fin.ToLower());
 
-            DbEmployee dbEmployees = _db.DbEmployees.FirstOrDefault(x=>x.employeeId == employee.id);
+            List<DbEmployee> dbEmployees = _db.DbEmployees.Where(x => x.employeeId == employee.id).ToList();
 
-            if(dbEmployees == null)
+            if (dbEmployees.Count >= 0)
             {
-                Card newCard = new Card ()
-                {
-                    series = cardPostDto.series,
-                    number = cardPostDto.number,
-                    lastName = cardPostDto.lastName,
-                    firstName = cardPostDto.firstName,
-                    address = cardPostDto.address,
-                    code = cardPostDto.code,
-                    date = cardPostDto.date,
-                    expireTime = cardPostDto.expireTime,
-                    issiedBy = cardPostDto.issiedBy,
-                    employeeId = employee.id
-                };
+                Card newCard = _mp.Map<Card>(cardPostDto);
+
                 _db.IdentityCards.Add(newCard);
                 _db.SaveChanges();
-
-
-
-                //DbEmployee newEmployee = new DbEmployee() {employeeId = employee.id};
             }
-            return Ok("asd");
+            else
+            {
+                foreach (var employeeCard in dbEmployees)
+                {
+                    employeeCard.isActive = false;
+                }
+                Card newCard = _mp.Map<Card>(cardPostDto);
+               
+                _db.IdentityCards.Add(newCard);
+                _db.SaveChanges();
+            }
+            return getFinishedObject = new Answer<CardGetDto>(201, "Identity card created", null);
         }
     }
 }
