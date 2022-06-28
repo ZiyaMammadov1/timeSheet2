@@ -16,10 +16,10 @@ namespace TimeSheet.DatabaseContext
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Project> Projects { get; set; }
-        //public DbSet<WorkType> WorkType { get; set; }
+        public DbSet<Contact> Contacts{ get; set; }
         //public DbSet<mainTimeSheet> MainTimeSheets { get; set; }
         //public DbSet<Salary> Salaries { get; set; }
-        //public DbSet<IdentityCard> IdentityCards { get; set; }
+        public DbSet<IdentityCard> IdentityCards { get; set; }
         //public DbSet<FamilyMembers> FamilyMembers { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<typeOfOrder> typeOfOrders { get; set; }
@@ -91,6 +91,28 @@ namespace TimeSheet.DatabaseContext
             modelBuilder.Entity<Employee>()
                 .HasIndex(p => p.fin)
                 .IsUnique(true);
+
+
+            modelBuilder.Entity<IdentityCard>()
+             .Property(p => p.uuid)
+             .HasDefaultValueSql("NEWID()");
+
+            modelBuilder.Entity<IdentityCard>()
+                .Property(p => p.isDeleted)
+                .HasDefaultValue(false);
+
+            modelBuilder.Entity<IdentityCard>()
+                .Property(p => p.isActive)
+                .HasDefaultValue(true);
+
+            modelBuilder.Entity<Contact>()
+           .Property(p => p.uuid)
+           .HasDefaultValueSql("NEWID()");
+
+            modelBuilder.Entity<Contact>()
+                .Property(p => p.isDeleted)
+                .HasDefaultValue(false);
+
 
             //modelBuilder.Entity<User>()
             //    .HasIndex(a => a.fin)

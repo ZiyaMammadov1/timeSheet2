@@ -7,9 +7,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TimeSheet.DatabaseContext;
+using TimeSheet.Dtos.EmployeeInfoDtos;
 using TimeSheet.Dtos.UserDto;
 using TimeSheet.Entities;
-using TimeSheet.SecondDtos.UserDtos;
 using VoltekApi.Helper;
 
 namespace TimeSheet.Controllers
@@ -119,10 +119,5 @@ namespace TimeSheet.Controllers
 
             return getFinishObject = new Answer<UserGetDto>(204, "Password changed", null);
         }
-
-
-
-
-
     }
 }

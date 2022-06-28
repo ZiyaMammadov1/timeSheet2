@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TimeSheet.DatabaseContext;
 
 namespace TimeSheet.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220628154455_Migrations3")]
+    partial class Migrations3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -221,12 +223,6 @@ namespace TimeSheet.Migrations
                     b.Property<string>("code")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("databaseCode")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("databaseid")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("date")
                         .HasColumnType("datetime2");
 
@@ -267,8 +263,6 @@ namespace TimeSheet.Migrations
                         .HasDefaultValueSql("NEWID()");
 
                     b.HasKey("id");
-
-                    b.HasIndex("databaseid");
 
                     b.HasIndex("employeeId");
 
@@ -415,10 +409,6 @@ namespace TimeSheet.Migrations
 
             modelBuilder.Entity("TimeSheet.Entities.IdentityCard", b =>
                 {
-                    b.HasOne("TimeSheet.Entities.Database", "database")
-                        .WithMany()
-                        .HasForeignKey("databaseid");
-
                     b.HasOne("TimeSheet.Entities.Employee", "employee")
                         .WithMany()
                         .HasForeignKey("employeeId")

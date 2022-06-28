@@ -2,21 +2,23 @@
 
 namespace TimeSheet.Entities
 {
-    public class IdentityCard
+    public class IdentityCard : BaseEntity
     {
-        public int id { get; set; }
-        public string uuid { get; set; }
-        public string fin { get; set; }
-        public bool status { get; set; }
+        public string firstName { get; set; }
+        public string lastName { get; set; }
+        public DateTime expireTime { get; set; }
+        public DateTime date { get; set; }
+        public string number { get; set; }
+        public string issiedBy { get; set; }
+        public string address { get; set; }
         public string series { get; set; }
-        public DateTime deliveryTime{ get; set; }
-        public DateTime expiredTime { get; set; }
-        public string govermentName { get; set; }
-        public string Address { get; set; }
-        public bool isDeleted { get; set; }
-        public string codeUR { get; set; }
+        public bool isActive { get; set; }
 
-        public int userId { get; set; }
-        public Employee User { get; set; }
+
+        public int employeeId { get; set; }
+        public Employee employee { get; set; }
+
+        public int databaseCode { get; set; }
+        public Database database { get; set; }
     }
 }
