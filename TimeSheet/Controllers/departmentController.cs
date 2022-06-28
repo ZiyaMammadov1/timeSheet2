@@ -32,8 +32,21 @@ namespace TimeSheet.Controllers
             List<Department> departments = _context.Departments.Where(x => x.isDeleted == false).ToList();
             if (departments.Count > 0)
             {
-                List<DepartmentGetDto> departmentList = departments.Select(x => new DepartmentGetDto() { uuid = x.uuid, name = x.name }).ToList();
-                return getFinishObject = new Answer<DepartmentGetDto>(200, "Departments founded", departmentList);
+                List<DepartmentGetDto> departmentList = new List<DepartmentGetDto>();
+                foreach (var department in departments)
+                {
+                    Database databases = _context.Database.FirstOrDefault(x => x.isDeleted == false);
+
+                    DepartmentGetDto GetDto = new DepartmentGetDto()
+                    {
+                        name = department.name,
+                        uuid = department.uuid,
+                        dbCode = databases.code
+                    };
+
+                    departmentList.Add(GetDto);
+                }
+                return getFinishObject = new Answer<DepartmentGetDto>(200, "Department founded", departmentList);
             }
             return getFinishObject = new Answer<DepartmentGetDto>(400, "Departments not founded", null);
         }
@@ -45,7 +58,15 @@ namespace TimeSheet.Controllers
 
             if (department != null)
             {
-                return getFinishObject = new Answer<DepartmentGetDto>(200, "Department founded", new List<DepartmentGetDto> { _mapper.Map<DepartmentGetDto>(department) });
+                Database database = _context.Database.FirstOrDefault(x => x.id == department.databaseId && x.isDeleted == false);
+
+                DepartmentGetDto CurrentDepartment = new DepartmentGetDto()
+                {
+                    dbCode = database.code,
+                    name = department.name,
+                    uuid = department.uuid
+                };
+                return getFinishObject = new Answer<DepartmentGetDto>(200, "Department founded", new List<DepartmentGetDto> { CurrentDepartment });
             }
             else
             {

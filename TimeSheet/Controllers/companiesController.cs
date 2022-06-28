@@ -29,9 +29,23 @@ namespace TimeSheet.Controllers
         public ActionResult<Answer<CompanyGetDto>> GetAll()
         {
             List<Company> companies = _context.Companies.Where(x => x.isDeleted == false).ToList();
+
             if (companies.Count > 0)
             {
-                List<CompanyGetDto> companyList = companies.Select(x => new CompanyGetDto() { uuid = x.uuid, name = x.name, isActive = x.isActive, tin = x.tin, dbCode = x.code }).ToList();
+                List<CompanyGetDto> companyList = new List<CompanyGetDto>();
+                foreach (var company in companies)
+                {
+                    Database databases = _context.Database.FirstOrDefault(x => x.isDeleted == false);
+
+                    CompanyGetDto GetDto = new CompanyGetDto() 
+                    {
+                        uuid = company.uuid,
+                        name=company.name,
+                        tin = company.tin,
+                        dbCode = databases.code
+                    };
+                    companyList.Add(GetDto);
+                }
                 return getFinishObject = new Answer<CompanyGetDto>(200, "Companies founded", companyList);
             }
             return getFinishObject = new Answer<CompanyGetDto>(400, "Companies not founded", null);
@@ -42,11 +56,13 @@ namespace TimeSheet.Controllers
         {
             Company company = _context.Companies.FirstOrDefault(x => x.code.ToLower() == code.ToLower() && x.isDeleted == false);
 
+            Database database = _context.Database.FirstOrDefault(x=>x.id == company.databaseId && x.isDeleted == false);
+
             if (company != null)
             {
                 CompanyGetDto currentCompany = new CompanyGetDto()
                 {
-                    dbCode = company.code,
+                    dbCode = database.code,
                     name = company.name,
                     isActive = company.isActive,
                     tin = company.tin,
