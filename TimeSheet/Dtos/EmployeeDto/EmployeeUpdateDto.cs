@@ -2,7 +2,7 @@
 
 namespace TimeSheet.Dtos.UserDto
 {
-    public class UserUpdateDto
+    public class EmployeeUpdateDto
     {
         public string code { get; set; }
         public string fin { get; set; }

@@ -24,6 +24,7 @@ namespace TimeSheet.DatabaseContext
         //public DbSet<FamilyMembers> FamilyMembers { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<typeOfOrder> typeOfOrders { get; set; }
+        public DbSet<Order> Orders { get; set; }
         public DbSet<Contact> Contacts { get; set; }
 
 
@@ -126,7 +127,13 @@ namespace TimeSheet.DatabaseContext
             .Property(p => p.uuid)
             .HasDefaultValueSql("NEWID()");
 
+            modelBuilder.Entity<Order>()
+           .Property(p => p.uuid)
+           .HasDefaultValueSql("NEWID()");
 
+            modelBuilder.Entity<Order>()
+            .Property(p => p.isDeleted)
+            .HasDefaultValue(false);
 
 
             foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))

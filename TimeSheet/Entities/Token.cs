@@ -11,7 +11,7 @@ namespace TimeSheet.Entities
         public string RefreshToken { get; set; }
 
         [NotMapped]
-        public UserGetDto User { get; set; }
+        public EmployeeGetDto User { get; set; }
     }
 }
     

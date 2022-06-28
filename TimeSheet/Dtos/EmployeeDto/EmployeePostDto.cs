@@ -5,13 +5,13 @@ using TimeSheet.Entities;
 
 namespace TimeSheet.Dtos.UserDto
 {
-    public class UserPostDto
+    public class EmployeePostDto
     {
         public string code { get; set; }
         public string fin { get; set; }
     }
 
-    public class UserPostDtoValidator : AbstractValidator<UserPostDto>
+    public class UserPostDtoValidator : AbstractValidator<EmployeePostDto>
     {
         public UserPostDtoValidator()
         {

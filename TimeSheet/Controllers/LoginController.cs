@@ -65,7 +65,7 @@ namespace TimeSheet.Controllers
             };
 
             Token token = tokenInitilizing.Init(UserLoginDto, _config, User.id);
-            token.User = _mapper.Map<UserGetDto>(User);
+            token.User = _mapper.Map<EmployeeGetDto>(User);
 
 
             return StatusCode(200, token);
