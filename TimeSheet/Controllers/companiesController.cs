@@ -31,7 +31,7 @@ namespace TimeSheet.Controllers
             List<Company> companies = _context.Companies.Where(x => x.isDeleted == false).ToList();
             if (companies.Count > 0)
             {
-                List<CompanyGetDto> companyList = companies.Select(x => new CompanyGetDto() { uuid = x.uuid, name = x.name, isActive = x.isActive, tin = x.tin }).ToList();
+                List<CompanyGetDto> companyList = companies.Select(x => new CompanyGetDto() { uuid = x.uuid, name = x.name, isActive = x.isActive, tin = x.tin, dbCode = x.code }).ToList();
                 return getFinishObject = new Answer<CompanyGetDto>(200, "Companies founded", companyList);
             }
             return getFinishObject = new Answer<CompanyGetDto>(400, "Companies not founded", null);
@@ -44,11 +44,19 @@ namespace TimeSheet.Controllers
 
             if (company != null)
             {
-                return getFinishObject = new Answer<CompanyGetDto>(200, "Company founded", new List<CompanyGetDto> { _mapper.Map<CompanyGetDto>(company) });
+                CompanyGetDto currentCompany = new CompanyGetDto()
+                {
+                    dbCode = company.code,
+                    name = company.name,
+                    isActive = company.isActive,
+                    tin = company.tin,
+                    uuid = company.uuid
+                };
+                return getFinishObject = new Answer<CompanyGetDto>(200, "Companies founded", new List<CompanyGetDto> { currentCompany });
             }
             else
             {
-                return getFinishObject = new Answer<CompanyGetDto>(400, "Company not found", null);
+                return getFinishObject = new Answer<CompanyGetDto>(400, "Companies not found", null);
             }
         }
         

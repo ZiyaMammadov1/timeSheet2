@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TimeSheet.Entities
 {
@@ -10,5 +11,6 @@ namespace TimeSheet.Entities
 
         public int databaseId { get; set; }
         public Database Database { get; set; }
+
     }
 }
