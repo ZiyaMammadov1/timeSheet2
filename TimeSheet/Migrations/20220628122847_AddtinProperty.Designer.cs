@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TimeSheet.DatabaseContext;
 
 namespace TimeSheet.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220628122847_AddtinProperty")]
+    partial class AddtinProperty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -288,66 +290,18 @@ namespace TimeSheet.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("adress")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("code")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("dbCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("expireDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("fin")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("firstName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("isActive")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
-                    b.Property<string>("issiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("lastName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("number")
-                        .HasColumnType("int");
-
                     b.Property<string>("password")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("phone1")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("phone2")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("phone3")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("phone4")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("photo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("seriya")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("uuid")

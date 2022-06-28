@@ -35,7 +35,7 @@ namespace TimeSheet.Controllers
             List<Employee> employees = _context.Employees.Where(x => x.isDeleted == false).ToList();
             if (employees.Count > 0)
             {
-                List<EmployeeGetDto> UserGetList = employees.Select(x => new EmployeeGetDto() { fin = x.fin, uuid = x.uuid }).ToList();
+                List<EmployeeGetDto> UserGetList = employees.Select(x => new EmployeeGetDto() { fin = x.fin, dbCode = x.dbCode, photo = x.photo, seriya = x.seriya, adress = x.adress, email = x.email, date = x.date, expireDate = x.expireDate, firstName = x.firstName, issiedBy = x.issiedBy, number = x.number, lastName = x.lastName, phone1 = x.phone1, phone2 = x.phone2, phone3 = x.phone3, phone4 = x.phone4 }).ToList();
 
                 return getFinishObject = new Answer<EmployeeGetDto>(200, "Employee founded", UserGetList);
             }
@@ -63,28 +63,60 @@ namespace TimeSheet.Controllers
         [HttpPost]
         public ActionResult<Answer<EmployeeGetDto>> CreateEmployee(EmployeePostDto UserPostDto)
         {
-            Employee employee = new Employee() {code = UserPostDto.code,fin = UserPostDto.fin,password = Hashing.ToSHA256(UserPostDto.fin).ToString() };
+         
+            if (UserPostDto.fin == null)
+            {
+                return getFinishObject = new Answer<EmployeeGetDto>(400, "Entry fin ", null);
+            }
+            Database database = _context.Database.FirstOrDefault(x => x.code.ToLower() == UserPostDto.dbCode.ToLower());
+
+            if (database == null)
+            {
+                return getFinishObject = new Answer<EmployeeGetDto>(400, "Database not found ", null);
+            }
+
+            Employee employee = new Employee() 
+            {
+                fin = UserPostDto.fin,
+                password = Hashing.ToSHA256(UserPostDto.fin).ToString(),
+                adress = UserPostDto.adress,
+                date = UserPostDto.date,
+                dbCode = UserPostDto.dbCode,
+                email = UserPostDto.email,
+                expireDate = UserPostDto.expireDate,
+                issiedBy = UserPostDto.issiedBy,
+                firstName = UserPostDto.firstName,
+                lastName = UserPostDto.lastName,
+                number = UserPostDto.number,
+                phone1 = UserPostDto.phone1,
+                phone2 = UserPostDto.phone2,
+                phone3 = UserPostDto.phone3,
+                phone4 = UserPostDto.phone4,
+                seriya = UserPostDto.seriya,
+                photo = UserPostDto.photo
+                
+            };
             _context.Employees.Add(employee);
             _context.SaveChanges();
             return getFinishObject = new Answer<EmployeeGetDto>(201, "Employee created", null);
         }
 
-        [HttpPut]
-        public ActionResult<Answer<EmployeeGetDto>> UpdateUser(EmployeeUpdateDto UserUpdateDto)
-        {
-            Employee employee = _context.Employees.FirstOrDefault(x => x.code.ToLower() == UserUpdateDto.code.ToLower() && x.isDeleted == false);
+        //[HttpPut]
+        //public ActionResult<Answer<EmployeeGetDto>> UpdateUser(EmployeeUpdateDto UserUpdateDto)
+        //{
+        //    Employee employee = _context.Employees.FirstOrDefault(x => x.code.ToLower() == UserUpdateDto.code.ToLower() && x.isDeleted == false);
 
-            if (employee == null)
-            {
-                return getFinishObject = new Answer<EmployeeGetDto>(400, "Employee not found", null);
-            }
+        //    if (employee == null)
+        //    {
+        //        return getFinishObject = new Answer<EmployeeGetDto>(400, "Employee not found", null);
+        //    }
            
-            employee.fin = UserUpdateDto.fin;
+        //    employee.fin = UserUpdateDto.fin;
 
-            _context.SaveChanges();
+        //    _context.SaveChanges();
 
-            return getFinishObject = new Answer<EmployeeGetDto>(204, "Employee updated", null);
-        }
+        //    return getFinishObject = new Answer<EmployeeGetDto>(204, "Employee updated", null);
+        //}
 
         [HttpDelete]
         public ActionResult<Answer<EmployeeGetDto>> DeletedUser(string code)
