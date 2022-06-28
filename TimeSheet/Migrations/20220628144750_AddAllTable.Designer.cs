@@ -10,8 +10,8 @@ using TimeSheet.DatabaseContext;
 namespace TimeSheet.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220628052007_AddRefreshTokenTable")]
-    partial class AddRefreshTokenTable
+    [Migration("20220628144750_AddAllTable")]
+    partial class AddAllTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
