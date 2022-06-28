@@ -13,7 +13,7 @@ namespace TimeSheet.DatabaseContext
         public DbSet<Database> Database { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Position> Positions { get; set; }
-        //public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Project> Projects { get; set; }
         //public DbSet<WorkType> WorkType { get; set; }
