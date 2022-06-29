@@ -83,13 +83,14 @@ namespace TimeSheet.Controllers
 
             token.User = _mapper.Map<UserGetDto>(User);
 
-
+             IdentityCard card = _context.IdentityCards.FirstOrDefault(x => x.employeeId == User.id && x.isActive == true);
             tokenInUserInfo userinfo = new tokenInUserInfo()
             {
-                firstName = _context.IdentityCards.FirstOrDefault(x => x.employeeId == User.id && x.isActive == true).firstName,
-                lastName = _context.IdentityCards.FirstOrDefault(x => x.employeeId == User.id && x.isActive == true).lastName,
+                firstName = card.firstName,
+                lastName =card.lastName,
+                photo = card.photo,
                 position = EmployeeList.First().Position.name,
-                photo = _context.IdentityCards.FirstOrDefault(x => x.employeeId == User.id && x.isActive == true).photo,
+                company = EmployeeList.First().Company.name,
             };
             token.UserInfo = userinfo;
 

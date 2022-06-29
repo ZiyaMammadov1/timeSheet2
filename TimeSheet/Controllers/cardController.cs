@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Linq;
 using TimeSheet.DatabaseContext;
 using TimeSheet.Dtos.CardDtos;
@@ -29,43 +30,46 @@ namespace TimeSheet.Controllers
             {
                 return getFinishObject = new Answer<string>(400,"User not found", null);
             }
+            Database db = _context.Database.FirstOrDefault(x => x.code.ToLower() == CardPostDto.dbCode.ToLower());
+            if (db == null)
+            {
+                return getFinishObject = new Answer<string>(400, "User not found", null);
+            }
 
-           
 
-            #region card
-            //IdentityCard card = _context.IdentityCards.FirstOrDefault(x => x.employeeId == user.id && x.databaseId == database.id);
+            IdentityCard card = _context.IdentityCards.FirstOrDefault(x => x.employeeId == user.id && x.databaseId == db.id);
 
-            //if (card != null)
-            //{
-            //    List<IdentityCard> cards = _context.IdentityCards.Where(x => x.employeeId == user.id && x.databaseId == database.id).ToList();
-            //    foreach (var item in cards)
-            //    {
-            //        item.isActive = false;
-            //    }
-            //    _context.SaveChanges();
-            //}
+            if (card != null)
+            {
+                List<IdentityCard> cards = _context.IdentityCards.Where(x => x.employeeId == user.id && x.databaseId == db.id).ToList();
+                foreach (var item in cards)
+                {
+                    item.isActive = false;
+                }
+                _context.SaveChanges();
+            }
 
-            //if (card == null || EmployeeInfoPostDto.date != card.date)
-            //{
-            //    IdentityCard newCard = new IdentityCard()
-            //    {
-            //        address = EmployeeInfoPostDto.adress,
-            //        date = EmployeeInfoPostDto.date,
-            //        expireTime = EmployeeInfoPostDto.expireDate,
-            //        firstName = EmployeeInfoPostDto.firstName,
-            //        lastName = EmployeeInfoPostDto.lastName,
-            //        number = EmployeeInfoPostDto.number,
-            //        issiedBy = EmployeeInfoPostDto.issiedBy,
-            //        series = EmployeeInfoPostDto.seriya,
-            //        employeeId = user.id,
-            //        databaseId = database.id,
-            //        photo = EmployeeInfoPostDto.photo
-            //    };
+            if (card == null || CardPostDto.date != card.date)
+            {
+                IdentityCard newCard = new IdentityCard()
+                {
+                    address = CardPostDto.adress,
+                    date = CardPostDto.date,
+                    expireTime = CardPostDto.expireDate,
+                    firstName = CardPostDto.firstName,
+                    lastName = CardPostDto.lastName,
+                    number = CardPostDto.number,
+                    issiedBy = CardPostDto.issiedBy,
+                    series = CardPostDto.seriya,
+                    employeeId = user.id,
+                    databaseId = db.id,
+                    photo = CardPostDto.photo
+                };
 
-            //    _context.IdentityCards.Add(newCard);
+                _context.IdentityCards.Add(newCard);
+                _context.SaveChanges();
 
-            //}
-            #endregion
+            }
 
 
             return getFinishObject = new Answer<string>(201, "Employee created", null);
