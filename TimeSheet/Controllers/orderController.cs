@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using TimeSheet.DatabaseContext;
+using TimeSheet.Dtos.CreateOrRemoveDtos;
 using TimeSheet.Dtos.OrderDtos;
 using TimeSheet.Entities;
 
@@ -17,17 +18,21 @@ namespace TimeSheet.Controllers
         private readonly DataContext _context;
         Answer<string> getFinishObject;
 
-        public orderController(DataContext dataContext)
+        public orderController(DataContext context)
         {
-            _context = _context;
+            _context = context;
         }
 
 
         [HttpPost]
         public ActionResult<Answer<string>> OrderPost(OrderPostDto orderPostDto)
         {
+            Employee user = _context.Employees.FirstOrDefault(x => x.fin.ToLower() == orderPostDto.fin.ToLower());
 
-
+            if (user == null)
+            {
+                return getFinishObject = new Answer<string>(400, "User not found", null);
+            }
 
             Database database = _context.Database.FirstOrDefault(x => x.code.ToLower() == orderPostDto.dbCode.ToLower());
 
@@ -67,14 +72,25 @@ namespace TimeSheet.Controllers
             }
 
 
+              CreateOrRemoveDto ctr = new CreateOrRemoveDto()
+                {
+                    OrderPostDto = orderPostDto,
+                    Project = project,
+                    Department = department,
+                    Company = company,
+                     Position = position,
+                     Database = database,
+                     Employee = user
+                };
             int statusCode = 400;
             if (orderPostDto.orderType == 1 || orderPostDto.orderType == 2)
             {
-                statusCode = CreateOrRemoveUser(orderPostDto,project,department,company,position,database);
+              
+                statusCode = CreateOrRemoveUser(ctr);
             }
             else if (orderPostDto.orderType == 2)
             {
-                statusCode = CreateOrRemoveUser(orderPostDto, project, department, company, position,database);
+                statusCode = CreateOrRemoveUser(ctr);
             }
 
 
@@ -114,27 +130,40 @@ namespace TimeSheet.Controllers
 
         // OrderType = 1 or = 2
 
-        public int CreateOrRemoveUser(OrderPostDto orderPostDto,Project project,
-                                      Department department,Company company, Position position,Database database)
+        private int CreateOrRemoveUser(CreateOrRemoveDto CRDto)
         {
 
             //create
-            if (orderPostDto.orderType == 1)
+            if (CRDto.OrderPostDto.orderType == 1)
             {
                 DBEmployee dBEmployee = new DBEmployee()
                 {
-                    projectId = project.id,
-                    departmentId = department.id,
-                    employeeId = 5,
-                    positionId = position.id,
-                    databaseId = database.id
+                    projectId = CRDto.Project.id,
+                    departmentId = CRDto.Department.id,
+                    employeeId = CRDto.Employee.id,
+                    positionId = CRDto.Position.id,
+                    databaseId = CRDto.Database.id,
+                    companyId = CRDto.Company.id
 
                 };
+
+                _context.dBEmployees.Add(dBEmployee);
+                _context.SaveChanges();
+                return 201;
             }
             //remove
-            else if (orderPostDto.orderType == 2)
+            else if (CRDto.OrderPostDto.orderType == 2)
             {
+                DBEmployee currentUser = _context.dBEmployees.FirstOrDefault(x => x.databaseId == CRDto.Database.id && x.employeeId == CRDto.Employee.id &&
+                                                                                 x.projectId == CRDto.Project.id && x.companyId == CRDto.Company.id && x.departmentId == CRDto.Department.id &&
+                                                                                 x.positionId == CRDto.Position.id && x.isDelete == false);
 
+                if(currentUser == null)
+                {
+                    return 400;
+                }
+                currentUser.isDelete = true;
+                currentUser.isActive = false;
             }
             return 400;
 
