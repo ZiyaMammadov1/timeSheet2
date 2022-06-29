@@ -9,5 +9,6 @@ namespace TimeSheet.Dtos.UserDto
     {
         public string uuid { get; set; }
         public string fin { get; set; }
+
     }
 }

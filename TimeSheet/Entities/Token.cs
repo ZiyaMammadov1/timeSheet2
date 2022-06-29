@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using TimeSheet.Dtos.TokenWithUserInfo;
 using TimeSheet.Dtos.UserDto;
 
 namespace TimeSheet.Entities
@@ -12,6 +13,8 @@ namespace TimeSheet.Entities
 
         [NotMapped]
         public UserGetDto User { get; set; }
+
+        public tokenInUserInfo UserInfo { get; set; }
     }
 }
     

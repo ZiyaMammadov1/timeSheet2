@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,7 @@ using TimeSheet.DatabaseContext;
 using TimeSheet.Dtos.LoginDtos;
 using TimeSheet.Dtos.PositionDtos;
 using TimeSheet.Dtos.RefreshTokenDtos;
+using TimeSheet.Dtos.TokenWithUserInfo;
 using TimeSheet.Dtos.UserDto;
 using TimeSheet.Entities;
 using TimeSheet.Helper;
@@ -64,8 +66,32 @@ namespace TimeSheet.Controllers
                 password = userLoginDto.password
             };
 
+
+
+           List<DBEmployee> EmployeeList =_context.dBEmployees.Include(x=>x.Company)
+                                                               .Include(x => x.Database)
+                                                               .Include(x => x.Depament)
+                                                               .Include(x => x.Employee)
+                                                               .Include(x => x.Position)
+                .Where(x=>x.employeeId == User.id).ToList();
+            if (EmployeeList.Count() <= 0)
+            {
+                return loginfinishObject = new Answer<UserLoginDto>(409, "You haven't permission to login", null);
+            }
             Token token = tokenInitilizing.Init(UserLoginDto, _config, User.id);
+
+
             token.User = _mapper.Map<UserGetDto>(User);
+
+
+            tokenInUserInfo userinfo = new tokenInUserInfo()
+            {
+                firstName = _context.IdentityCards.FirstOrDefault(x => x.employeeId == User.id && x.isActive == true).firstName,
+                lastName = _context.IdentityCards.FirstOrDefault(x => x.employeeId == User.id && x.isActive == true).lastName,
+                position = EmployeeList.First().Position.name,
+                photo = _context.IdentityCards.FirstOrDefault(x => x.employeeId == User.id && x.isActive == true).photo,
+            };
+            token.UserInfo = userinfo;
 
 
             return StatusCode(200, token);
