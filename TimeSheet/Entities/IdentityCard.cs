@@ -13,12 +13,13 @@ namespace TimeSheet.Entities
         public string address { get; set; }
         public string series { get; set; }
         public bool isActive { get; set; }
+        public string photo { get; set; }
 
 
         public int employeeId { get; set; }
         public Employee employee { get; set; }
 
-        public int databaseCode { get; set; }
-        public Database database { get; set; }
+        public int databaseId { get; set; }
+        public Database Database { get; set; }
     }
 }

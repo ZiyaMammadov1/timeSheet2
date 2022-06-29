@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TimeSheet.DatabaseContext;
 
 namespace TimeSheet.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220629061042_UpdateIdentityCard")]
+    partial class UpdateIdentityCard
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,7 +73,6 @@ namespace TimeSheet.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("dbCode")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("email")
@@ -254,9 +255,6 @@ namespace TimeSheet.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("number")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("photo")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("series")
