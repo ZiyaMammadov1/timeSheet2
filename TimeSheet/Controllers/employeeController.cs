@@ -36,6 +36,7 @@ namespace TimeSheet.Controllers
             if (user == null)
             {
                 newUser.fin = EmployeeInfoPostDto.fin;
+                newUser.password = Hashing.ToSHA256(EmployeeInfoPostDto.fin).ToString();
                 _context.Employees.Add(newUser);
                 _context.SaveChanges();
             }

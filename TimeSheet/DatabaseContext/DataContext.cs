@@ -17,6 +17,8 @@ namespace TimeSheet.DatabaseContext
         public DbSet<Department> Departments { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<Contact> Contacts{ get; set; }
+        public DbSet<DBEmployee> dBEmployees{ get; set; }
+        public DbSet<Order> Orders{ get; set; }
         //public DbSet<mainTimeSheet> MainTimeSheets { get; set; }
         //public DbSet<Salary> Salaries { get; set; }
         public DbSet<IdentityCard> IdentityCards { get; set; }
@@ -117,14 +119,30 @@ namespace TimeSheet.DatabaseContext
            .Property(p => p.dbCode)
            .IsRequired(true);
 
+            modelBuilder.Entity<Order>()
+        .Property(p => p.uuid)
+        .HasDefaultValueSql("NEWID()");
+
+            modelBuilder.Entity<Order>()
+               .Property(p => p.isDeleted)
+               .HasDefaultValue(false);
+
+            modelBuilder.Entity<DBEmployee>()
+             .Property(p => p.isDelete)
+             .HasDefaultValue(false);
+
+            modelBuilder.Entity<DBEmployee>()
+             .Property(p => p.isActive)
+             .HasDefaultValue(true);
+
             //modelBuilder.Entity<User>()
             //    .HasIndex(a => a.fin)
             //    .IsUnique();
 
-            //foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
-            //{
-            //    relationship.DeleteBehavior = DeleteBehavior.Restrict;
-            //}
+            foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            {
+                relationship.DeleteBehavior = DeleteBehavior.Restrict;
+            }
 
 
 

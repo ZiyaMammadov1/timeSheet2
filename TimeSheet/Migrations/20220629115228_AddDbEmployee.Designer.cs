@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TimeSheet.DatabaseContext;
 
 namespace TimeSheet.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220629115228_AddDbEmployee")]
+    partial class AddDbEmployee
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -141,9 +143,6 @@ namespace TimeSheet.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
-                    b.Property<int>("positionId")
-                        .HasColumnType("int");
-
                     b.Property<int>("projectId")
                         .HasColumnType("int");
 
@@ -156,8 +155,6 @@ namespace TimeSheet.Migrations
                     b.HasIndex("departmentId");
 
                     b.HasIndex("employeeId");
-
-                    b.HasIndex("positionId");
 
                     b.HasIndex("projectId");
 
@@ -582,12 +579,6 @@ namespace TimeSheet.Migrations
                     b.HasOne("TimeSheet.Entities.Employee", "Employee")
                         .WithMany("DbEmployees")
                         .HasForeignKey("employeeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("TimeSheet.Entities.Position", "Position")
-                        .WithMany("dBEmployees")
-                        .HasForeignKey("positionId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

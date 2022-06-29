@@ -30,14 +30,7 @@ namespace TimeSheet.Controllers
                 return getFinishObject = new Answer<string>(400,"User not found", null);
             }
 
-            Employee newUser = new Employee();
-
-            if (user == null)
-            {
-                newUser.fin = EmployeeInfoPostDto.fin;
-                _context.Employees.Add(newUser);
-                _context.SaveChanges();
-            }
+           
 
             #region card
             //IdentityCard card = _context.IdentityCards.FirstOrDefault(x => x.employeeId == user.id && x.databaseId == database.id);
@@ -74,37 +67,6 @@ namespace TimeSheet.Controllers
             //}
             #endregion
 
-            #region contact
-            ////Contact contact = _context.Contacts.FirstOrDefault(x => x.fin == user.fin && x.dbCode == database.code);
-
-            ////if (contact == null)
-            ////{
-            ////    Contact newContact = new Contact()
-            ////    {
-            ////        fin = EmployeeInfoPostDto.fin,
-            ////        dbCode = database.code,
-            ////        phone1 = EmployeeInfoPostDto.phone1,
-            ////        phone2 = EmployeeInfoPostDto.phone2,
-            ////        phone3 = EmployeeInfoPostDto.phone3,
-            ////        phone4 = EmployeeInfoPostDto.phone4,
-            ////        email = EmployeeInfoPostDto.email
-            ////    };
-            ////    _context.Contacts.Add(newContact);
-
-            ////}
-            ////else
-            ////{
-            ////    contact.fin = EmployeeInfoPostDto.fin;
-            ////    contact.phone1 = EmployeeInfoPostDto.phone1;
-            ////    contact.phone2 = EmployeeInfoPostDto.phone2;
-            ////    contact.phone3 = EmployeeInfoPostDto.phone3;
-            ////    contact.phone4 = EmployeeInfoPostDto.phone4;
-            ////    contact.email = EmployeeInfoPostDto.email;
-            ////}
-
-
-            //_context.SaveChanges();
-            #endregion
 
             return getFinishObject = new Answer<string>(201, "Employee created", null);
 

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TimeSheet.DatabaseContext;
 
 namespace TimeSheet.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220629111512_UpdateOrderTable")]
+    partial class UpdateOrderTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -110,58 +112,6 @@ namespace TimeSheet.Migrations
                     b.HasIndex("Databaseid");
 
                     b.ToTable("Contacts");
-                });
-
-            modelBuilder.Entity("TimeSheet.Entities.DBEmployee", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("companyId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("databaseId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("departmentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("employeeId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("isActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
-
-                    b.Property<bool>("isDelete")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
-                    b.Property<int>("positionId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("projectId")
-                        .HasColumnType("int");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("companyId");
-
-                    b.HasIndex("databaseId");
-
-                    b.HasIndex("departmentId");
-
-                    b.HasIndex("employeeId");
-
-                    b.HasIndex("positionId");
-
-                    b.HasIndex("projectId");
-
-                    b.ToTable("dBEmployees");
                 });
 
             modelBuilder.Entity("TimeSheet.Entities.Database", b =>
@@ -557,45 +507,6 @@ namespace TimeSheet.Migrations
                         .WithMany("Contact")
                         .HasForeignKey("Databaseid")
                         .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("TimeSheet.Entities.DBEmployee", b =>
-                {
-                    b.HasOne("TimeSheet.Entities.Company", "Company")
-                        .WithMany("DbEmployees")
-                        .HasForeignKey("companyId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("TimeSheet.Entities.Database", "Database")
-                        .WithMany("DbEmployees")
-                        .HasForeignKey("databaseId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("TimeSheet.Entities.Department", "Depament")
-                        .WithMany("DbEmployees")
-                        .HasForeignKey("departmentId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("TimeSheet.Entities.Employee", "Employee")
-                        .WithMany("DbEmployees")
-                        .HasForeignKey("employeeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("TimeSheet.Entities.Position", "Position")
-                        .WithMany("dBEmployees")
-                        .HasForeignKey("positionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("TimeSheet.Entities.Project", "Project")
-                        .WithMany("DbEmployees")
-                        .HasForeignKey("projectId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("TimeSheet.Entities.Department", b =>

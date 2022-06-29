@@ -15,6 +15,7 @@ namespace TimeSheet.Entities
         public List<IdentityCard> IdentityCards { get; set; } = new List<IdentityCard>();
         public List<Contact> Contact { get; set; } = new List<Contact>();
         public List<Employee> Employees { get; set; } = new List<Employee>();
+        public List<DBEmployee> DbEmployees { get; set; } = new List<DBEmployee>();
 
 
     }
