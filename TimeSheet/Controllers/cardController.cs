@@ -1,35 +1,34 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.Linq;
 using TimeSheet.DatabaseContext;
-using TimeSheet.Dtos.EmployeeInfoDtos;
+using TimeSheet.Dtos.CardDtos;
 using TimeSheet.Entities;
-using VoltekApi.Helper;
 
 namespace TimeSheet.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [EnableCors("AllowOrigin")]
-    public class employeeController : ControllerBase
+    public class cardController : ControllerBase
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
         Answer<string> getFinishObject;
-        public employeeController(DataContext context, IMapper mapper)
+        public cardController(DataContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
 
         [HttpPost]
-        public ActionResult<Answer<string>> AddEmployeeInfo(EmployeeInfoPostDto EmployeeInfoPostDto)
+        public ActionResult<Answer<string>> AddCard(CardPostDto CardPostDto)
         {
-            Employee user = _context.Employees.FirstOrDefault(x => x.fin.ToLower() == EmployeeInfoPostDto.fin.ToLower());
+            Employee user = _context.Employees.FirstOrDefault(x => x.fin.ToLower() == CardPostDto.fin.ToLower());
+            if (user == null)
+            {
+                return getFinishObject = new Answer<string>(400,"User not found", null);
+            }
 
             Employee newUser = new Employee();
 
@@ -112,6 +111,6 @@ namespace TimeSheet.Controllers
         }
 
 
-      
+
     }
 }

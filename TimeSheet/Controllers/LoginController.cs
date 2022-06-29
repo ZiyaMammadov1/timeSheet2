@@ -46,7 +46,7 @@ namespace TimeSheet.Controllers
             {
                 return loginfinishObject = new Answer<UserLoginDto>(404, "Username empty", null);
             }
-            var User = _context.Employees.FirstOrDefault(x => x.fin.ToLower() == userLoginDto.key.ToLower());
+            Employee User = _context.Employees.FirstOrDefault(x => x.fin.ToLower() == userLoginDto.key.ToLower());
             
             if (User == null)
             {

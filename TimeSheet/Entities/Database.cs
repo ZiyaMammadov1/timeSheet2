@@ -13,6 +13,8 @@ namespace TimeSheet.Entities
         public List<Position> Positions { get; set; } = new List<Position>();
         public List<Company> Companies { get; set; } = new List<Company>();
         public List<IdentityCard> IdentityCards { get; set; } = new List<IdentityCard>();
+        public List<Contact> Contact { get; set; } = new List<Contact>();
+        public List<Employee> Employees { get; set; } = new List<Employee>();
 
 
     }

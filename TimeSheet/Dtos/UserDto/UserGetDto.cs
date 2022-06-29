@@ -1,5 +1,7 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using TimeSheet.Dtos.PositionDtos;
+using TimeSheet.Entities;
 
 namespace TimeSheet.Dtos.UserDto
 {

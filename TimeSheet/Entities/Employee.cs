@@ -7,6 +7,7 @@ namespace TimeSheet.Entities
     {
         public string fin { get; set; }
         public string password { get; set; }
+        
     }
 
 }
