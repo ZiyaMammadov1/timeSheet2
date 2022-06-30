@@ -1,22 +1,16 @@
 ﻿using FluentValidation;
 using System;
+using TimeSheet.Entities;
 
 namespace TimeSheet.Dtos.FamilyDtos
 {
     public class MemberPostDto
     {
         public string fin { get; set; }
-        public string member { get; set; }
-        public string memberFullname { get; set; }
-        public DateTime memberDoB{ get; set; }
-        public int memberAge{ get; set; }
+        public string dbCode { get; set; }
+        public string relative { get; set; }
+        public string fullName { get; set; }
+        public DateTime dob{ get; set; }
     }
 
-    public class MemberPostDtoValidator : AbstractValidator<MemberPostDto>
-    {
-        public MemberPostDtoValidator()
-        {
-            RuleFor(x => x.fin).NotEmpty().MaximumLength(10);
-        }
-    }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TimeSheet.Entities
 {
@@ -13,9 +14,15 @@ namespace TimeSheet.Entities
         public DateTime dateEffective { get; set; }
         public DateTime dateExpired { get; set; }
         public DateTime dateTo{ get; set; }
-        public int salary1 { get; set; }
-        public int salary2 { get; set; }
-        public int salaryTotal { get; set; }
+
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal salary1 { get; set; }
+
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal salary2 { get; set; }
+
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal salaryTotal { get; set; }
         public string description { get; set; }
         public string code { get; set; }
 

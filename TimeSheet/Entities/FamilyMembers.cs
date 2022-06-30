@@ -2,16 +2,13 @@
 
 namespace TimeSheet.Entities
 {
-    public class FamilyMembers
+    public class FamilyMembers : BaseEntity
     {
-        public int id { get; set; }
-        public string member { get; set; }
+        public string fin { get; set; }
+        public string dbCode { get; set; }
+        public string relative { get; set; }
         public string fullName { get; set; }
         public DateTime dob { get; set; }
-        public int age { get; set; }
-
-        public int userId { get; set; }
-        public Employee User { get; set; }
 
     }
 }

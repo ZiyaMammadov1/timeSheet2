@@ -16,9 +16,9 @@ namespace TimeSheet.DatabaseContext
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Project> Projects { get; set; }
-        public DbSet<Contact> Contacts{ get; set; }
-        public DbSet<DBEmployee> dBEmployees{ get; set; }
-        public DbSet<Order> Orders{ get; set; }
+        public DbSet<Contact> Contacts { get; set; }
+        public DbSet<DBEmployee> dBEmployees { get; set; }
+        public DbSet<Order> Orders { get; set; }
         //public DbSet<mainTimeSheet> MainTimeSheets { get; set; }
         //public DbSet<Salary> Salaries { get; set; }
         public DbSet<IdentityCard> IdentityCards { get; set; }
@@ -45,7 +45,7 @@ namespace TimeSheet.DatabaseContext
             modelBuilder.Entity<Department>()
                 .Property(p => p.isDeleted)
                 .HasDefaultValue(false);
-            
+
             modelBuilder.Entity<Project>()
                 .Property(p => p.uuid)
                 .HasDefaultValueSql("NEWID()");
@@ -76,8 +76,8 @@ namespace TimeSheet.DatabaseContext
 
             modelBuilder.Entity<Company>()
                 .Property(p => p.isDeleted)
-                .HasDefaultValue(false); 
-            
+                .HasDefaultValue(false);
+
             modelBuilder.Entity<Company>()
                 .Property(p => p.isActive)
                 .HasDefaultValue(true);
@@ -134,6 +134,16 @@ namespace TimeSheet.DatabaseContext
             modelBuilder.Entity<DBEmployee>()
              .Property(p => p.isActive)
              .HasDefaultValue(true);
+
+            //modelBuilder.Entity<FamilyMembers>()
+            //  .Property(p => p.uuid)
+            //  .HasDefaultValueSql("NEWID()");
+
+            //modelBuilder.Entity<FamilyMembers>()
+            //   .Property(p => p.isDelete)
+            //   .HasDefaultValue(false);
+
+
 
             //modelBuilder.Entity<User>()
             //    .HasIndex(a => a.fin)
