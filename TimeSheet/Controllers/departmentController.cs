@@ -84,9 +84,9 @@ namespace TimeSheet.Controllers
                 return getFinishObject = new Answer<DepartmentGetDto>(400, "Database not found", null);
             }
 
-            if (_context.Departments.Any(x => x.name.ToLower() == DepartmentPostDto.name.ToLower() && x.databaseId == database.id))
+            if (_context.Departments.Any(x => x.code.ToLower() == DepartmentPostDto.code.ToLower() && x.databaseId == database.id))
             {
-                return getFinishObject = new Answer<DepartmentGetDto>(409, "This department existed", null);
+                return getFinishObject = new Answer<DepartmentGetDto>(409, "This department existed (code conflict!)", null);
             }
 
             Department department = new Department() { name = DepartmentPostDto.name, code = DepartmentPostDto.code, databaseId = database.id };

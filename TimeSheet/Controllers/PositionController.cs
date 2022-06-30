@@ -61,9 +61,9 @@ namespace TimeSheet.Controllers
                 return getFinishObject = new Answer<PositionGetDto>(400, "Database not found", null);
             }
 
-            if (_context.Positions.Any(x => x.name.ToLower() == PositionPostDto.name.ToLower() && x.databaseId == database.id))
+            if (_context.Positions.Any(x => x.code.ToLower() == PositionPostDto.code.ToLower() && x.databaseId == database.id))
             {
-                return getFinishObject = new Answer<PositionGetDto>(409, "This position existed", null);
+                return getFinishObject = new Answer<PositionGetDto>(409, "This position existed (code conflict!) ", null);
             }
 
             Position position = new Position() { name = PositionPostDto.name, code = PositionPostDto.code, databaseId = database.id };

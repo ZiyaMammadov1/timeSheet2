@@ -155,6 +155,9 @@ namespace TimeSheet.DatabaseContext
                 .HasIndex(x => x.code)
                 .IsUnique(true);
 
+            modelBuilder.Entity<Order>()
+               .HasIndex(x => x.code)
+               .IsUnique(true);
 
             //modelBuilder.Entity<User>()
             //    .HasIndex(a => a.fin)

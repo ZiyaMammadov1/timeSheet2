@@ -64,9 +64,9 @@ namespace TimeSheet.Controllers
                 return getFinishObject = new Answer<ProjectGetDto>(400, "Database not found", null);
             }
 
-            if (_context.Projects.Any(x => x.name.ToLower() == ProjectPostDto.name.ToLower() && x.databaseId == database.id))
+            if (_context.Projects.Any(x => x.code.ToLower() == ProjectPostDto.code.ToLower() && x.databaseId == database.id))
             {
-                return getFinishObject = new Answer<ProjectGetDto>(409, "This project existed", null);
+                return getFinishObject = new Answer<ProjectGetDto>(409, "This project existed (code conflict!)", null);
             }
 
             Project project = new Project() { name = ProjectPostDto.name, code = ProjectPostDto.code, databaseId = database.id };
