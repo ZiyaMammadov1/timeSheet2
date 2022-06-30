@@ -86,6 +86,7 @@ namespace TimeSheet.Controllers
              IdentityCard card = _context.IdentityCards.FirstOrDefault(x => x.employeeId == User.id && x.isActive == true);
             tokenInUserInfo userinfo = new tokenInUserInfo()
             {
+                fin = User.fin,
                 firstName = card.firstName,
                 lastName =card.lastName,
                 photo = card.photo,

@@ -2,7 +2,7 @@
 {
     public class tokenInUserInfo
     {
-
+        public string fin { get; set; }
         public string firstName { get; set; }
         public string lastName { get; set; }
         public string photo { get; set; }
