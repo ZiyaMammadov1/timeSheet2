@@ -143,6 +143,17 @@ namespace TimeSheet.DatabaseContext
                .Property(p => p.isDeleted)
                .HasDefaultValue(false);
 
+            modelBuilder.Entity<Project>()
+                .HasIndex(x => x.code)
+                .IsUnique(true);
+            
+            modelBuilder.Entity<Department>()
+                .HasIndex(x => x.code)
+                .IsUnique(true);
+
+            modelBuilder.Entity<Position>()
+                .HasIndex(x => x.code)
+                .IsUnique(true);
 
 
             //modelBuilder.Entity<User>()
