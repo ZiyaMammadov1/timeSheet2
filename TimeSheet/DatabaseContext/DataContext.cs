@@ -159,6 +159,10 @@ namespace TimeSheet.DatabaseContext
             modelBuilder.Entity<Order>()
                .HasIndex(x => x.code)
                .IsUnique(true);
+            
+            modelBuilder.Entity<FamilyMembers>()
+               .HasIndex(x => x.code)
+               .IsUnique(true);
 
 
             foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))

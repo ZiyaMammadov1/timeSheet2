@@ -38,12 +38,18 @@ namespace TimeSheet.Controllers
             {
                 return getFinishObject = new Answer<MemberGetDto>(400, "Employee not found.", null);
             }
-            //List<FamilyMembers> existMembers = _context.FamilyMembers.Where(x=>x.dbId == database.id && x.fin == employee.fin && x.isDeleted == false).ToList();
+            List<FamilyMembers> existMembers = _context.FamilyMembers.Where(x => x.dbId == database.id && x.fin == employee.fin && x.isDeleted == false).ToList();
 
-            //foreach (var member in existMembers)
-            //{
-            //    if(member.fullName.ToLower() == memberPostDto.fullName.ToLower() && )
-            //}
+            foreach (var member in existMembers)
+            {
+                if (member.fullName.ToLower() == memberPostDto.fullName.ToLower() && member.dbId == database.id && member.code.ToLower() == memberPostDto.code.ToLower())
+                {
+                    member.relative = memberPostDto.relative;
+                    member.dob = memberPostDto.dob;
+                    member.fullName = memberPostDto.fullName;
+                }
+                _context.SaveChanges();
+            }
 
             FamilyMembers newMember = new FamilyMembers()
             {

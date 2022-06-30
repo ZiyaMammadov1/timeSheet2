@@ -9,6 +9,7 @@ namespace TimeSheet.Entities
         public string relative { get; set; }
         public string fullName { get; set; }
         public DateTime dob { get; set; }
+        public string code { get; set; }
 
     }
 }
