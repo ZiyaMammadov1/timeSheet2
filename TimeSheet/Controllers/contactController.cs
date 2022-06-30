@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using TimeSheet.DatabaseContext;
 using TimeSheet.Dtos.ContactDtos;
@@ -77,6 +78,20 @@ namespace TimeSheet.Controllers
 
             return getFinishObject = new Answer<ContactGetDto>(200, "Contact created", null);
 
+        }
+
+        [HttpGet]
+        public ActionResult<Answer<ContactGetDto>> GetAll()
+        {
+            List<Contact> contacts = _context.Contacts.Where(x => x.isDeleted == false).ToList();
+            List<ContactGetDto> contactGetDto = new List<ContactGetDto>();
+
+            if(contacts.Count > 0)
+            {
+                contactGetDto = contacts.Select(x => new ContactGetDto() { email = x.email, phone1 = x.phone1, phone2 = x.phone2, phone3 = x.phone3, phone4 = x.phone4 }).ToList() ;
+                return getFinishObject = new Answer<ContactGetDto>(200,"Contact founded", contactGetDto);
+            }
+            return getFinishObject = new Answer<ContactGetDto>(400, "Contacts not found", null);
         }
     }
 }
