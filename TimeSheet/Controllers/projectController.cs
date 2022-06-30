@@ -33,7 +33,7 @@ namespace TimeSheet.Controllers
             List<Project> projects = _context.Projects.Where(x => x.isDeleted == false).ToList();
             if (projects.Count > 0)
             {
-                List<ProjectGetDto> projectList = projects.Select(x => new ProjectGetDto() { uuid = x.uuid, name = x.name }).ToList();
+                List<ProjectGetDto> projectList = projects.Select(x => new ProjectGetDto() { uuid = x.uuid, name = x.name, code = x.code }).ToList();
                 return getFinishObject = new Answer<ProjectGetDto>(200, "Project founded", projectList);
             }
             return getFinishObject = new Answer<ProjectGetDto>(400, "Projects not founded", null);
@@ -42,7 +42,7 @@ namespace TimeSheet.Controllers
         [HttpGet("{code}")]
         public ActionResult<Answer<ProjectGetDto>> Get(string code)
         {
-            Project project = _context.Projects.FirstOrDefault(x => x.code.ToLower() == code.ToLower() && x.isDeleted == false);
+            Project project = _context.Projects.FirstOrDefault(x => x.code == code && x.isDeleted == false);
 
             if (project != null)
             {
