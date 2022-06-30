@@ -44,7 +44,7 @@ namespace TimeSheet.Controllers
             {
                 if (member.fullName.ToLower() == memberPostDto.fullName.ToLower() && member.dbId == database.id && member.code.ToLower() == memberPostDto.code.ToLower())
                 {
-                    member.relative = memberPostDto.relative;
+                    member.relative = memberPostDto.relative; 
                     member.dob = memberPostDto.dob;
                     member.fullName = memberPostDto.fullName;
                 }
