@@ -160,9 +160,6 @@ namespace TimeSheet.DatabaseContext
                .HasIndex(x => x.code)
                .IsUnique(true);
 
-            //modelBuilder.Entity<User>()
-            //    .HasIndex(a => a.fin)
-            //    .IsUnique();
 
             foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
             {
