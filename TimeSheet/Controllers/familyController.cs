@@ -49,6 +49,8 @@ namespace TimeSheet.Controllers
                     member.fullName = memberPostDto.fullName;
                 }
                 _context.SaveChanges();
+                return getFinishObject = new Answer<MemberGetDto>(201, "Member updated.", null);
+
             }
 
             FamilyMembers newMember = new FamilyMembers()
