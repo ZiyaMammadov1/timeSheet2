@@ -70,6 +70,10 @@ namespace TimeSheet.DatabaseContext
                 .Property(p => p.isDeleted)
                 .HasDefaultValue(false);
 
+            modelBuilder.Entity<typeOfOrder>()
+              .HasIndex(x => x.code)
+              .IsUnique(true);
+
             modelBuilder.Entity<Company>()
              .Property(p => p.uuid)
              .HasDefaultValueSql("NEWID()");

@@ -29,9 +29,14 @@ namespace TimeSheet.Controllers
         [HttpPost]
         public ActionResult<Answer<typeOfOrderGetDto>> CreateOrderType(typeOfOrderPostDto typeOfOrderPostDto)
         {
+            if (_db.typeOfOrders.Any(x => x.code == typeOfOrderPostDto.code))
+            {
+                return getFinishedObject = new Answer<typeOfOrderGetDto>(409, "This order type existed (code conflict!) ", null);
+            }
+
             if (_db.typeOfOrders.Any(x => x.name.ToLower() == typeOfOrderPostDto.name.ToLower()))
             {
-                return getFinishedObject = new Answer<typeOfOrderGetDto>(409, "This order type existed", null);
+                return getFinishedObject = new Answer<typeOfOrderGetDto>(409, "This order type existed (name conflict!)", null);
             }
             typeOfOrder type = _mp.Map<typeOfOrder>(typeOfOrderPostDto);
             _db.typeOfOrders.Add(type);
@@ -55,11 +60,12 @@ namespace TimeSheet.Controllers
         public ActionResult<Answer<typeOfOrderGetDto>> GetAllOrderType()
         {
             List<typeOfOrder> types = _db.typeOfOrders.Where(x => x.isDeleted == false).ToList();
+
             if (types.Count <= 0)
             {
                 return getFinishedObject = new Answer<typeOfOrderGetDto>(400, "Type items not found", null);
             }
-            List<typeOfOrderGetDto> typeGetDto = types.Select(x => new typeOfOrderGetDto() { uuid = x.uuid, name = x.name, description = x.description }).ToList();
+            List<typeOfOrderGetDto> typeGetDto = types.Select(x => new typeOfOrderGetDto() { uuid = x.uuid, name = x.name, description = x.description, code = x.code }).ToList();
             return getFinishedObject = new Answer<typeOfOrderGetDto>(200, "Type items founded", typeGetDto);
         }
 
