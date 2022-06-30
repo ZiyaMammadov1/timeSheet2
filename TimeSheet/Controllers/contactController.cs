@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections;
 using System.Linq;
 using TimeSheet.DatabaseContext;
 using TimeSheet.Dtos.ContactDtos;
@@ -25,26 +26,57 @@ namespace TimeSheet.Controllers
             _mapper = mapper;
         }
 
-        //public ActionResult<Answer<ContactGetDto>> CreateContact(ContactPostDto postDto)
-        //{
-        //    Database database = _context.Database.FirstOrDefault(x=>x.code == postDto.dbCode);
 
-        //    if(database == null)
-        //    {
-        //        return getFinishObject = new Answer<ContactGetDto>(400, "Database not found", null);
-        //    }
+        [HttpPost]
+        public ActionResult<Answer<ContactGetDto>> CreateContact(ContactPostDto postDto)
+        {
+            Database database = _context.Database.FirstOrDefault(x => x.code == postDto.dbCode);
 
-        //    Employee employee = _context.Employees.FirstOrDefault(x => x.code == postDto.employeeCode);
+            if (database == null)
+            {
+                return getFinishObject = new Answer<ContactGetDto>(400, "Database not found", null);
+            }
 
-        //    if (employee == null)
-        //    {
-        //        return getFinishObject = new Answer<ContactGetDto>(400, "Employee not found", null);
+            Employee employee = _context.Employees.FirstOrDefault(x => x.fin.ToLower() == postDto.employeeFin.ToLower());
+
+            if (employee == null)
+            {
+                return getFinishObject = new Answer<ContactGetDto>(400, "Employee not found", null);
+            }
+            Contact searchAnyContact = _context.Contacts.FirstOrDefault(x => x.dbId == database.id && x.employeeId == employee.id);
+            if (searchAnyContact != null)
+            {
+                searchAnyContact.email = postDto.email;
+                searchAnyContact.code = postDto.code;
+                searchAnyContact.phone1 = postDto.phone1;
+                searchAnyContact.phone2 = postDto.phone2;
+                searchAnyContact.phone3 = postDto.phone3;
+                searchAnyContact.phone4 = postDto.phone4;
+
+                _context.SaveChanges();
+
+                return getFinishObject = new Answer<ContactGetDto>(200, "Contact Updated", null);
 
 
-        //        Contact newContact = new Contact() 
-        //        {
-                    
-        //        };
-        //}
+            }
+
+            Contact newContact = new Contact()
+            {
+                dbId = database.id,
+                employeeId = employee.id,
+                phone1 = postDto.phone1,
+                phone2 = postDto.phone2,
+                phone3 = postDto.phone3,
+                phone4 = postDto.phone4,
+                code = postDto.code,
+                email = postDto.email
+            };
+
+            _context.Contacts.Add(newContact);
+            _context.SaveChanges();
+
+            return getFinishObject = new Answer<ContactGetDto>(200, "Contact created", null);
+
+        }
     }
 }
