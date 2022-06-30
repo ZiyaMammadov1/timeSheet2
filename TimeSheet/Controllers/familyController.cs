@@ -24,39 +24,74 @@ namespace TimeSheet.Controllers
         }
 
 
-        //[HttpPost]
-        //public ActionResult<Answer<MemberGetDto>> CreateMember(MemberPostDto memberPostDto)
-        //{
-        //    Database database = _context.Database.FirstOrDefault(a => a.code.ToLower() == memberPostDto.dbCode.ToLower());
-        //    if (database == null)
-        //    {
-        //        return getFinishObject = new Answer<MemberGetDto>(400, "Database not found.", null);
-        //    }
+        [HttpPost]
+        public ActionResult<Answer<MemberGetDto>> CreateMember(MemberPostDto memberPostDto)
+        {
+            Database database = _context.Database.FirstOrDefault(a => a.code == memberPostDto.dbCode);
+            if (database == null)
+            {
+                return getFinishObject = new Answer<MemberGetDto>(400, "Database not found.", null);
+            }
 
-        //    Employee employee = _context.Employees.FirstOrDefault(a => a.fin == memberPostDto.fin);
-        //    if (database == null)
-        //    {
-        //        return getFinishObject = new Answer<MemberGetDto>(400, "Employee not found.", null);
-        //    }
+            Employee employee = _context.Employees.FirstOrDefault(a => a.fin == memberPostDto.fin);
+            if (employee == null)
+            {
+                return getFinishObject = new Answer<MemberGetDto>(400, "Employee not found.", null);
+            }
 
-        //FamilyMembers newMember = new FamilyMembers()
-        //{
-        //    member = memberPostDto.member,
-        //    age = memberPostDto.memberAge,
-        //    dob = memberPostDto.memberDoB,
-        //    fullName = memberPostDto.memberFullname,
-        //    userId = user.id
-        //};
+            FamilyMembers newMember = new FamilyMembers()
+            {
+                relative = memberPostDto.relative,
+                dbId = database.id,
+                code = memberPostDto.code,
+                dob = memberPostDto.dob,
+                fullName = memberPostDto.fullName,
+                fin = memberPostDto.fin
+            };
 
-        //_context.FamilyMembers.Add(newMember);
-        //_context.SaveChanges();
+            _context.FamilyMembers.Add(newMember);
+            _context.SaveChanges();
 
-        //return getFinishObject = new Answer<MemberGetDto>(201, "Member created.", null);
+            return getFinishObject = new Answer<MemberGetDto>(201, "Member created.", null);
 
-    //}
+        }
 
 
+        [HttpGet]
+        [Route("{fin}")]
+        public ActionResult<Answer<MemberGetDto>> Get(string fin)
+        {
+            // burda yoxluyassan gelen tokenden ki bu tokenin fini ile burda gelen fin eynidise cavab qaytarassan
+            Employee employee = _context.Employees.FirstOrDefault(a => a.fin == fin);
 
+            if (employee == null)
+            {
+                return getFinishObject = new Answer<MemberGetDto>(400, "Employee not found.", null);
+            }
+
+            List<DBEmployee> dbEmployees = _context.dBEmployees.Where(a => a.employeeId == employee.id).ToList();
+
+            if (dbEmployees.Count<=0 && dbEmployees == null)
+            {
+                return getFinishObject = new Answer<MemberGetDto>(400, "DbEmployees not found.", null);
+            }
+
+            List<FamilyMembers> familyMembers = _context.FamilyMembers.Where(x => x.fin == employee.fin && x.dbId == dbEmployees.FirstOrDefault().databaseId).ToList();
+            List<MemberGetDto> members = new List<MemberGetDto>();
+            foreach (var item in familyMembers)
+            {
+                MemberGetDto memberGetDto = new MemberGetDto()
+                {
+                    dob = item.dob,
+                    fullName = item.fullName,
+                    relative = item.relative
+                };
+                members.Add(memberGetDto);
+            }
+
+            return getFinishObject = new Answer<MemberGetDto>(200,"Family member founded", members);
+
+        }
 
 
     }

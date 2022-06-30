@@ -4,9 +4,9 @@ namespace TimeSheet.Dtos.FamilyDtos
 {
     public class MemberGetDto
     {
-        public string member { get; set; }
-        public string memberFullname { get; set; }
-        public DateTime memberDoB { get; set; }
-        public int memberAge { get; set; }
+        public string relative { get; set; }
+        public string fullName { get; set; }
+        public DateTime dob { get; set; }
+
     }
 }

@@ -22,7 +22,7 @@ namespace TimeSheet.DatabaseContext
         //public DbSet<mainTimeSheet> MainTimeSheets { get; set; }
         //public DbSet<Salary> Salaries { get; set; }
         public DbSet<IdentityCard> IdentityCards { get; set; }
-        //public DbSet<FamilyMembers> FamilyMembers { get; set; }
+        public DbSet<FamilyMembers> FamilyMembers { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<typeOfOrder> typeOfOrders { get; set; }
 
@@ -135,13 +135,13 @@ namespace TimeSheet.DatabaseContext
              .Property(p => p.isActive)
              .HasDefaultValue(true);
 
-            //modelBuilder.Entity<FamilyMembers>()
-            //  .Property(p => p.uuid)
-            //  .HasDefaultValueSql("NEWID()");
+            modelBuilder.Entity<FamilyMembers>()
+              .Property(p => p.uuid)
+              .HasDefaultValueSql("NEWID()");
 
-            //modelBuilder.Entity<FamilyMembers>()
-            //   .Property(p => p.isDelete)
-            //   .HasDefaultValue(false);
+            modelBuilder.Entity<FamilyMembers>()
+               .Property(p => p.isDeleted)
+               .HasDefaultValue(false);
 
 
 
