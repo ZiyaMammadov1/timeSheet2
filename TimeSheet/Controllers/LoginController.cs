@@ -49,7 +49,7 @@ namespace TimeSheet.Controllers
                 return loginfinishObject = new Answer<UserLoginDto>(404, "Username empty", null);
             }
             Employee User = _context.Employees.FirstOrDefault(x => x.fin.ToLower() == userLoginDto.key.ToLower());
-            
+
             if (User == null)
             {
                 return loginfinishObject = new Answer<UserLoginDto>(400, "FIN or password is incorrect", null);
@@ -68,12 +68,12 @@ namespace TimeSheet.Controllers
 
 
 
-           List<DBEmployee> EmployeeList =_context.dBEmployees.Include(x=>x.Company)
-                                                               .Include(x => x.Database)
-                                                               .Include(x => x.Depament)
-                                                               .Include(x => x.Employee)
-                                                               .Include(x => x.Position)
-                .Where(x=>x.employeeId == User.id).ToList();
+            List<DBEmployee> EmployeeList = _context.dBEmployees.Include(x => x.Company)
+                                                                .Include(x => x.Database)
+                                                                .Include(x => x.Depament)
+                                                                .Include(x => x.Employee)
+                                                                .Include(x => x.Position)
+                 .Where(x => x.employeeId == User.id).ToList();
             if (EmployeeList.Count() <= 0)
             {
                 return loginfinishObject = new Answer<UserLoginDto>(409, "You haven't permission to login", null);
@@ -83,12 +83,16 @@ namespace TimeSheet.Controllers
 
             token.User = _mapper.Map<UserGetDto>(User);
 
-             IdentityCard card = _context.IdentityCards.FirstOrDefault(x => x.employeeId == User.id && x.isActive == true);
+            IdentityCard card = _context.IdentityCards.FirstOrDefault(x => x.employeeId == User.id && x.isActive == true);
+            if (card == null)
+            {
+                return loginfinishObject = new Answer<UserLoginDto>(409, "Cart not found", null);
+            }
             tokenInUserInfo userinfo = new tokenInUserInfo()
             {
                 fin = User.fin,
                 firstName = card.firstName,
-                lastName =card.lastName,
+                lastName = card.lastName,
                 photo = card.photo,
                 position = EmployeeList.First().Position.name,
                 company = EmployeeList.First().Company.name
