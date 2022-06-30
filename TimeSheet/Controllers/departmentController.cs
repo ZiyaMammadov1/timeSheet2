@@ -41,7 +41,8 @@ namespace TimeSheet.Controllers
                     {
                         name = department.name,
                         uuid = department.uuid,
-                        dbCode = databases.code
+                        dbCode = databases.code,
+                        code = department.code
                     };
 
                     departmentList.Add(GetDto);
@@ -54,17 +55,22 @@ namespace TimeSheet.Controllers
         [HttpGet("{code}")]
         public ActionResult<Answer<DepartmentGetDto>> Get(string code)
         {
-            Department department = _context.Departments.FirstOrDefault(x => x.code.ToLower() == code.ToLower() && x.isDeleted == false);
+            Department department = _context.Departments.FirstOrDefault(x => x.code == code && x.isDeleted == false);
 
             if (department != null)
             {
                 Database database = _context.Database.FirstOrDefault(x => x.id == department.databaseId && x.isDeleted == false);
+                if(database == null)
+                {
+                    return getFinishObject = new Answer<DepartmentGetDto>(200, "Database not found",null);
+                }
 
                 DepartmentGetDto CurrentDepartment = new DepartmentGetDto()
                 {
                     dbCode = database.code,
                     name = department.name,
-                    uuid = department.uuid
+                    uuid = department.uuid,
+                    code = department.code
                 };
                 return getFinishObject = new Answer<DepartmentGetDto>(200, "Department founded", new List<DepartmentGetDto> { CurrentDepartment });
             }
