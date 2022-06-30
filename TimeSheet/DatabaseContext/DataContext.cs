@@ -119,10 +119,7 @@ namespace TimeSheet.DatabaseContext
                 .Property(p => p.isDeleted)
                 .HasDefaultValue(false);
 
-            modelBuilder.Entity<Contact>()
-           .Property(p => p.dbCode)
-           .IsRequired(true);
-
+       
             modelBuilder.Entity<Order>()
         .Property(p => p.uuid)
         .HasDefaultValueSql("NEWID()");

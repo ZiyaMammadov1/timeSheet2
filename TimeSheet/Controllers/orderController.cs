@@ -82,10 +82,10 @@ namespace TimeSheet.Controllers
                      Database = database,
                      Employee = user
                 };
+
             int statusCode = 400;
             if (orderPostDto.orderType == 1 || orderPostDto.orderType == 2)
             {
-              
                 statusCode = CreateOrRemoveUser(ctr);
             }
             else if (orderPostDto.orderType == 2)
@@ -120,10 +120,8 @@ namespace TimeSheet.Controllers
             _context.Orders.Add(newOrder);
             _context.SaveChanges();
 
+
             return getFinishObject = new Answer<string>(201, "Order created", null);
-
-
-
 
         }
 
@@ -151,6 +149,8 @@ namespace TimeSheet.Controllers
                 _context.SaveChanges();
                 return 201;
             }
+
+
             //remove
             else if (CRDto.OrderPostDto.orderType == 2)
             {
