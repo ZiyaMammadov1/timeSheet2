@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TimeSheet.DatabaseContext;
@@ -252,6 +253,70 @@ namespace TimeSheet.Controllers
 
         }
 
+
+        public class TestOrder
+        {
+            public string dbCode { get; set; }
+            public string fin { get; set; }
+            public string tin { get; set; }
+            public string orderType { get; set; }
+            public DateTime date { get; set; }
+            public DateTime dateEffective { get; set; }
+            public DateTime dateExpired { get; set; }
+            public DateTime dateTo { get; set; }
+            public decimal salary1 { get; set; }
+            public decimal salary2 { get; set; }
+            public decimal salaryTotal { get; set; }
+            public string description { get; set; }
+            public string code { get; set; }
+            public string projectCode { get; set; }
+            public string departmentCode { get; set; }
+            public string positionCode { get; set; }
+            public string companyCode { get; set; }
+
+        }
+
+
+
+        [HttpGet]
+        public ActionResult<List<TestOrder>> GetAllRecord()
+        {
+            List<Order> orders = _context.Orders
+                                         .Include(x=>x.Deprtment)
+                                         .Include(x=>x.Position)
+                                         .Include(x=>x.Company)
+                                         .Include(x=>x.Project)
+                                         .ToList();
+            List<TestOrder> TOrder = new List<TestOrder>();
+            foreach (var order in orders)
+            {
+                TestOrder testOrder = new TestOrder() 
+                {
+                    dbCode = order.dbCode,
+                    fin = order.fin,
+                    tin = order.tin,
+                    orderType = order.orderType,
+                    date = order.date,
+                    dateEffective = order.dateEffective,
+                    dateExpired = order.dateExpired,
+                    dateTo = order.dateTo,
+                    salary1 = order.salary1,
+                    salary2 = order.salary2,
+                    salaryTotal = order.salaryTotal,
+                    description = order.description,
+                    code = order.code,
+                    projectCode = order.Project.code,
+                    departmentCode = order.Deprtment.code,
+                    positionCode = order.Position.code,
+                    companyCode = order.Company.code
+
+                };
+                TOrder.Add(testOrder);
+
+            }
+
+            return TOrder;
+        }
 
     }
 

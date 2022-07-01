@@ -31,7 +31,7 @@ namespace TimeSheet.Entities
         public Project Project { get; set; }
 
         public int deprtmentID { get; set; }
-        public Department Department { get; set; }
+        public Department Deprtment { get; set; }
 
         public int positionId { get; set; }
         public Position Position { get; set; }

@@ -18,7 +18,6 @@ namespace TimeSheet.Dtos.OrderDtos
         public int salaryTotal { get; set; }
         public string description { get; set; }
         public string code { get; set; }
-
         public string projectCode { get; set; }
         public string departmentCode { get; set; }
         public string positionCode { get; set; }

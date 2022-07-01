@@ -36,7 +36,7 @@ namespace TimeSheet.Controllers
                 return getFinishObject = new Answer<ContactGetDto>(400, "Database not found", null);
             }
 
-            Employee employee = _context.Employees.FirstOrDefault(x => x.fin.ToLower() == postDto.employeeFin.ToLower());
+            Employee employee = _context.Employees.FirstOrDefault(x => x.fin.ToLower() == postDto.fin.ToLower());
 
             if (employee == null)
             {
