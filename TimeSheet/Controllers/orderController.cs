@@ -85,11 +85,11 @@ namespace TimeSheet.Controllers
                 };
 
             int statusCode = 400;
-            if (orderPostDto.orderType == 1 || orderPostDto.orderType == 2)
+            if (orderPostDto.orderType == "1" || orderPostDto.orderType == "2")
             {
                 statusCode = CreateOrRemoveUser(ctr);
             }
-            else if (orderPostDto.orderType == 2)
+            else if (orderPostDto.orderType == "2")
             {
                 statusCode = CreateOrRemoveUser(ctr);
             }
@@ -101,7 +101,7 @@ namespace TimeSheet.Controllers
                 dbCode = orderPostDto.dbCode,
                 fin = orderPostDto.fin,
                 tin = orderPostDto.tin,
-                orderType = orderPostDto.code,
+                orderType = orderPostDto.orderType,
                 date = orderPostDto.date,
                 dateEffective = orderPostDto.dateEffective,
                 dateExpired = orderPostDto.dateExpired,
@@ -133,7 +133,7 @@ namespace TimeSheet.Controllers
         {
 
             //create
-            if (CRDto.OrderPostDto.orderType == 1)
+            if (CRDto.OrderPostDto.orderType == "1")
             {
                 DBEmployee dBEmployee = new DBEmployee()
                 {
@@ -153,7 +153,7 @@ namespace TimeSheet.Controllers
 
 
             //remove
-            else if (CRDto.OrderPostDto.orderType == 2)
+            else if (CRDto.OrderPostDto.orderType == "2")
             {
                 DBEmployee currentUser = _context.dBEmployees.FirstOrDefault(x => x.databaseId == CRDto.Database.id && x.employeeId == CRDto.Employee.id &&
                                                                                  x.projectId == CRDto.Project.id && x.companyId == CRDto.Company.id && x.departmentId == CRDto.Department.id &&
@@ -196,8 +196,10 @@ namespace TimeSheet.Controllers
             DBEmployee dbEmployee = dbEmployees.FirstOrDefault();
 
             Order order = _context.Orders
-                //.Include(x=>x.Department)
-                //.Include(x=>x.)
+                .Include(x => x.Department)
+                .Include(x => x.Position)
+                .Include(x=>x.Project)
+                .Include(x=>x.Company)
                 .FirstOrDefault(x=>x.fin == employee.fin && x.dbCode == dbEmployee.Database.code && x.isDeleted == false);
 
             if(order == null)
@@ -207,11 +209,11 @@ namespace TimeSheet.Controllers
 
 
             List<IdentityCard> identityCards = _context.IdentityCards.Where(x => x.employeeId == employee.id && x.databaseId == dbEmployees.FirstOrDefault().databaseId).ToList();
-            //typeOfOrder orderType = _context.typeOfOrders.FirstOrDefault(x=>x.id == order.id);
-            //if(orderType == null)
-            //{
-            //    return getFinishObject = new Answer<OrderGetDto>(400, "Order type found.", null);
-            //}
+            typeOfOrder orderType = _context.typeOfOrders.FirstOrDefault(x => x.id == order.id);
+            if (orderType == null)
+            {
+                return getFinishObject = new Answer<OrderGetDto>(400, "Order type found.", null);
+            }
             List<OrderGetDto> ordersGetDto = new List<OrderGetDto>();
             foreach (var item in identityCards)
             {
@@ -233,7 +235,7 @@ namespace TimeSheet.Controllers
                     salary2 = order.salary2,
                     salaryTotal = order.salaryTotal,
                     tin = order.tin,
-                    //orderType = order.orderType
+                    orderType = orderType
 
                 };
                 ordersGetDto.Add(orderGetDto);
