@@ -13,7 +13,7 @@ namespace TimeSheet.Controllers
     public class companyController : ControllerBase
     {
         private readonly DataContext _context;
-        private readonly IMapper _mapper;
+        private readonly IMapper _mapper; 
         Answer<CompanyGetDto> getFinishObject;
 
         public companyController(DataContext context, IMapper mapper)
