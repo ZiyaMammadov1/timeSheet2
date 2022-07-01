@@ -1,7 +1,4 @@
 ﻿using FluentValidation;
-using System;
-using System.Collections.Generic;
-using TimeSheet.Entities;
 
 namespace TimeSheet.Dtos.UserDto
 {

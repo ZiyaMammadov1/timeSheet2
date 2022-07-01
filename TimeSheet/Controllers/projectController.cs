@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using TimeSheet.DatabaseContext;
@@ -55,7 +53,7 @@ namespace TimeSheet.Controllers
         }
 
         [HttpPost]
-        public ActionResult<Answer<ProjectGetDto>> CreateProject (ProjectPostDto ProjectPostDto)
+        public ActionResult<Answer<ProjectGetDto>> CreateProject(ProjectPostDto ProjectPostDto)
         {
             Database database = _context.Database.FirstOrDefault(x => x.code.ToLower() == ProjectPostDto.dbCode.ToLower());
 

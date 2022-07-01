@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.Linq;
 using TimeSheet.DatabaseContext;
 using TimeSheet.Dtos.EmployeeInfoDtos;
@@ -113,6 +110,6 @@ namespace TimeSheet.Controllers
         }
 
 
-      
+
     }
 }

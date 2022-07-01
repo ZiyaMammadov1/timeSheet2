@@ -1,13 +1,9 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using TimeSheet.DatabaseContext;
-using TimeSheet.Dtos.EmployeeInfoDtos;
 using TimeSheet.Dtos.UserDto;
 using TimeSheet.Entities;
 using VoltekApi.Helper;
@@ -63,7 +59,7 @@ namespace TimeSheet.Controllers
         [HttpPost]
         public ActionResult<Answer<UserGetDto>> CreateEmployee(UserPostDto UserPostDto)
         {
-            Employee employee = new Employee() {code = UserPostDto.code,fin = UserPostDto.fin,password = Hashing.ToSHA256(UserPostDto.fin).ToString() };
+            Employee employee = new Employee() { code = UserPostDto.code, fin = UserPostDto.fin, password = Hashing.ToSHA256(UserPostDto.fin).ToString() };
             _context.Employees.Add(employee);
             _context.SaveChanges();
             return getFinishObject = new Answer<UserGetDto>(201, "Employee created", null);
@@ -78,7 +74,7 @@ namespace TimeSheet.Controllers
             {
                 return getFinishObject = new Answer<UserGetDto>(400, "Employee not found", null);
             }
-           
+
             employee.fin = UserUpdateDto.fin;
 
             _context.SaveChanges();

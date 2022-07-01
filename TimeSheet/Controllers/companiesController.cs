@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using TimeSheet.DatabaseContext;
@@ -37,10 +35,10 @@ namespace TimeSheet.Controllers
                 {
                     Database databases = _context.Database.FirstOrDefault(x => x.isDeleted == false);
 
-                    CompanyGetDto GetDto = new CompanyGetDto() 
+                    CompanyGetDto GetDto = new CompanyGetDto()
                     {
                         uuid = company.uuid,
-                        name=company.name,
+                        name = company.name,
                         tin = company.tin,
                         dbCode = databases.code
                     };
@@ -56,7 +54,7 @@ namespace TimeSheet.Controllers
         {
             Company company = _context.Companies.FirstOrDefault(x => x.code.ToLower() == code.ToLower() && x.isDeleted == false);
 
-            Database database = _context.Database.FirstOrDefault(x=>x.id == company.databaseId && x.isDeleted == false);
+            Database database = _context.Database.FirstOrDefault(x => x.id == company.databaseId && x.isDeleted == false);
 
             if (company != null)
             {
@@ -75,7 +73,7 @@ namespace TimeSheet.Controllers
                 return getFinishObject = new Answer<CompanyGetDto>(400, "Companies not found", null);
             }
         }
-        
+
         [HttpPost]
         public ActionResult<Answer<CompanyGetDto>> CreateCompany(CompanyPostDto CompanyPostDto)
         {
@@ -91,7 +89,7 @@ namespace TimeSheet.Controllers
                 return getFinishObject = new Answer<CompanyGetDto>(409, "This company existed", null);
             }
 
-            Company company = new Company() { name = CompanyPostDto.name, code = CompanyPostDto.code, databaseId = database.id, tin = CompanyPostDto.tin  };
+            Company company = new Company() { name = CompanyPostDto.name, code = CompanyPostDto.code, databaseId = database.id, tin = CompanyPostDto.tin };
 
             _context.Companies.Add(company);
             _context.SaveChanges();
@@ -126,7 +124,7 @@ namespace TimeSheet.Controllers
             {
                 company.isActive = false;
                 _context.SaveChanges();
-                return getFinishObject = new Answer<CompanyGetDto>(200, "Company set deactive",null);
+                return getFinishObject = new Answer<CompanyGetDto>(200, "Company set deactive", null);
             }
             else
             {

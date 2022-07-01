@@ -17,4 +17,3 @@ namespace TimeSheet.Entities
         public tokenInUserInfo UserInfo { get; set; }
     }
 }
-    

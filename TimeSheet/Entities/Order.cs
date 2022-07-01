@@ -13,7 +13,7 @@ namespace TimeSheet.Entities
         public DateTime date { get; set; }
         public DateTime dateEffective { get; set; }
         public DateTime dateExpired { get; set; }
-        public DateTime dateTo{ get; set; }
+        public DateTime dateTo { get; set; }
 
         [Column(TypeName = "decimal(18, 2)")]
         public decimal salary1 { get; set; }

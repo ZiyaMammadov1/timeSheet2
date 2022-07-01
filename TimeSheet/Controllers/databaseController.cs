@@ -20,32 +20,32 @@ namespace TimeSheet.Controllers
         Answer<DatabaseGetDto> getFinishedObject;
         public databaseController(DataContext db, IMapper mp)
         {
-            _db  = db;
+            _db = db;
             _mp = mp;
         }
 
         [HttpPost]
         public ActionResult<Answer<DatabaseGetDto>> CreateDatabase(DatabasePostDto DatabasePostDto)
         {
-            if(_db.Database.Any(x=>x.name.ToLower() == DatabasePostDto.name.ToLower()))
+            if (_db.Database.Any(x => x.name.ToLower() == DatabasePostDto.name.ToLower()))
             {
                 return getFinishedObject = new Answer<DatabaseGetDto>(409, "This database existed", null);
             }
             Database database = _mp.Map<Database>(DatabasePostDto);
             _db.Database.Add(database);
             _db.SaveChanges();
-            return getFinishedObject = new Answer<DatabaseGetDto>(201,"Database created", null);
+            return getFinishedObject = new Answer<DatabaseGetDto>(201, "Database created", null);
         }
 
         [HttpGet("{code}")]
         public ActionResult<Answer<DatabaseGetDto>> GetDatabase(string code)
         {
-            Database database = _db.Database.FirstOrDefault(x=>x.code.ToLower() == code.ToLower() && x.isDeleted == false);
-            if(database == null)
+            Database database = _db.Database.FirstOrDefault(x => x.code.ToLower() == code.ToLower() && x.isDeleted == false);
+            if (database == null)
             {
                 return getFinishedObject = new Answer<DatabaseGetDto>(400, "Database not found", null);
             }
-            return getFinishedObject = new Answer<DatabaseGetDto>(200, "Database founded", new List<DatabaseGetDto> { _mp.Map<DatabaseGetDto>(database)});
+            return getFinishedObject = new Answer<DatabaseGetDto>(200, "Database founded", new List<DatabaseGetDto> { _mp.Map<DatabaseGetDto>(database) });
 
         }
 

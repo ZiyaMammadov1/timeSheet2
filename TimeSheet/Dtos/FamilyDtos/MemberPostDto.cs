@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-using System;
-using TimeSheet.Entities;
+﻿using System;
 
 namespace TimeSheet.Dtos.FamilyDtos
 {
@@ -11,7 +9,7 @@ namespace TimeSheet.Dtos.FamilyDtos
         public string code { get; set; }
         public string relative { get; set; }
         public string fullName { get; set; }
-        public DateTime dob{ get; set; }
+        public DateTime dob { get; set; }
 
     }
 

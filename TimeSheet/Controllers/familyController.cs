@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,9 +45,9 @@ namespace TimeSheet.Controllers
                 //{
                 //    return getFinishObject = new Answer<MemberGetDto>(400, "Enter correct value", null);
                 //}
-                if (member.fullName.ToLower() == memberPostDto.fullName.ToLower() && member.dbId == database.id && member.code== memberPostDto.code)
+                if (member.fullName.ToLower() == memberPostDto.fullName.ToLower() && member.dbId == database.id && member.code == memberPostDto.code)
                 {
-                    member.relative = memberPostDto.relative; 
+                    member.relative = memberPostDto.relative;
                     member.dob = memberPostDto.dob;
                     member.fullName = memberPostDto.fullName;
                 }
@@ -89,7 +88,7 @@ namespace TimeSheet.Controllers
 
             List<DBEmployee> dbEmployees = _context.dBEmployees.Where(a => a.employeeId == employee.id).ToList();
 
-            if (dbEmployees.Count<=0 && dbEmployees == null)
+            if (dbEmployees.Count <= 0 && dbEmployees == null)
             {
                 return getFinishObject = new Answer<MemberGetDto>(400, "DbEmployees not found.", null);
             }
@@ -107,7 +106,7 @@ namespace TimeSheet.Controllers
                 members.Add(memberGetDto);
             }
 
-            return getFinishObject = new Answer<MemberGetDto>(200,"Family member founded", members);
+            return getFinishObject = new Answer<MemberGetDto>(200, "Family member founded", members);
 
         }
 

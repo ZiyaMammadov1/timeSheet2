@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-
-namespace TimeSheet.Dtos.ProjectDtos
+﻿namespace TimeSheet.Dtos.ProjectDtos
 {
     public class ProjectGetDto
     {

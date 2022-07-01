@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-
-namespace TimeSheet.Dtos.UserDto
+﻿namespace TimeSheet.Dtos.UserDto
 {
     public class UserUpdateDto
     {

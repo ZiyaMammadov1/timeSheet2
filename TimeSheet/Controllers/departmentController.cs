@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using TimeSheet.DatabaseContext;
@@ -60,9 +58,9 @@ namespace TimeSheet.Controllers
             if (department != null)
             {
                 Database database = _context.Database.FirstOrDefault(x => x.id == department.databaseId && x.isDeleted == false);
-                if(database == null)
+                if (database == null)
                 {
-                    return getFinishObject = new Answer<DepartmentGetDto>(200, "Database not found",null);
+                    return getFinishObject = new Answer<DepartmentGetDto>(200, "Database not found", null);
                 }
 
                 DepartmentGetDto CurrentDepartment = new DepartmentGetDto()

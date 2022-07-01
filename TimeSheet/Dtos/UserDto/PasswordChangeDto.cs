@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-
-namespace TimeSheet.Dtos.UserDto
+﻿namespace TimeSheet.Dtos.UserDto
 {
     public class PasswordChangeDto
     {
@@ -9,5 +7,5 @@ namespace TimeSheet.Dtos.UserDto
         public string ConfirmPassword { get; set; }
     }
 
-   
+
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
-using TimeSheet.Dtos.PositionDtos;
-using TimeSheet.Entities;
-
-namespace TimeSheet.Dtos.UserDto
+﻿namespace TimeSheet.Dtos.UserDto
 {
     public class UserGetDto
     {

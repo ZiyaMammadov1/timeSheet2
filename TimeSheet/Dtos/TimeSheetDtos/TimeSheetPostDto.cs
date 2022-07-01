@@ -1,7 +1,5 @@
 ﻿using FluentValidation;
 using System;
-using System.ComponentModel.DataAnnotations.Schema;
-using TimeSheet.Entities;
 
 namespace TimeSheet.Dtos.TimeSheetDtos
 {
@@ -11,7 +9,7 @@ namespace TimeSheet.Dtos.TimeSheetDtos
         public string workTypeId { get; set; }
         public DateTime? startDate { get; set; }
         public string description { get; set; }
-        public decimal? hours{ get; set; }
+        public decimal? hours { get; set; }
         public DateTime createdTime { get; set; }
     }
     public class TimeSheetPostDtoValidator : AbstractValidator<TimeSheetPostDto>

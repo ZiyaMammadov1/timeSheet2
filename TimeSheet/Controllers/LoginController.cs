@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using TimeSheet.DatabaseContext;
 using TimeSheet.Dtos.LoginDtos;
-using TimeSheet.Dtos.PositionDtos;
 using TimeSheet.Dtos.RefreshTokenDtos;
 using TimeSheet.Dtos.TokenWithUserInfo;
 using TimeSheet.Dtos.UserDto;
@@ -92,7 +91,7 @@ namespace TimeSheet.Controllers
             {
                 return loginfinishObject = new Answer<UserLoginDto>(400, "Cart not found", null);
             }
-            var OrderForSalary = _context.Orders.FirstOrDefault(x=>x.fin == User.fin && x.dbCode == EmployeeList.First().Database.code && x.isDeleted == false);
+            var OrderForSalary = _context.Orders.FirstOrDefault(x => x.fin == User.fin && x.dbCode == EmployeeList.First().Database.code && x.isDeleted == false);
 
             Contact contact = _context.Contacts.FirstOrDefault(x => x.employeeId == User.id && x.dbId == EmployeeList.First().Database.id && x.isDeleted == true);
 

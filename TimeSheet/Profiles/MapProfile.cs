@@ -1,15 +1,11 @@
 ﻿using AutoMapper;
-using System.Collections.Generic;
 using TimeSheet.Dtos.CompanyDtos;
 using TimeSheet.Dtos.DatabaseDtos;
 using TimeSheet.Dtos.DepartmentDtos;
-using TimeSheet.Dtos.FamilyDtos;
 using TimeSheet.Dtos.PositionDtos;
 using TimeSheet.Dtos.ProjectDtos;
-using TimeSheet.Dtos.TimeSheetDtos;
 using TimeSheet.Dtos.TypeOfOrderDtos;
 using TimeSheet.Dtos.UserDto;
-using TimeSheet.Dtos.WorkTypeDtos;
 using TimeSheet.Entities;
 
 namespace TimeSheet.Profiles

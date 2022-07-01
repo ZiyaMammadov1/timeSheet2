@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TimeSheet.Dtos.EmployeeInfoDtos
+﻿namespace TimeSheet.Dtos.EmployeeInfoDtos
 {
     public class EmployeeInfoPostDto
     {

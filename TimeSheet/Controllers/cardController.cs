@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +27,7 @@ namespace TimeSheet.Controllers
             Employee user = _context.Employees.FirstOrDefault(x => x.fin.ToLower() == CardPostDto.fin.ToLower());
             if (user == null)
             {
-                return getFinishObject = new Answer<CardGetDto>(400,"User not found", null);
+                return getFinishObject = new Answer<CardGetDto>(400, "User not found", null);
             }
             Database db = _context.Database.FirstOrDefault(x => x.code.ToLower() == CardPostDto.dbCode.ToLower());
             if (db == null)
@@ -63,7 +62,7 @@ namespace TimeSheet.Controllers
                     series = CardPostDto.seriya,
                     employeeId = user.id,
                     databaseId = db.id,
-                    photo = CardPostDto.photo                    
+                    photo = CardPostDto.photo
                 };
 
                 _context.IdentityCards.Add(newCard);

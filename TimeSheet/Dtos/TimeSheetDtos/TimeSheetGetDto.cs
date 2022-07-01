@@ -1,7 +1,5 @@
-﻿using FluentValidation;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using TimeSheet.Entities;
 
 namespace TimeSheet.Dtos.TimeSheetDtos
 {
@@ -19,5 +17,5 @@ namespace TimeSheet.Dtos.TimeSheetDtos
         [NotMapped]
         public string Calendar { get; set; }
     }
-   
+
 }

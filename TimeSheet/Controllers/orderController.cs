@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using TimeSheet.DatabaseContext;
@@ -75,16 +73,16 @@ namespace TimeSheet.Controllers
             }
 
 
-              CreateOrRemoveDto ctr = new CreateOrRemoveDto()
-                {
-                    OrderPostDto = orderPostDto,
-                    Project = project,
-                    Department = department,
-                    Company = company,
-                     Position = position,
-                     Database = database,
-                     Employee = user
-                };
+            CreateOrRemoveDto ctr = new CreateOrRemoveDto()
+            {
+                OrderPostDto = orderPostDto,
+                Project = project,
+                Department = department,
+                Company = company,
+                Position = position,
+                Database = database,
+                Employee = user
+            };
 
             int statusCode = 400;
             if (orderPostDto.orderType == "1" || orderPostDto.orderType == "2")
@@ -161,7 +159,7 @@ namespace TimeSheet.Controllers
                                                                                  x.projectId == CRDto.Project.id && x.companyId == CRDto.Company.id && x.departmentId == CRDto.Department.id &&
                                                                                  x.positionId == CRDto.Position.id && x.isDelete == false);
 
-                if(currentUser == null)
+                if (currentUser == null)
                 {
                     return 400;
                 }
@@ -187,7 +185,7 @@ namespace TimeSheet.Controllers
 
             List<DBEmployee> dbEmployees = _context.dBEmployees.Where(a => a.employeeId == employee.id).ToList();
 
-          
+
 
 
             if (dbEmployees.Count <= 0 && dbEmployees == null)
@@ -199,17 +197,17 @@ namespace TimeSheet.Controllers
             DBEmployee dbEmployee = dbEmployees.FirstOrDefault();
 
 
-            Order order = _context.Orders.FirstOrDefault(x=>x.fin == employee.fin && x.dbCode == dbEmployee.Database.code && x.isDeleted == false);
+            Order order = _context.Orders.FirstOrDefault(x => x.fin == employee.fin && x.dbCode == dbEmployee.Database.code && x.isDeleted == false);
 
-            if(order == null)
+            if (order == null)
             {
                 return getFinishObject = new Answer<OrderGetDto>(400, "Order not found.", null);
             }
 
-            typeOfOrder orderType = _context.typeOfOrders.FirstOrDefault(x=>x.code == order.orderType );
+            typeOfOrder orderType = _context.typeOfOrders.FirstOrDefault(x => x.code == order.orderType);
 
             List<IdentityCard> identityCards = _context.IdentityCards.Where(x => x.employeeId == employee.id && x.databaseId == dbEmployees.FirstOrDefault().databaseId).ToList();
-           
+
             List<OrderGetDto> ordersGetDto = new List<OrderGetDto>();
             foreach (var item in identityCards)
             {

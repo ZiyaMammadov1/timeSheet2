@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-
-namespace TimeSheet.Dtos.DepartmentDtos
+﻿namespace TimeSheet.Dtos.DepartmentDtos
 {
     public class DepartmentPostDto
     {

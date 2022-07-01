@@ -2,7 +2,7 @@
 
 namespace TimeSheet.Entities
 {
-    public class Project:BaseEntity
+    public class Project : BaseEntity
     {
         public string name { get; set; }
 

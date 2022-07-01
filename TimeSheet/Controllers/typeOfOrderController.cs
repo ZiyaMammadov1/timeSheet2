@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using TimeSheet.DatabaseContext;
-using TimeSheet.Dtos.DatabaseDtos;
 using TimeSheet.Dtos.TypeOfOrderDtos;
 using TimeSheet.Entities;
 

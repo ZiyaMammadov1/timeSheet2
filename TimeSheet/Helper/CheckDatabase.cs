@@ -17,11 +17,11 @@ namespace TimeSheet.Helper
             _context = context;
         }
 
-        public Answer<T> Exist(Expression<Func<T, bool>> predicate) 
+        public Answer<T> Exist(Expression<Func<T, bool>> predicate)
         {
             var exist = _context.Set<T>().FirstOrDefault(predicate);
 
-            if(exist == null)
+            if (exist == null)
             {
                 return getFinishObject = new Answer<T>(400, "Not Found", null);
             }

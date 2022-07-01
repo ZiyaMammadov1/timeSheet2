@@ -7,15 +7,15 @@ namespace TimeSheet.Entities
         public int StatusCode { get; set; }
         public string Message { get; set; }
 
-        #nullable enable
+#nullable enable
         public List<T> Result { get; set; }
 
-        public Answer(int statusCode, string message, List<T> ?result)
+        public Answer(int statusCode, string message, List<T>? result)
         {
             StatusCode = statusCode;
             Message = message;
             Result = result ?? new List<T>();
-        }  
-     
+        }
+
     }
 }

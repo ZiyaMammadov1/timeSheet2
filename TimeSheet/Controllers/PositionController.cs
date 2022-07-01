@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using TimeSheet.DatabaseContext;
@@ -30,7 +29,7 @@ namespace TimeSheet.Controllers
             List<Position> position = _context.Positions.Where(x => x.isDeleted == false).ToList();
             if (position.Count > 0)
             {
-                List<PositionGetDto> positionList = position.Select(x => new PositionGetDto() { uuid = x.uuid, name = x.name , code = x.code}).ToList();
+                List<PositionGetDto> positionList = position.Select(x => new PositionGetDto() { uuid = x.uuid, name = x.name, code = x.code }).ToList();
                 return getFinishObject = new Answer<PositionGetDto>(200, "Position founded", positionList);
             }
             return getFinishObject = new Answer<PositionGetDto>(400, "Position not founded", null);
@@ -39,7 +38,7 @@ namespace TimeSheet.Controllers
         [HttpGet("{code}")]
         public ActionResult<Answer<PositionGetDto>> Get(string code)
         {
-            Position position = _context.Positions.FirstOrDefault(x => x.code== code && x.isDeleted == false);
+            Position position = _context.Positions.FirstOrDefault(x => x.code == code && x.isDeleted == false);
 
             if (position != null)
             {

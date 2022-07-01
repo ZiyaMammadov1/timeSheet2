@@ -109,7 +109,7 @@ namespace TimeSheet
                 options.AddPolicy(name: "AllowOrigin",
                     builder =>
                     {
-                        builder.WithOrigins("http://192.168.192.85:8045","http://localhost:4200")
+                        builder.WithOrigins("http://192.168.192.85:8045", "http://localhost:4200")
                                             .AllowAnyHeader()
                                             .AllowAnyMethod();
 

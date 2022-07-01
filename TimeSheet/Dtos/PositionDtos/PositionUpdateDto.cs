@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-
-namespace TimeSheet.Dtos.PositionDtos
+﻿namespace TimeSheet.Dtos.PositionDtos
 {
     public class PositionUpdateDto
     {
@@ -8,5 +6,5 @@ namespace TimeSheet.Dtos.PositionDtos
         public string name { get; set; }
     }
 
-  
+
 }

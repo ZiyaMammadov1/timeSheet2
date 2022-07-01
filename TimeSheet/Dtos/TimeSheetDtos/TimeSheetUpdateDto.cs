@@ -5,7 +5,7 @@ namespace TimeSheet.Dtos.TimeSheetDtos
 {
     public class TimeSheetUpdateDto
     {
-        public string id { get; set; } 
+        public string id { get; set; }
         public string title { get; set; }
         public string projectid { get; set; }
         public string workTypeId { get; set; }

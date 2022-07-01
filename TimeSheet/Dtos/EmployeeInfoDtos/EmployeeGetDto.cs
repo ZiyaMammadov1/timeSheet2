@@ -1,5 +1,4 @@
 ﻿using System;
-using TimeSheet.Entities;
 
 namespace TimeSheet.Dtos.EmployeeInfoDtos
 {

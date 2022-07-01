@@ -1,6 +1,6 @@
 ﻿namespace TimeSheet.Entities
 {
-    public class DBEmployee 
+    public class DBEmployee
     {
         public int id { get; set; }
 

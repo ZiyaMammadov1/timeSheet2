@@ -119,7 +119,7 @@ namespace TimeSheet.DatabaseContext
                 .Property(p => p.isDeleted)
                 .HasDefaultValue(false);
 
-       
+
             modelBuilder.Entity<Order>()
         .Property(p => p.uuid)
         .HasDefaultValueSql("NEWID()");
@@ -147,7 +147,7 @@ namespace TimeSheet.DatabaseContext
             modelBuilder.Entity<Project>()
                 .HasIndex(x => x.code)
                 .IsUnique(true);
-            
+
             modelBuilder.Entity<Department>()
                 .HasIndex(x => x.code)
                 .IsUnique(true);
@@ -159,7 +159,7 @@ namespace TimeSheet.DatabaseContext
             modelBuilder.Entity<Order>()
                .HasIndex(x => x.code)
                .IsUnique(true);
-            
+
             modelBuilder.Entity<FamilyMembers>()
                .HasIndex(x => x.code)
                .IsUnique(true);
