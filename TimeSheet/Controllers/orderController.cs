@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using TimeSheet.DatabaseContext;
@@ -183,7 +184,13 @@ namespace TimeSheet.Controllers
                 return getFinishObject = new Answer<OrderGetDto>(400, "Employee not found.", null);
             }
 
-            List<DBEmployee> dbEmployees = _context.dBEmployees.Where(a => a.employeeId == employee.id).ToList();
+            List<DBEmployee> dbEmployees = _context.dBEmployees
+                                                    .Include(x=>x.Database)
+                                                    .Include(x=>x.Position)
+                                                    .Include(x=>x.Depament)
+                                                    .Include(x=>x.Project)
+                                                    .Include(x=>x.Company)
+                                                    .Where(a => a.employeeId == employee.id).ToList();
 
 
 
@@ -208,7 +215,13 @@ namespace TimeSheet.Controllers
 
             List<IdentityCard> identityCards = _context.IdentityCards.Where(x => x.employeeId == employee.id && x.databaseId == dbEmployees.FirstOrDefault().databaseId).ToList();
 
+            if(identityCards == null || identityCards.Count <= 0) 
+            {
+                return getFinishObject = new Answer<OrderGetDto>(400, "Identity Card not found.", null);
+            }
+
             List<OrderGetDto> ordersGetDto = new List<OrderGetDto>();
+
             foreach (var item in identityCards)
             {
                 OrderGetDto orderGetDto = new OrderGetDto()

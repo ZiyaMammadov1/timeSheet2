@@ -91,12 +91,14 @@ namespace TimeSheet.Controllers
 
             List<DBEmployee> dbEmployees = _context.dBEmployees.Where(a => a.employeeId == employee.id).ToList();
 
-            if (dbEmployees.Count <= 0 && dbEmployees == null)
+            if (dbEmployees == null || dbEmployees.Count <= 0)
             {
                 return getFinishObject = new Answer<CardGetDto>(400, "DbEmployees not found.", null);
             }
 
             List<IdentityCard> identityCards = _context.IdentityCards.Where(x => x.employeeId == employee.id && x.databaseId == dbEmployees.FirstOrDefault().databaseId).ToList();
+
+
             List<CardGetDto> cardsGetDto = new List<CardGetDto>();
             foreach (var item in identityCards)
             {

@@ -73,7 +73,7 @@ namespace TimeSheet.Controllers
                                                                 .Include(x => x.Employee)
                                                                 .Include(x => x.Position)
                  .Where(x => x.employeeId == User.id).ToList();
-            if (EmployeeList.Count() <= 0)
+            if (EmployeeList == null || EmployeeList.Count() <= 0)
             {
                 return loginfinishObject = new Answer<UserLoginDto>(409, "You haven't permission to login", null);
             }
