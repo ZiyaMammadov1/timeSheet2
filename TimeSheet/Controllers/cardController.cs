@@ -112,7 +112,8 @@ namespace TimeSheet.Controllers
                     lastName = item.lastName,
                     number = item.number,
                     photo = item.photo,
-                    seriya = item.series
+                    seriya = item.series,
+                    isActive = item.isActive
                 };
                 cardsGetDto.Add(cardGetDto);
             }

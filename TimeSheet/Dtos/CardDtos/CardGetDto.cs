@@ -14,5 +14,6 @@ namespace TimeSheet.Dtos.CardDtos
         public string adress { get; set; }
         public string issiedBy { get; set; }
         public string photo { get; set; }
+        public bool isActive { get; set; }
     }
 }
