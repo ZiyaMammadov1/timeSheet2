@@ -88,6 +88,8 @@ namespace TimeSheet.Controllers
             {
                 return loginfinishObject = new Answer<UserLoginDto>(409, "Cart not found", null);
             }
+            var OrderForSalary = _context.Orders.FirstOrDefault(x=>x.fin == User.fin && x.dbCode == EmployeeList.First().Database.code && x.isDeleted == false);
+
             tokenInUserInfo userinfo = new tokenInUserInfo()
             {
                 fin = User.fin,
@@ -96,7 +98,8 @@ namespace TimeSheet.Controllers
                 photo = card.photo,
                 position = EmployeeList.First().Position.name,
                 company = EmployeeList.First().Company.name,
-                department = EmployeeList.First().Depament.name
+                department = EmployeeList.First().Depament.name,
+                salary = OrderForSalary.salaryTotal
             };
             token.UserInfo = userinfo;
 

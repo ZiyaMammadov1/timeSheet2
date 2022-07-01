@@ -63,7 +63,7 @@ namespace TimeSheet.Controllers
                     series = CardPostDto.seriya,
                     employeeId = user.id,
                     databaseId = db.id,
-                    photo = CardPostDto.photo
+                    photo = CardPostDto.photo                    
                 };
 
                 _context.IdentityCards.Add(newCard);
