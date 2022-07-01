@@ -42,10 +42,10 @@ namespace TimeSheet.Controllers
 
             foreach (var member in existMembers)
             {
-                if(member.fullName == null || member.dbId == null || member.code == null)
-                {
-                    return getFinishObject = new Answer<MemberGetDto>(400, "Enter correct value", null);
-                }
+                //if(member.fullName == null || member.code == null)
+                //{
+                //    return getFinishObject = new Answer<MemberGetDto>(400, "Enter correct value", null);
+                //}
                 if (member.fullName.ToLower() == memberPostDto.fullName.ToLower() && member.dbId == database.id && member.code== memberPostDto.code)
                 {
                     member.relative = memberPostDto.relative; 
