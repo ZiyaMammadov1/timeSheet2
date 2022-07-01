@@ -93,7 +93,7 @@ namespace TimeSheet.Controllers
             }
             var OrderForSalary = _context.Orders.FirstOrDefault(x => x.fin == User.fin && x.dbCode == EmployeeList.First().Database.code && x.isDeleted == false);
 
-            Contact contact = _context.Contacts.FirstOrDefault(x => x.employeeId == User.id && x.dbId == EmployeeList.First().Database.id && x.isDeleted == true);
+            Contact contact = _context.Contacts.FirstOrDefault(x => x.employeeId == User.id && x.dbId == EmployeeList.First().Database.id && x.isDeleted == false);
 
             if (contact == null)
             {
