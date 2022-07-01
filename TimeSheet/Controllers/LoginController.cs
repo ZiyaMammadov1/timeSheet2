@@ -95,7 +95,8 @@ namespace TimeSheet.Controllers
                 lastName = card.lastName,
                 photo = card.photo,
                 position = EmployeeList.First().Position.name,
-                company = EmployeeList.First().Company.name
+                company = EmployeeList.First().Company.name,
+                department = EmployeeList.First().Depament.name
             };
             token.UserInfo = userinfo;
 
