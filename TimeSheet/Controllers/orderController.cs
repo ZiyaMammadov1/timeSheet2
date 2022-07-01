@@ -185,8 +185,9 @@ namespace TimeSheet.Controllers
                 return getFinishObject = new Answer<OrderGetDto>(400, "Employee not found.", null);
             }
 
-            List<DBEmployee> dbEmployees = _context.dBEmployees.Include(x=>x.Database).Where(a => a.employeeId == employee.id).ToList();
+            List<DBEmployee> dbEmployees = _context.dBEmployees.Where(a => a.employeeId == employee.id).ToList();
 
+          
 
 
             if (dbEmployees.Count <= 0 && dbEmployees == null)
@@ -197,9 +198,8 @@ namespace TimeSheet.Controllers
 
             DBEmployee dbEmployee = dbEmployees.FirstOrDefault();
 
-            Order order = _context.Orders
-             
-                .FirstOrDefault(x=>x.fin == employee.fin && x.dbCode == dbEmployee.Database.code && x.isDeleted == false);
+
+            Order order = _context.Orders.FirstOrDefault(x=>x.fin == employee.fin && x.dbCode == dbEmployee.Database.code && x.isDeleted == false);
 
             if(order == null)
             {
@@ -215,10 +215,10 @@ namespace TimeSheet.Controllers
             {
                 OrderGetDto orderGetDto = new OrderGetDto()
                 {
-                    Position = dbEmployee.Position,
-                    Company = dbEmployee.Company,
-                    Department = dbEmployee.Depament,
-                    Project = dbEmployee.Project,
+                    Position = dbEmployee.Position.name,
+                    Company = dbEmployee.Company.name,
+                    Department = dbEmployee.Depament.name,
+                    Project = dbEmployee.Project.name,
                     code = item.code,
                     date = item.date,
                     dateEffective = order.dateEffective,

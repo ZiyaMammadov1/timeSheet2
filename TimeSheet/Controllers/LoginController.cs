@@ -87,12 +87,19 @@ namespace TimeSheet.Controllers
             token.User = _mapper.Map<UserGetDto>(User);
 
             IdentityCard card = _context.IdentityCards.FirstOrDefault(x => x.employeeId == User.id && x.isActive == true);
+
             if (card == null)
             {
-                return loginfinishObject = new Answer<UserLoginDto>(409, "Cart not found", null);
+                return loginfinishObject = new Answer<UserLoginDto>(400, "Cart not found", null);
             }
             var OrderForSalary = _context.Orders.FirstOrDefault(x=>x.fin == User.fin && x.dbCode == EmployeeList.First().Database.code && x.isDeleted == false);
 
+            Contact contact = _context.Contacts.FirstOrDefault(x => x.employeeId == User.id && x.dbId == EmployeeList.First().Database.id && x.isDeleted == true);
+
+            if (contact == null)
+            {
+                return loginfinishObject = new Answer<UserLoginDto>(400, "Contact not found", null);
+            }
 
 
             tokenInUserInfo userinfo = new tokenInUserInfo()
@@ -104,7 +111,8 @@ namespace TimeSheet.Controllers
                 position = dbEmployee.Position.name,
                 company = dbEmployee.Company.name,
                 department = dbEmployee.Depament.name,
-                salary = OrderForSalary.salaryTotal
+                salary = OrderForSalary.salaryTotal,
+                email = contact.email
             };
             token.UserInfo = userinfo;
 

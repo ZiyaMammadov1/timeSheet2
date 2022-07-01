@@ -10,6 +10,7 @@
         public string company { get; set; }
         public string department { get; set; }
         public decimal salary { get; set; }
+        public string email { get; set; }
 
     }
 }

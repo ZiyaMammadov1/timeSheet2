@@ -19,9 +19,9 @@ namespace TimeSheet.Dtos.OrderDtos
         public string description { get; set; }
         public string code { get; set; }
 
-        public Project Project { get; set; }
-        public Department Department { get; set; }
-        public Position Position{ get; set; }
-        public Company Company{ get; set; }
+        public string Project { get; set; }
+        public string Department { get; set; }
+        public string Position{ get; set; }
+        public string Company{ get; set; }
     }
 }
