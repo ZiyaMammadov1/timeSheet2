@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using TimeSheet.DatabaseContext;
@@ -16,7 +17,7 @@ namespace TimeSheet.Controllers
     public class orderController : ControllerBase
     {
         private readonly DataContext _context;
-        Answer<string> getFinishObject;
+        Answer<OrderGetDto> getFinishObject;
 
         public orderController(DataContext context)
         {
@@ -25,27 +26,27 @@ namespace TimeSheet.Controllers
 
 
         [HttpPost]
-        public ActionResult<Answer<string>> OrderPost(OrderPostDto orderPostDto)
+        public ActionResult<Answer<OrderGetDto>> OrderPost(OrderPostDto orderPostDto)
         {
             Employee user = _context.Employees.FirstOrDefault(x => x.fin.ToLower() == orderPostDto.fin.ToLower());
 
             if (user == null)
             {
-                return getFinishObject = new Answer<string>(400, "User not found", null);
+                return getFinishObject = new Answer<OrderGetDto>(400, "User not found", null);
             }
 
             Database database = _context.Database.FirstOrDefault(x => x.code.ToLower() == orderPostDto.dbCode.ToLower());
 
             if (database == null)
             {
-                return getFinishObject = new Answer<string>(400, "Database not found", null);
+                return getFinishObject = new Answer<OrderGetDto>(400, "Database not found", null);
             }
 
             Company company = _context.Companies.FirstOrDefault(x => x.tin.ToLower() == orderPostDto.tin.ToLower());
 
             if (company == null)
             {
-                return getFinishObject = new Answer<string>(400, "Company not found", null);
+                return getFinishObject = new Answer<OrderGetDto>(400, "Company not found", null);
             }
 
 
@@ -54,21 +55,21 @@ namespace TimeSheet.Controllers
 
             if (project == null)
             {
-                return getFinishObject = new Answer<string>(400, "Project not found", null);
+                return getFinishObject = new Answer<OrderGetDto>(400, "Project not found", null);
             }
 
             Department department = _context.Departments.FirstOrDefault(x => x.code.ToLower() == orderPostDto.departmentCode.ToLower());
 
             if (department == null)
             {
-                return getFinishObject = new Answer<string>(400, "Department not found", null);
+                return getFinishObject = new Answer<OrderGetDto>(400, "Department not found", null);
             }
 
             Position position = _context.Positions.FirstOrDefault(x => x.code.ToLower() == orderPostDto.positionCode.ToLower());
 
             if (position == null)
             {
-                return getFinishObject = new Answer<string>(400, "Position not found", null);
+                return getFinishObject = new Answer<OrderGetDto>(400, "Position not found", null);
             }
 
 
@@ -121,7 +122,7 @@ namespace TimeSheet.Controllers
             _context.SaveChanges();
 
 
-            return getFinishObject = new Answer<string>(201, "Order created", null);
+            return getFinishObject = new Answer<OrderGetDto>(201, "Order created", null);
 
         }
 
@@ -169,7 +170,78 @@ namespace TimeSheet.Controllers
 
         }
 
+        [HttpGet]
+        [Route("{fin}")]
+        public ActionResult<Answer<OrderGetDto>> Get(string fin)
+        {
 
+            // burda yoxluyassan gelen tokenden ki bu tokenin fini ile burda gelen fin eynidise cavab qaytarassan
+            Employee employee = _context.Employees.FirstOrDefault(a => a.fin == fin && a.isDeleted == false);
+
+            if (employee == null)
+            {
+                return getFinishObject = new Answer<OrderGetDto>(400, "Employee not found.", null);
+            }
+
+            List<DBEmployee> dbEmployees = _context.dBEmployees.Include(x=>x.Database).Where(a => a.employeeId == employee.id).ToList();
+
+
+
+            if (dbEmployees.Count <= 0 && dbEmployees == null)
+            {
+                return getFinishObject = new Answer<OrderGetDto>(400, "DbEmployees not found.", null);
+            }
+
+
+            DBEmployee dbEmployee = dbEmployees.FirstOrDefault();
+
+            Order order = _context.Orders
+                //.Include(x=>x.Department)
+                //.Include(x=>x.)
+                .FirstOrDefault(x=>x.fin == employee.fin && x.dbCode == dbEmployee.Database.code && x.isDeleted == false);
+
+            if(order == null)
+            {
+                return getFinishObject = new Answer<OrderGetDto>(400, "Order not found.", null);
+            }
+
+
+            List<IdentityCard> identityCards = _context.IdentityCards.Where(x => x.employeeId == employee.id && x.databaseId == dbEmployees.FirstOrDefault().databaseId).ToList();
+            //typeOfOrder orderType = _context.typeOfOrders.FirstOrDefault(x=>x.id == order.id);
+            //if(orderType == null)
+            //{
+            //    return getFinishObject = new Answer<OrderGetDto>(400, "Order type found.", null);
+            //}
+            List<OrderGetDto> ordersGetDto = new List<OrderGetDto>();
+            foreach (var item in identityCards)
+            {
+                OrderGetDto orderGetDto = new OrderGetDto()
+                {
+                    Position = dbEmployee.Position,
+                    Company = dbEmployee.Company,
+                    Department = dbEmployee.Depament,
+                    Project = dbEmployee.Project,
+                    code = item.code,
+                    date = item.date,
+                    dateEffective = order.dateEffective,
+                    dateExpired = order.dateExpired,
+                    dateTo = order.dateTo,
+                    dbCode = dbEmployee.Database.code,
+                    description = order.description,
+                    fin = employee.fin,
+                    salary1 = order.salary1,
+                    salary2 = order.salary2,
+                    salaryTotal = order.salaryTotal,
+                    tin = order.tin,
+                    //orderType = order.orderType
+
+                };
+                ordersGetDto.Add(orderGetDto);
+            }
+
+            return getFinishObject = new Answer<OrderGetDto>(200, "Employee cards founded", ordersGetDto);
+
+        }
 
 
     }

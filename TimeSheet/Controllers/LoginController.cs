@@ -78,6 +78,9 @@ namespace TimeSheet.Controllers
             {
                 return loginfinishObject = new Answer<UserLoginDto>(409, "You haven't permission to login", null);
             }
+
+            DBEmployee dbEmployee = EmployeeList.FirstOrDefault();
+
             Token token = tokenInitilizing.Init(UserLoginDto, _config, User.id);
 
 
@@ -90,15 +93,17 @@ namespace TimeSheet.Controllers
             }
             var OrderForSalary = _context.Orders.FirstOrDefault(x=>x.fin == User.fin && x.dbCode == EmployeeList.First().Database.code && x.isDeleted == false);
 
+
+
             tokenInUserInfo userinfo = new tokenInUserInfo()
             {
                 fin = User.fin,
                 firstName = card.firstName,
                 lastName = card.lastName,
                 photo = card.photo,
-                position = EmployeeList.First().Position.name,
-                company = EmployeeList.First().Company.name,
-                department = EmployeeList.First().Depament.name,
+                position = dbEmployee.Position.name,
+                company = dbEmployee.Company.name,
+                department = dbEmployee.Depament.name,
                 salary = OrderForSalary.salaryTotal
             };
             token.UserInfo = userinfo;

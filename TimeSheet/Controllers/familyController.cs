@@ -27,7 +27,7 @@ namespace TimeSheet.Controllers
         [HttpPost]
         public ActionResult<Answer<MemberGetDto>> CreateMember(MemberPostDto memberPostDto)
         {
-            Database database = _context.Database.FirstOrDefault(a => a.code == memberPostDto.dbCode);
+            Database database = _context.Database.FirstOrDefault(a => a.code == memberPostDto.dbCode && a.isDeleted == false);
             if (database == null)
             {
                 return getFinishObject = new Answer<MemberGetDto>(400, "Database not found.", null);
@@ -42,7 +42,11 @@ namespace TimeSheet.Controllers
 
             foreach (var member in existMembers)
             {
-                if (member.fullName.ToLower() == memberPostDto.fullName.ToLower() && member.dbId == database.id && member.code.ToLower() == memberPostDto.code.ToLower())
+                if(member.fullName == null || member.dbId == null || member.code == null)
+                {
+                    return getFinishObject = new Answer<MemberGetDto>(400, "Enter correct value", null);
+                }
+                if (member.fullName.ToLower() == memberPostDto.fullName.ToLower() && member.dbId == database.id && member.code== memberPostDto.code)
                 {
                     member.relative = memberPostDto.relative; 
                     member.dob = memberPostDto.dob;

@@ -15,7 +15,7 @@ namespace TimeSheet.Controllers
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
-        Answer<string> getFinishObject;
+        Answer<CardGetDto> getFinishObject;
         public cardController(DataContext context, IMapper mapper)
         {
             _context = context;
@@ -23,17 +23,17 @@ namespace TimeSheet.Controllers
         }
 
         [HttpPost]
-        public ActionResult<Answer<string>> AddCard(CardPostDto CardPostDto)
+        public ActionResult<Answer<CardGetDto>> AddCard(CardPostDto CardPostDto)
         {
             Employee user = _context.Employees.FirstOrDefault(x => x.fin.ToLower() == CardPostDto.fin.ToLower());
             if (user == null)
             {
-                return getFinishObject = new Answer<string>(400,"User not found", null);
+                return getFinishObject = new Answer<CardGetDto>(400,"User not found", null);
             }
             Database db = _context.Database.FirstOrDefault(x => x.code.ToLower() == CardPostDto.dbCode.ToLower());
             if (db == null)
             {
-                return getFinishObject = new Answer<string>(400, "User not found", null);
+                return getFinishObject = new Answer<CardGetDto>(400, "User not found", null);
             }
 
 
@@ -72,11 +72,54 @@ namespace TimeSheet.Controllers
             }
 
 
-            return getFinishObject = new Answer<string>(201, "Employee created", null);
+            return getFinishObject = new Answer<CardGetDto>(201, "Employee created", null);
 
         }
 
 
+        [HttpGet]
+        [Route("{fin}")]
+        public ActionResult<Answer<CardGetDto>> Get(string fin)
+        {
+
+            // burda yoxluyassan gelen tokenden ki bu tokenin fini ile burda gelen fin eynidise cavab qaytarassan
+            Employee employee = _context.Employees.FirstOrDefault(a => a.fin == fin && a.isDeleted == false);
+
+            if (employee == null)
+            {
+                return getFinishObject = new Answer<CardGetDto>(400, "Employee not found.", null);
+            }
+
+            List<DBEmployee> dbEmployees = _context.dBEmployees.Where(a => a.employeeId == employee.id).ToList();
+
+            if (dbEmployees.Count <= 0 && dbEmployees == null)
+            {
+                return getFinishObject = new Answer<CardGetDto>(400, "DbEmployees not found.", null);
+            }
+
+            List<IdentityCard> identityCards = _context.IdentityCards.Where(x => x.employeeId == employee.id && x.databaseId == dbEmployees.FirstOrDefault().databaseId).ToList();
+            List<CardGetDto> cardsGetDto = new List<CardGetDto>();
+            foreach (var item in identityCards)
+            {
+                CardGetDto cardGetDto = new CardGetDto()
+                {
+                    fin = employee.fin,
+                    adress = item.address,
+                    date = item.date,
+                    expireDate = item.expireTime,
+                    firstName = item.firstName,
+                    issiedBy = item.issiedBy,
+                    lastName = item.lastName,
+                    number = item.number,
+                    photo = item.photo,
+                    seriya = item.series
+                };
+                cardsGetDto.Add(cardGetDto);
+            }
+
+            return getFinishObject = new Answer<CardGetDto>(200, "Employee cards founded", cardsGetDto);
+
+        }
 
     }
 }
