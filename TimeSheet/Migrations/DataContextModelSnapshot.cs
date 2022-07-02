@@ -140,9 +140,6 @@ namespace TimeSheet.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
-                    b.Property<int>("orderId")
-                        .HasColumnType("int");
-
                     b.Property<int>("positionId")
                         .HasColumnType("int");
 
@@ -158,8 +155,6 @@ namespace TimeSheet.Migrations
                     b.HasIndex("departmentId");
 
                     b.HasIndex("employeeId");
-
-                    b.HasIndex("orderId");
 
                     b.HasIndex("positionId");
 
@@ -397,6 +392,9 @@ namespace TimeSheet.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("Departmentid")
+                        .HasColumnType("int");
+
                     b.Property<string>("code")
                         .HasColumnType("nvarchar(450)");
 
@@ -460,13 +458,13 @@ namespace TimeSheet.Migrations
 
                     b.HasKey("id");
 
+                    b.HasIndex("Departmentid");
+
                     b.HasIndex("code")
                         .IsUnique()
                         .HasFilter("[code] IS NOT NULL");
 
                     b.HasIndex("companyId");
-
-                    b.HasIndex("deprtmentID");
 
                     b.HasIndex("positionId");
 
@@ -650,12 +648,6 @@ namespace TimeSheet.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("TimeSheet.Entities.Order", "Order")
-                        .WithMany()
-                        .HasForeignKey("orderId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("TimeSheet.Entities.Position", "Position")
                         .WithMany("dBEmployees")
                         .HasForeignKey("positionId")
@@ -703,15 +695,14 @@ namespace TimeSheet.Migrations
 
             modelBuilder.Entity("TimeSheet.Entities.Order", b =>
                 {
+                    b.HasOne("TimeSheet.Entities.Department", "Department")
+                        .WithMany("Orders")
+                        .HasForeignKey("Departmentid")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("TimeSheet.Entities.Company", "Company")
                         .WithMany("Orders")
                         .HasForeignKey("companyId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("TimeSheet.Entities.Department", "Deprtment")
-                        .WithMany("Orders")
-                        .HasForeignKey("deprtmentID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
