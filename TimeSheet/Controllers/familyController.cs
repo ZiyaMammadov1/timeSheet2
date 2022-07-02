@@ -41,11 +41,15 @@ namespace TimeSheet.Controllers
 
             foreach (var member in existMembers)
             {
-                //if(member.fullName == null || member.code == null)
-                //{
-                //    return getFinishObject = new Answer<MemberGetDto>(400, "Enter correct value", null);
-                //}
-                if (member.fullName.ToLower() == memberPostDto.fullName.ToLower() && member.dbId == database.id && member.code == memberPostDto.code)
+                if (member.fullName == null || member.code == null )
+                {
+                    return getFinishObject = new Answer<MemberGetDto>(400, "Fullname and code can't be null", null);
+                }
+                if (member.code == memberPostDto.code)
+                {
+                    return getFinishObject = new Answer<MemberGetDto>(409, "A code conflict occurred", null);
+                }
+                if (member.fullName.ToLower() == memberPostDto.fullName.ToLower() && member.dbId == database.id)
                 {
                     member.relative = memberPostDto.relative;
                     member.dob = memberPostDto.dob;
