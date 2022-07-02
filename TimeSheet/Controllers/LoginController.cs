@@ -6,6 +6,8 @@ using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Linq;
 using TimeSheet.DatabaseContext;
+using TimeSheet.Dtos.CompanyDtos;
+using TimeSheet.Dtos.EmployeeInfoDtos;
 using TimeSheet.Dtos.LoginDtos;
 using TimeSheet.Dtos.RefreshTokenDtos;
 using TimeSheet.Dtos.TokenWithUserInfo;
@@ -155,6 +157,61 @@ namespace TimeSheet.Controllers
             {
                 return loginfinishObject = new Answer<UserLoginDto>(400, "Token is time out. Sign in with user", null);
             }
+
+        }
+
+        [HttpGet]
+        [Route("workPlaces")]
+        public ActionResult<Answer<CompanyGetDto>> GetAllWorkPlaces(string fin)
+        {
+
+            Answer<CompanyGetDto> companyfinishObject;
+
+            Employee employee = _context.Employees.FirstOrDefault(x => x.fin == fin);
+
+            if (employee == null)
+            {
+                return companyfinishObject = new Answer<CompanyGetDto>(400,"Employee not found", null);
+            }
+
+            List<DBEmployee> dbEmployees = _context.dBEmployees.Where(x => x.employeeId == employee.id).ToList();
+
+            if (dbEmployees.Count <= 0)
+            {
+                return companyfinishObject = new Answer<CompanyGetDto>(400, "DbEmployees not found", null);
+            }
+
+            List<CompanyGetDto> companiesGetDto = new List<CompanyGetDto>();
+
+            List<Company> companies = new List<Company>();
+
+            foreach (var item in dbEmployees)
+            {
+                Company company = _context.Companies.FirstOrDefault(x=>x.id == item.companyId && x.isDeleted == false);
+
+                companies.Add(company);
+            }
+
+            if(companies.Count <= 0)
+            {
+                return companyfinishObject = new Answer<CompanyGetDto>(400, "Companies not found", null);
+            }
+
+            foreach (var item in companies)
+            {
+                CompanyGetDto company = new CompanyGetDto()
+                {
+                    name = item.name,
+                    uuid = item.uuid,
+                    tin = item.tin,
+                    isActive = item.isActive
+                };
+
+                companiesGetDto.Add(company);
+            }
+
+            return companyfinishObject = new Answer<CompanyGetDto>(400, "Companies founded", companiesGetDto);
+
 
         }
 
