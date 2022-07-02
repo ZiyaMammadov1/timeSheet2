@@ -50,9 +50,11 @@ namespace TimeSheet.Controllers
                     member.relative = memberPostDto.relative;
                     member.dob = memberPostDto.dob;
                     member.fullName = memberPostDto.fullName;
+
+                    _context.SaveChanges();
+                    return getFinishObject = new Answer<MemberGetDto>(201, "Member updated.", null);
                 }
-                _context.SaveChanges();
-                return getFinishObject = new Answer<MemberGetDto>(201, "Member updated.", null);
+               
 
             }
 
