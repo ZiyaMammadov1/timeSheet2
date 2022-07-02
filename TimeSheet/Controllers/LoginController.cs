@@ -171,7 +171,7 @@ namespace TimeSheet.Controllers
 
             if (employee == null)
             {
-                return companyfinishObject = new Answer<CompanyGetDto>(400,"Employee not found", null);
+                return companyfinishObject = new Answer<CompanyGetDto>(400, "Employee not found", null);
             }
 
             List<DBEmployee> dbEmployees = _context.dBEmployees.Where(x => x.employeeId == employee.id).ToList();
@@ -187,12 +187,12 @@ namespace TimeSheet.Controllers
 
             foreach (var item in dbEmployees)
             {
-                Company company = _context.Companies.FirstOrDefault(x=>x.id == item.companyId && x.isDeleted == false);
+                Company company = _context.Companies.FirstOrDefault(x => x.id == item.companyId && x.isDeleted == false);
 
                 companies.Add(company);
             }
 
-            if(companies.Count <= 0)
+            if (companies.Count <= 0)
             {
                 return companyfinishObject = new Answer<CompanyGetDto>(400, "Companies not found", null);
             }
@@ -215,5 +215,11 @@ namespace TimeSheet.Controllers
 
         }
 
+        //[HttpGet]
+        //[Route("getDbEmployee")]
+        //public ActionResult GetCartAndContactWithDbEmployee(string uuid)
+        //{
+
+        //}
     }
 }

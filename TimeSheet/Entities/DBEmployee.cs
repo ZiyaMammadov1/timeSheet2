@@ -21,6 +21,8 @@
 
         public int positionId { get; set; }
         public Position Position { get; set; }
+        public int orderId { get; set; }
+        public Order Order { get; set; }
 
         public bool isActive { get; set; }
         public bool isDelete { get; set; }

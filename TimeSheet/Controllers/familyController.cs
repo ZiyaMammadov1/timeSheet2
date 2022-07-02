@@ -41,7 +41,7 @@ namespace TimeSheet.Controllers
 
             foreach (var member in existMembers)
             {
-                if (member.fullName == null || member.code == null )
+                if (memberPostDto.fullName == null || memberPostDto.code == null )
                 {
                     return getFinishObject = new Answer<MemberGetDto>(400, "Fullname and code can't be null", null);
                 }

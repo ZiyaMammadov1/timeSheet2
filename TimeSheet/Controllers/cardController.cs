@@ -38,18 +38,21 @@ namespace TimeSheet.Controllers
 
             IdentityCard card = _context.IdentityCards.FirstOrDefault(x => x.employeeId == user.id && x.databaseId == db.id);
 
-            if (card != null)
-            {
-                List<IdentityCard> cards = _context.IdentityCards.Where(x => x.employeeId == user.id && x.databaseId == db.id).ToList();
-                foreach (var item in cards)
-                {
-                    item.isActive = false;
-                }
-                _context.SaveChanges();
-            }
+            //if (card != null)
+            //{
+                
+            //    _context.SaveChanges();
+            //}
 
             if (card == null || CardPostDto.date != card.date)
             {
+
+                if (card != null)
+                {
+
+                    _context.SaveChanges();
+                }
+
                 IdentityCard newCard = new IdentityCard()
                 {
                     address = CardPostDto.adress,
