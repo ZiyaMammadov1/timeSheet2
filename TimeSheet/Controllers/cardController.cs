@@ -38,20 +38,13 @@ namespace TimeSheet.Controllers
 
             IdentityCard card = _context.IdentityCards.FirstOrDefault(x => x.employeeId == user.id && x.databaseId == db.id);
 
-            //if (card != null)
-            //{
-                
-            //    _context.SaveChanges();
-            //}
+           if(_context.IdentityCards.Any(x=>x.series == CardPostDto.seriya))
+           {
+                return getFinishObject = new Answer<CardGetDto>(400, "Card already exist", null);
+           }
 
             if (card == null || CardPostDto.date != card.date)
             {
-
-                if (card != null)
-                {
-
-                    _context.SaveChanges();
-                }
 
                 IdentityCard newCard = new IdentityCard()
                 {
