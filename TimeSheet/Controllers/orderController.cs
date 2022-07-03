@@ -75,6 +75,7 @@ namespace TimeSheet.Controllers
             {
                 return orderResult = new Answer<OrderPostDto>(400, "There was a conflict with the code", null);
             }
+
             #endregion
 
             #region addOrder
@@ -106,6 +107,11 @@ namespace TimeSheet.Controllers
             #endregion
 
             #region CreateOrRemoveDtoAndChecking
+            if (_context.dBEmployees.Any(x => x.employeeId == user.id && x.databaseId == database.id && x.companyId == company.id && x.projectId == project.id && x.positionId == position.id && x.isDelete == false))
+            {
+                return orderResult = new Answer<OrderPostDto>(200, "Order already exist", null);
+            }
+
             CreateOrRemoveDto ctr = new CreateOrRemoveDto()
             {
                 OrderPostDto = orderPostDto,
@@ -191,11 +197,11 @@ namespace TimeSheet.Controllers
             }
 
             List<DBEmployee> dbEmployees = _context.dBEmployees
-                                                    .Include(x=>x.Database)
-                                                    .Include(x=>x.Position)
-                                                    .Include(x=>x.Depament)
-                                                    .Include(x=>x.Project)
-                                                    .Include(x=>x.Company)
+                                                    .Include(x => x.Database)
+                                                    .Include(x => x.Position)
+                                                    .Include(x => x.Depament)
+                                                    .Include(x => x.Project)
+                                                    .Include(x => x.Company)
                                                     .Where(a => a.employeeId == employee.id).ToList();
             if (dbEmployees.Count <= 0 && dbEmployees == null)
             {
@@ -215,12 +221,12 @@ namespace TimeSheet.Controllers
 
             List<IdentityCard> identityCards = _context.IdentityCards.Where(x => x.employeeId == employee.id && x.databaseId == dbEmployees.FirstOrDefault().databaseId).ToList();
 
-            if(identityCards == null || identityCards.Count <= 0) 
+            if (identityCards == null || identityCards.Count <= 0)
             {
                 return getFinishObject = new Answer<OrderGetDto>(400, "Identity Card not found.", null);
             }
 
-           
+
             List<OrderGetDto> ordersGetDto = new List<OrderGetDto>();
 
             foreach (var item in identityCards)
@@ -254,7 +260,7 @@ namespace TimeSheet.Controllers
         }
 
 
-     
+
 
     }
 
