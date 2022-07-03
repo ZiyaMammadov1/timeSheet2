@@ -12,5 +12,6 @@ namespace TimeSheet.Dtos.CreateOrRemoveDtos
         public Position Position { get; set; }
         public Database Database { get; set; }
         public Employee Employee { get; set; }
+        public int OrderId { get; set; }
     }
 }

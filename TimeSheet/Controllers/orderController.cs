@@ -30,6 +30,7 @@ namespace TimeSheet.Controllers
         [HttpPost]
         public ActionResult<Answer<OrderPostDto>> OrderPost(OrderPostDto orderPostDto)
         {
+            #region CheckOrderPostDtoAllProperty
             Employee user = _context.Employees.FirstOrDefault(x => x.fin.ToLower() == orderPostDto.fin.ToLower());
 
             if (user == null)
@@ -50,9 +51,6 @@ namespace TimeSheet.Controllers
             {
                 return orderResult = new Answer<OrderPostDto>(400, "Company not found", null);
             }
-
-
-
             Project project = _context.Projects.FirstOrDefault(x => x.code.ToLower() == orderPostDto.projectCode.ToLower());
 
             if (project == null)
@@ -73,30 +71,13 @@ namespace TimeSheet.Controllers
             {
                 return orderResult = new Answer<OrderPostDto>(400, "Position not found", null);
             }
-
-
-            CreateOrRemoveDto ctr = new CreateOrRemoveDto()
+            if (_context.Orders.Any(x => x.code == orderPostDto.code))
             {
-                OrderPostDto = orderPostDto,
-                Project = project,
-                Department = department,
-                Company = company,
-                Position = position,
-                Database = database,
-                Employee = user
-            };
-
-            int statusCode = 400;
-            if (orderPostDto.orderType == "1" || orderPostDto.orderType == "2")
-            {
-                statusCode = CreateOrRemoveUser(ctr);
+                return orderResult = new Answer<OrderPostDto>(400, "There was a conflict with the code", null);
             }
-            else if (orderPostDto.orderType == "2")
-            {
-                statusCode = CreateOrRemoveUser(ctr);
-            }
+            #endregion
 
-
+            #region addOrder
             Order newOrder = new Order()
 
             {
@@ -122,18 +103,39 @@ namespace TimeSheet.Controllers
 
             _context.Orders.Add(newOrder);
             _context.SaveChanges();
+            #endregion
 
+            #region CreateOrRemoveDtoAndChecking
+            CreateOrRemoveDto ctr = new CreateOrRemoveDto()
+            {
+                OrderPostDto = orderPostDto,
+                Project = project,
+                Department = department,
+                Company = company,
+                Position = position,
+                Database = database,
+                Employee = user,
+                OrderId = newOrder.id
+            };
+
+            int statusCode = 400;
+            if (orderPostDto.orderType == "1" || orderPostDto.orderType == "2")
+            {
+                statusCode = CreateOrRemoveUser(ctr);
+            }
+            else if (orderPostDto.orderType == "2")
+            {
+                statusCode = CreateOrRemoveUser(ctr);
+            }
+            #endregion
 
             return orderResult = new Answer<OrderPostDto>(201, "Order created", null);
 
         }
 
-
-        // OrderType = 1 or = 2
-
         private int CreateOrRemoveUser(CreateOrRemoveDto CRDto)
         {
-
+            #region CreateOrRemoveDbEmployee
             //create
             if (CRDto.OrderPostDto.orderType == "1")
             {
@@ -144,7 +146,8 @@ namespace TimeSheet.Controllers
                     employeeId = CRDto.Employee.id,
                     positionId = CRDto.Position.id,
                     databaseId = CRDto.Database.id,
-                    companyId = CRDto.Company.id
+                    companyId = CRDto.Company.id,
+                    OrderId = CRDto.OrderId
 
                 };
 
@@ -152,7 +155,6 @@ namespace TimeSheet.Controllers
                 _context.SaveChanges();
                 return 201;
             }
-
 
             //remove
             else if (CRDto.OrderPostDto.orderType == "2")
@@ -169,6 +171,9 @@ namespace TimeSheet.Controllers
                 currentUser.isActive = false;
             }
             return 400;
+
+            #endregion
+
 
         }
 
@@ -192,16 +197,10 @@ namespace TimeSheet.Controllers
                                                     .Include(x=>x.Project)
                                                     .Include(x=>x.Company)
                                                     .Where(a => a.employeeId == employee.id).ToList();
-
-
-
-
             if (dbEmployees.Count <= 0 && dbEmployees == null)
             {
                 return getFinishObject = new Answer<OrderGetDto>(400, "DbEmployees not found.", null);
             }
-
-
             DBEmployee dbEmployee = dbEmployees.FirstOrDefault();
 
 
@@ -221,6 +220,7 @@ namespace TimeSheet.Controllers
                 return getFinishObject = new Answer<OrderGetDto>(400, "Identity Card not found.", null);
             }
 
+           
             List<OrderGetDto> ordersGetDto = new List<OrderGetDto>();
 
             foreach (var item in identityCards)
@@ -254,69 +254,7 @@ namespace TimeSheet.Controllers
         }
 
 
-        public class TestOrder
-        {
-            public string dbCode { get; set; }
-            public string fin { get; set; }
-            public string tin { get; set; }
-            public string orderType { get; set; }
-            public DateTime date { get; set; }
-            public DateTime dateEffective { get; set; }
-            public DateTime dateExpired { get; set; }
-            public DateTime dateTo { get; set; }
-            public decimal salary1 { get; set; }
-            public decimal salary2 { get; set; }
-            public decimal salaryTotal { get; set; }
-            public string description { get; set; }
-            public string code { get; set; }
-            public string projectCode { get; set; }
-            public string departmentCode { get; set; }
-            public string positionCode { get; set; }
-            public string companyCode { get; set; }
-
-        }
-
-
-
-        [HttpGet]
-        public ActionResult<List<TestOrder>> GetAllRecord()
-        {
-            List<Order> orders = _context.Orders
-                                         .Include(x=>x.Deprtment)
-                                         .Include(x=>x.Position)
-                                         .Include(x=>x.Company)
-                                         .Include(x=>x.Project)
-                                         .ToList();
-            List<TestOrder> TOrder = new List<TestOrder>();
-            foreach (var order in orders)
-            {
-                TestOrder testOrder = new TestOrder() 
-                {
-                    dbCode = order.dbCode,
-                    fin = order.fin,
-                    tin = order.tin,
-                    orderType = order.orderType,
-                    date = order.date,
-                    dateEffective = order.dateEffective,
-                    dateExpired = order.dateExpired,
-                    dateTo = order.dateTo,
-                    salary1 = order.salary1,
-                    salary2 = order.salary2,
-                    salaryTotal = order.salaryTotal,
-                    description = order.description,
-                    code = order.code,
-                    projectCode = order.Project.code,
-                    departmentCode = order.Deprtment.code,
-                    positionCode = order.Position.code,
-                    companyCode = order.Company.code
-
-                };
-                TOrder.Add(testOrder);
-
-            }
-
-            return TOrder;
-        }
+     
 
     }
 
