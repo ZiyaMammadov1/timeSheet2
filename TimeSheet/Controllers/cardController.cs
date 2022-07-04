@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -86,14 +87,23 @@ namespace TimeSheet.Controllers
                 return getFinishObject = new Answer<CardGetDto>(400, "Employee not found.", null);
             }
 
-            List<DBEmployee> dbEmployees = _context.dBEmployees.Where(a => a.employeeId == employee.id).ToList();
+            List<DBEmployee> dbEmployees = _context.dBEmployees.Include(x=>x.Company).Where(a => a.employeeId == employee.id).ToList();
 
             if (dbEmployees == null || dbEmployees.Count <= 0)
             {
                 return getFinishObject = new Answer<CardGetDto>(400, "DbEmployees not found.", null);
             }
 
-            List<IdentityCard> identityCards = _context.IdentityCards.Where(x => x.employeeId == employee.id && x.databaseId == dbEmployees.FirstOrDefault().databaseId).ToList();
+            DBEmployee dBEmployee = dbEmployees.FirstOrDefault();
+            int dbId;
+            if(uuid != null)
+            {
+                dBEmployee = dbEmployees.FirstOrDefault(x => x.Company.uuid.ToLower() == uuid.ToString());
+            }
+            dbId = dBEmployee.databaseId;
+
+
+            List<IdentityCard> identityCards = _context.IdentityCards.Where(x => x.employeeId == employee.id && x.databaseId == dbId).ToList();
 
             if(identityCards.Count == 0)
             {
