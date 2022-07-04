@@ -278,7 +278,7 @@ namespace TimeSheet.Controllers
                 ordersGetDto.Add(orderGetDto);
             }
 
-            return getFinishObject = new Answer<OrderGetDto>(200, "Employee cards founded", ordersGetDto);
+            return getFinishObject = new Answer<OrderGetDto>(200, "Orders founded", ordersGetDto);
 
         }
 
