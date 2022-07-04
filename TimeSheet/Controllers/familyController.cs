@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TimeSheet.DatabaseContext;
@@ -82,7 +84,7 @@ namespace TimeSheet.Controllers
 
         [HttpGet]
         [Route("{fin}")]
-        public ActionResult<Answer<MemberGetDto>> Get(string fin)
+        public ActionResult<Answer<MemberGetDto>> Get(string fin, Guid? uuid)
         {
             // burda yoxluyassan gelen tokenden ki bu tokenin fini ile burda gelen fin eynidise cavab qaytarassan
             Employee employee = _context.Employees.FirstOrDefault(a => a.fin == fin);
@@ -92,14 +94,23 @@ namespace TimeSheet.Controllers
                 return getFinishObject = new Answer<MemberGetDto>(400, "Employee not found.", null);
             }
 
-            List<DBEmployee> dbEmployees = _context.dBEmployees.Where(a => a.employeeId == employee.id).ToList();
+            List<DBEmployee> dbEmployees = _context.dBEmployees.Include(a=>a.Company).Where(a => a.employeeId == employee.id && a.isActive ==true && a.isDelete==false).ToList();
 
             if (dbEmployees.Count <= 0 && dbEmployees == null)
             {
                 return getFinishObject = new Answer<MemberGetDto>(400, "DbEmployees not found.", null);
             }
 
-            List<FamilyMembers> familyMembers = _context.FamilyMembers.Where(x => x.fin == employee.fin && x.dbId == dbEmployees.FirstOrDefault().databaseId).ToList();
+            DBEmployee dBEmployee = dbEmployees.FirstOrDefault();
+            int dbId;
+            if(uuid != null)
+            {
+                dBEmployee = dbEmployees.FirstOrDefault(x => x.Company.uuid == uuid.ToString());
+            }
+                dbId = dBEmployee.databaseId;
+        
+
+            List<FamilyMembers> familyMembers = _context.FamilyMembers.Where(x => x.fin == employee.fin && x.dbId == dbId).ToList();
             List<MemberGetDto> members = new List<MemberGetDto>();
             foreach (var item in familyMembers)
             {

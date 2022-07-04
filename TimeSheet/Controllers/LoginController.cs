@@ -167,14 +167,17 @@ namespace TimeSheet.Controllers
 
             Answer<CompanyGetDto> companyfinishObject;
 
-            Employee employee = _context.Employees.FirstOrDefault(x => x.fin == fin);
+            Employee employee = _context.Employees.FirstOrDefault(x => x.fin == fin && x.isDeleted == false);
 
             if (employee == null)
             {
                 return companyfinishObject = new Answer<CompanyGetDto>(400, "Employee not found", null);
             }
 
-            List<DBEmployee> dbEmployees = _context.dBEmployees.Where(x => x.employeeId == employee.id).ToList();
+            List<DBEmployee> dbEmployees = _context.dBEmployees.Include(x=>x.Company).ThenInclude(x=>x.Database).Where(x => x.employeeId == employee.id && 
+                                                                            x.isActive == true &&
+                                                                            x.isDelete == false)
+                                                                            .ToList();
 
             if (dbEmployees.Count <= 0)
             {
@@ -183,43 +186,29 @@ namespace TimeSheet.Controllers
 
             List<CompanyGetDto> companiesGetDto = new List<CompanyGetDto>();
 
-            List<Company> companies = new List<Company>();
-
             foreach (var item in dbEmployees)
             {
-                Company company = _context.Companies.FirstOrDefault(x => x.id == item.companyId && x.isDeleted == false);
 
-                companies.Add(company);
-            }
-
-            if (companies.Count <= 0)
-            {
-                return companyfinishObject = new Answer<CompanyGetDto>(400, "Companies not found", null);
-            }
-
-            foreach (var item in companies)
-            {
                 CompanyGetDto company = new CompanyGetDto()
                 {
-                    name = item.name,
-                    uuid = item.uuid,
-                    tin = item.tin,
+                    name = item.Company.name,
+                    uuid = item.Company.uuid,
+                    tin = item.Company.tin,
+                    dbCode = item.Company.Database.code,
                     isActive = item.isActive
                 };
 
                 companiesGetDto.Add(company);
+
             }
+
+
+       
 
             return companyfinishObject = new Answer<CompanyGetDto>(400, "Companies founded", companiesGetDto);
 
 
         }
 
-        //[HttpGet]
-        //[Route("getDbEmployee")]
-        //public ActionResult GetCartAndContactWithDbEmployee(string uuid)
-        //{
-
-        //}
     }
 }
