@@ -71,15 +71,20 @@ namespace TimeSheet.Controllers
             {
                 return orderResult = new Answer<OrderPostDto>(400, "Position not found", null);
             }
-            if (_context.Orders.Any(x => x.code == orderPostDto.code ))
+            List<Order> orders = _context.Orders.ToList();
+            if (orders.Any(x => x.code == orderPostDto.code
+                                && x.orderType == orderPostDto.orderType
+                                && x.fin == orderPostDto.fin
+                                && x.dbCode == orderPostDto.dbCode
+                                && x.Company.tin == orderPostDto.tin))
             {
-                return orderResult = new Answer<OrderPostDto>(400, "There was a conflict with the code", null);
+                return orderResult = new Answer<OrderPostDto>(400, "Order already exist", null);
             }
 
-            #endregion
+                #endregion
 
-            #region addOrder
-            Order newOrder = new Order()
+                #region addOrder
+                Order newOrder = new Order()
 
             {
                 dbCode = orderPostDto.dbCode,
