@@ -71,7 +71,7 @@ namespace TimeSheet.Controllers
             {
                 return orderResult = new Answer<OrderPostDto>(400, "Position not found", null);
             }
-            if (_context.Orders.Any(x => x.code == orderPostDto.code))
+            if (_context.Orders.Any(x => x.code == orderPostDto.code ))
             {
                 return orderResult = new Answer<OrderPostDto>(400, "There was a conflict with the code", null);
             }
@@ -98,16 +98,27 @@ namespace TimeSheet.Controllers
                 companyId = company.id,
                 deprtmentID = department.id,
                 positionId = position.id,
-                projectId = project.id
-
+                projectId = project.id,
+                dateFrom = orderPostDto.dateFrom,
+                days = orderPostDto.days,
+                totalDays = orderPostDto.totalDays,
+                place = orderPostDto.place
             };
 
             _context.Orders.Add(newOrder);
             _context.SaveChanges();
             #endregion
 
+
+            List<DBEmployee> dBEmployees = _context.dBEmployees.Where(x => x.employeeId == user.id &&
+                                        x.databaseId == database.id &&
+                                        x.companyId == company.id &&
+                                        x.projectId == project.id &&
+                                        x.positionId == position.id &&
+                                        x.isDelete == false).ToList();
+
             #region CreateOrRemoveDtoAndChecking
-            if (_context.dBEmployees.Any(x => x.employeeId == user.id && x.databaseId == database.id && x.companyId == company.id && x.projectId == project.id && x.positionId == position.id && x.isDelete == false))
+            if (orderPostDto.orderType == "1" && dBEmployees.Count>0)
             {
                 return orderResult = new Answer<OrderPostDto>(200, "Order already exist", null);
             }
@@ -129,13 +140,9 @@ namespace TimeSheet.Controllers
             {
                 statusCode = CreateOrRemoveUser(ctr);
             }
-            else if (orderPostDto.orderType == "2")
-            {
-                statusCode = CreateOrRemoveUser(ctr);
-            }
             #endregion
 
-            return orderResult = new Answer<OrderPostDto>(201, "Order created", null);
+            return orderResult = new Answer<OrderPostDto>(201, "Process done", null);
 
         }
 
@@ -175,8 +182,14 @@ namespace TimeSheet.Controllers
                 }
                 currentUser.isDelete = true;
                 currentUser.isActive = false;
+                _context.SaveChanges();
             }
-            return 400;
+            else if (CRDto.OrderPostDto.orderType == "3")
+            {
+
+            }
+
+                return 400;
 
             #endregion
 

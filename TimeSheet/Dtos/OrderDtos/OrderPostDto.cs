@@ -13,6 +13,10 @@ namespace TimeSheet.Dtos.OrderDtos
         public DateTime dateEffective { get; set; }
         public DateTime dateExpired { get; set; }
         public DateTime dateTo { get; set; }
+        public DateTime dateFrom { get; set; }
+        public decimal days { get; set; }
+        public decimal totalDays { get; set; }
+        public string place { get; set; }
         public int salary1 { get; set; }
         public int salary2 { get; set; }
         public int salaryTotal { get; set; }

@@ -14,6 +14,14 @@ namespace TimeSheet.Entities
         public DateTime dateEffective { get; set; }
         public DateTime dateExpired { get; set; }
         public DateTime dateTo { get; set; }
+        public DateTime dateFrom { get; set; }
+
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal? days { get; set; }
+
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal? totalDays { get; set; }
+        public string place { get; set; }
 
         [Column(TypeName = "decimal(18, 2)")]
         public decimal salary1 { get; set; }
