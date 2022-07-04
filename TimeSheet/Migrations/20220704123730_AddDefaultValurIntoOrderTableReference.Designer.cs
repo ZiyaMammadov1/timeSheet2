@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TimeSheet.DatabaseContext;
 
 namespace TimeSheet.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220704123730_AddDefaultValurIntoOrderTableReference")]
+    partial class AddDefaultValurIntoOrderTableReference
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -423,7 +425,9 @@ namespace TimeSheet.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("deprtmentID")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.Property<string>("description")
                         .HasColumnType("nvarchar(max)");
@@ -443,10 +447,14 @@ namespace TimeSheet.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("positionId")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.Property<int>("projectId")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.Property<decimal>("salary1")
                         .HasColumnType("decimal(18, 2)");
