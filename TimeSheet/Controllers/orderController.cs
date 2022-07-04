@@ -203,7 +203,7 @@ namespace TimeSheet.Controllers
 
         [HttpGet]
         [Route("{fin}")]
-        public ActionResult<Answer<OrderGetDto>> Get(string fin)
+        public ActionResult<Answer<OrderGetDto>> Get(string fin, Guid? uuid)
         {
 
             // burda yoxluyassan gelen tokenden ki bu tokenin fini ile burda gelen fin eynidise cavab qaytarassan
@@ -226,7 +226,12 @@ namespace TimeSheet.Controllers
                 return getFinishObject = new Answer<OrderGetDto>(400, "DbEmployees not found.", null);
             }
             DBEmployee dbEmployee = dbEmployees.FirstOrDefault();
-
+            int dbId;
+            if (uuid != null)
+            {
+                dbEmployee = dbEmployees.FirstOrDefault(x => x.Company.uuid.ToLower() == uuid.ToString());
+            }
+            dbId = dbEmployee.databaseId;
 
             Order order = _context.Orders.FirstOrDefault(x => x.fin == employee.fin && x.dbCode == dbEmployee.Database.code && x.isDeleted == false);
 
