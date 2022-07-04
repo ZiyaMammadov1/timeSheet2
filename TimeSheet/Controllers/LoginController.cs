@@ -234,7 +234,7 @@ namespace TimeSheet.Controllers
 
        
 
-            return companyfinishObject = new Answer<CommonInfoDto>(400, "Companies founded", companiesGetDto);
+            return companyfinishObject = new Answer<CommonInfoDto>(200, "Companies founded", companiesGetDto);
 
 
         }
