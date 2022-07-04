@@ -225,7 +225,8 @@ namespace TimeSheet.Controllers
                     Project = _mapper.Map<ProjectGetDto>(order.Project),
                     Department = _mapper.Map<DepartmentGetDto>(order.Deprtment),
                     Position = _mapper.Map<PositionGetDto>(order.Position),
-                    Company = _mapper.Map<CompanyGetDto>(order.Company)
+                    Company = _mapper.Map<CompanyGetDto>(order.Company),
+                    dateTo = order.dateTo
                 };
                
                 companiesGetDto.Add(company);

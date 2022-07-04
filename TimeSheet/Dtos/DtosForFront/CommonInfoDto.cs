@@ -1,4 +1,5 @@
-﻿using TimeSheet.Dtos.CompanyDtos;
+﻿using System;
+using TimeSheet.Dtos.CompanyDtos;
 using TimeSheet.Dtos.DepartmentDtos;
 using TimeSheet.Dtos.PositionDtos;
 using TimeSheet.Dtos.ProjectDtos;
@@ -19,6 +20,8 @@ namespace TimeSheet.Dtos.DtosForFront
         public ProjectGetDto Project { get; set; }
         public decimal salary { get; set; }
         public string photo { get; set; }
+        public DateTime dateTo { get; set; }
+
     }
 
    
