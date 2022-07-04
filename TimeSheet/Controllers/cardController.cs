@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TimeSheet.DatabaseContext;
@@ -74,7 +75,7 @@ namespace TimeSheet.Controllers
 
         [HttpGet]
         [Route("{fin}")]
-        public ActionResult<Answer<CardGetDto>> Get(string fin)
+        public ActionResult<Answer<CardGetDto>> Get(string fin, Guid? uuid)
         {
 
             // burda yoxluyassan gelen tokenden ki bu tokenin fini ile burda gelen fin eynidise cavab qaytarassan
@@ -94,7 +95,10 @@ namespace TimeSheet.Controllers
 
             List<IdentityCard> identityCards = _context.IdentityCards.Where(x => x.employeeId == employee.id && x.databaseId == dbEmployees.FirstOrDefault().databaseId).ToList();
 
-
+            if(identityCards.Count == 0)
+            {
+                return getFinishObject = new Answer<CardGetDto>(400, "Card not found.", null);
+            }
             List<CardGetDto> cardsGetDto = new List<CardGetDto>();
             foreach (var item in identityCards)
             {

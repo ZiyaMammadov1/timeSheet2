@@ -7,8 +7,12 @@ using System.Collections.Generic;
 using System.Linq;
 using TimeSheet.DatabaseContext;
 using TimeSheet.Dtos.CompanyDtos;
+using TimeSheet.Dtos.DepartmentDtos;
+using TimeSheet.Dtos.DtosForFront;
 using TimeSheet.Dtos.EmployeeInfoDtos;
 using TimeSheet.Dtos.LoginDtos;
+using TimeSheet.Dtos.PositionDtos;
+using TimeSheet.Dtos.ProjectDtos;
 using TimeSheet.Dtos.RefreshTokenDtos;
 using TimeSheet.Dtos.TokenWithUserInfo;
 using TimeSheet.Dtos.UserDto;
@@ -162,16 +166,16 @@ namespace TimeSheet.Controllers
 
         [HttpGet]
         [Route("workPlaces")]
-        public ActionResult<Answer<CompanyGetDto>> GetAllWorkPlaces(string fin)
+        public ActionResult<Answer<CommonInfoDto>> GetAllWorkPlaces(string fin)
         {
 
-            Answer<CompanyGetDto> companyfinishObject;
+            Answer<CommonInfoDto> companyfinishObject;
 
             Employee employee = _context.Employees.FirstOrDefault(x => x.fin == fin && x.isDeleted == false);
 
             if (employee == null)
             {
-                return companyfinishObject = new Answer<CompanyGetDto>(400, "Employee not found", null);
+                return companyfinishObject = new Answer<CommonInfoDto>(400, "Employee not found", null);
             }
 
             List<DBEmployee> dbEmployees = _context.dBEmployees.Include(x=>x.Company).ThenInclude(x=>x.Database).Where(x => x.employeeId == employee.id && 
@@ -181,23 +185,48 @@ namespace TimeSheet.Controllers
 
             if (dbEmployees.Count <= 0)
             {
-                return companyfinishObject = new Answer<CompanyGetDto>(400, "DbEmployees not found", null);
+                return companyfinishObject = new Answer<CommonInfoDto>(400, "DbEmployees not found", null);
             }
 
-            List<CompanyGetDto> companiesGetDto = new List<CompanyGetDto>();
+            List<IdentityCard> IdentityCard = _context.IdentityCards.Where(x=>x.employeeId == employee.id).ToList();
+            
+            List<Contact> Contacts = _context.Contacts.Where(x=>x.employeeId == employee.id).ToList();
+
+            List<Order> Orders = _context.Orders
+                                            .Include(x=>x.Position)
+                                            .Include(x=>x.Deprtment)
+                                            .Include(x=>x.Project)
+                                            .Include(x=>x.Company)
+                                            .Where(x=>x.fin == employee.fin).ToList();
+
+            List<CommonInfoDto> companiesGetDto = new List<CommonInfoDto>();
+
 
             foreach (var item in dbEmployees)
             {
+                IdentityCard card = IdentityCard.FirstOrDefault(x => x.employeeId == employee.id &&
+                                                                   x.databaseId == item.databaseId &&
+                                                                   x.isActive == true);
+                
+                Contact contact = Contacts.FirstOrDefault(x=>x.dbId == item.databaseId && x.isDeleted == false);
 
-                CompanyGetDto company = new CompanyGetDto()
+                Order order = Orders.FirstOrDefault(x => x.dbCode == item.Database.code);
+
+                CommonInfoDto company = new CommonInfoDto()
                 {
-                    name = item.Company.name,
                     uuid = item.Company.uuid,
-                    tin = item.Company.tin,
-                    dbCode = item.Company.Database.code,
-                    isActive = item.isActive
+                    fin = employee.fin,
+                    firstName = card.firstName,
+                    lastName = card.lastName,
+                    photo = card.photo,
+                    email = contact.email,
+                    salary = order.salaryTotal,
+                    Project = _mapper.Map<ProjectGetDto>(order.Project),
+                    Department = _mapper.Map<DepartmentGetDto>(order.Deprtment),
+                    Position = _mapper.Map<PositionGetDto>(order.Position),
+                    Company = _mapper.Map<CompanyGetDto>(order.Company)
                 };
-
+               
                 companiesGetDto.Add(company);
 
             }
@@ -205,7 +234,7 @@ namespace TimeSheet.Controllers
 
        
 
-            return companyfinishObject = new Answer<CompanyGetDto>(400, "Companies founded", companiesGetDto);
+            return companyfinishObject = new Answer<CommonInfoDto>(400, "Companies founded", companiesGetDto);
 
 
         }

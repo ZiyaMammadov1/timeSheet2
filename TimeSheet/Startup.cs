@@ -32,7 +32,7 @@ namespace TimeSheet
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers()
-                .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Serialize)
+                .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
                 .AddNewtonsoftJson().AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<UserPostDtoValidator>());
 
             services.AddDbContext<DataContext>(opt =>
