@@ -107,7 +107,7 @@ namespace TimeSheet.Controllers
             int dbId;
             if(uuid != null)
             {
-                dBEmployee = dbEmployees.FirstOrDefault(x => x.Company.uuid == uuid.ToString());
+                dBEmployee = dbEmployees.FirstOrDefault(x => x.Company.uuid.ToLower() == uuid.ToString());
             }
                 dbId = dBEmployee.databaseId;
         
