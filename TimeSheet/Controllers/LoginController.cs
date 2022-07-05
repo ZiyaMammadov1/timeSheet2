@@ -198,7 +198,7 @@ namespace TimeSheet.Controllers
                                             .Include(x=>x.Deprtment)
                                             .Include(x=>x.Project)
                                             .Include(x=>x.Company)
-                                            .Where(x=>x.fin == employee.fin && x.orderType == "1").ToList();
+                                            .Where(x=>x.fin == employee.fin).ToList();
 
             List<CommonInfoDto> companiesGetDto = new List<CommonInfoDto>();
 
