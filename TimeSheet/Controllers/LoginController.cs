@@ -211,7 +211,7 @@ namespace TimeSheet.Controllers
                 
                 Contact contact = Contacts.FirstOrDefault(x=>x.dbId == item.databaseId && x.isDeleted == false);
 
-                Order order = Orders.FirstOrDefault(x => x.dbCode == item.Database.code);
+                Order order = Orders.Find(x=>x.id==item.OrderId);
 
                 CommonInfoDto company = new CommonInfoDto()
                 {

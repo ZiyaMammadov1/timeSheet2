@@ -118,6 +118,14 @@ namespace TimeSheet.Controllers
                 place = orderPostDto.place
             };
 
+            if(newOrder.orderType == "3")
+            {
+                if (newOrder.dateTo == null || newOrder.dateFrom == null || newOrder.totalDays == null || newOrder.days == null)
+                {
+                    return orderResult = new Answer<OrderPostDto>(200, "Enter all required dates for vacation (dateto, dateFrom, days, totalDays)", null);
+                }
+            }
+
             _context.Orders.Add(newOrder);
             _context.SaveChanges();
             #endregion
@@ -163,7 +171,7 @@ namespace TimeSheet.Controllers
         {
             #region CreateOrRemoveDbEmployee
             //create
-            if (CRDto.OrderPostDto.orderType == "1")
+            if (CRDto.OrderPostDto.orderType == "1" || CRDto.OrderPostDto.orderType == "3")
             {
                 DBEmployee dBEmployee = new DBEmployee()
                 {
@@ -201,7 +209,7 @@ namespace TimeSheet.Controllers
             }
             else if (CRDto.OrderPostDto.orderType == "3")
             {
-
+              
             }
 
             return 400;
@@ -283,7 +291,6 @@ namespace TimeSheet.Controllers
                     salaryTotal = order.salaryTotal,
                     tin = order.tin,
                     orderType = orderType ?? null
-
                 };
                 ordersGetDto.Add(orderGetDto);
             }
