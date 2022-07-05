@@ -9,7 +9,10 @@ namespace TimeSheet.Entities
         public string dbCode { get; set; }
         public string fin { get; set; }
         public string tin { get; set; }
-        public string orderType { get; set; }
+        public int typeOfOrderId { get; set; }
+        public typeOfOrder typeOfOrder { get; set; }
+
+        //public string orderType { get; set; }
         public DateTime date { get; set; }
         public DateTime dateEffective { get; set; }
         public DateTime dateExpired { get; set; }
