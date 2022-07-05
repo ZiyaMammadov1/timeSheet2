@@ -221,7 +221,7 @@ namespace TimeSheet.Controllers
 
         [HttpGet]
         [Route("{fin}")]
-        public ActionResult<Answer<OrderGetDto>> Get(string fin, Guid? uuid)
+        public ActionResult<Answer<OrderGetDto>> GetOrders(string fin, Guid? uuid)
         {
 
             // burda yoxluyassan gelen tokenden ki bu tokenin fini ile burda gelen fin eynidise cavab qaytarassan
@@ -239,6 +239,8 @@ namespace TimeSheet.Controllers
                                                     .Include(x => x.Project)
                                                     .Include(x => x.Company)
                                                     .Where(a => a.employeeId == employee.id).ToList();
+
+
             if (dbEmployees.Count <= 0 && dbEmployees == null)
             {
                 return getFinishObject = new Answer<OrderGetDto>(400, "DbEmployees not found.", null);
@@ -251,27 +253,19 @@ namespace TimeSheet.Controllers
             }
             dbId = dbEmployee.databaseId;
 
-            Order order = _context.Orders.FirstOrDefault(x => x.fin == employee.fin && x.dbCode == dbEmployee.Database.code && x.isDeleted == false);
-
-            if (order == null)
-            {
-                return getFinishObject = new Answer<OrderGetDto>(400, "Order not found.", null);
-            }
-
-            typeOfOrder orderType = _context.typeOfOrders.FirstOrDefault(x => x.code == order.orderType);
-
-            List<IdentityCard> identityCards = _context.IdentityCards.Where(x => x.employeeId == employee.id && x.databaseId == dbEmployees.FirstOrDefault().databaseId).ToList();
-
-            if (identityCards == null || identityCards.Count <= 0)
-            {
-                return getFinishObject = new Answer<OrderGetDto>(400, "Identity Card not found.", null);
-            }
-
+           IList<Order> orders = _context.Orders.Include(x=>x.orderType).Where(x => x.fin == employee.fin && x.dbCode == dbEmployee.Database.code && x.isDeleted == false).ToList();
 
             List<OrderGetDto> ordersGetDto = new List<OrderGetDto>();
 
-            foreach (var item in identityCards)
+            List<typeOfOrder> typeOrderList = _context.typeOfOrders.ToList();
+
+            foreach (var item in orders)
             {
+                typeOfOrder type = typeOrderList.FirstOrDefault(x=>x.code == item.orderType);
+                if(type == null)
+                {
+                    return getFinishObject = new Answer<OrderGetDto>(400, "Order type not found.", null);
+                }
                 OrderGetDto orderGetDto = new OrderGetDto()
                 {
                     Position = dbEmployee.Position.name,
@@ -280,17 +274,17 @@ namespace TimeSheet.Controllers
                     Project = dbEmployee.Project.name,
                     code = item.code,
                     date = item.date,
-                    dateEffective = order.dateEffective,
-                    dateExpired = order.dateExpired,
-                    dateTo = order.dateTo,
+                    dateEffective = item.dateEffective,
+                    dateExpired = item.dateExpired,
+                    dateTo = item.dateTo,
                     dbCode = dbEmployee.Database.code,
-                    description = order.description,
+                    description = item.description,
                     fin = employee.fin,
-                    salary1 = order.salary1,
-                    salary2 = order.salary2,
-                    salaryTotal = order.salaryTotal,
-                    tin = order.tin,
-                    orderType = orderType ?? null
+                    salary1 = item.salary1,
+                    salary2 = item.salary2,
+                    salaryTotal = item.salaryTotal,
+                    tin = item.tin,
+                    orderType = type
                 };
                 ordersGetDto.Add(orderGetDto);
             }
@@ -300,8 +294,7 @@ namespace TimeSheet.Controllers
         }
 
 
-
-
+       
     }
 
 

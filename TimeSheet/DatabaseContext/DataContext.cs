@@ -25,6 +25,7 @@ namespace TimeSheet.DatabaseContext
         public DbSet<FamilyMembers> FamilyMembers { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<typeOfOrder> typeOfOrders { get; set; }
+        public DbSet<EarningType> typeOfEarning { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -160,11 +161,17 @@ namespace TimeSheet.DatabaseContext
                .HasIndex(x => x.code)
                .IsUnique(true);
 
-          
-
             modelBuilder.Entity<FamilyMembers>()
                .HasIndex(x => x.code)
                .IsUnique(true);
+
+            modelBuilder.Entity<EarningType>()
+                .Property(x => x.uuid)
+                .HasDefaultValueSql("NEWID()");
+
+            modelBuilder.Entity<EarningType>()
+                .HasIndex(x => x.code)
+                .IsUnique(true);
 
 
             foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
