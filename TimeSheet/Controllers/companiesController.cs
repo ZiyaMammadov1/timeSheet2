@@ -42,7 +42,8 @@ namespace TimeSheet.Controllers
                         uuid = company.uuid,
                         name = company.name,
                         tin = company.tin,
-                        dbCode = databases.code
+                        dbCode = databases.code,
+                        isActive = company.isActive
                     };
                     companyList.Add(GetDto);
                 }

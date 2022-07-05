@@ -157,7 +157,7 @@ namespace TimeSheet.Controllers
             };
 
             int statusCode = 201;
-            if (orderPostDto.orderType == "1" || orderPostDto.orderType == "2")
+            if (orderPostDto.orderType == "1" || orderPostDto.orderType == "2" || orderPostDto.orderType == "3")
             {
                 statusCode = CreateOrRemoveUser(ctr);
             }
