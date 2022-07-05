@@ -31,7 +31,7 @@ namespace TimeSheet.Controllers
         public ActionResult<Answer<OrderPostDto>> OrderPost(OrderPostDto orderPostDto)
         {
             #region CheckOrderPostDtoAllProperty
-            typeOfOrder orderType = _context.typeOfOrders.FirstOrDefault(x=>x.id == orderPostDto.orderType);
+            typeOfOrder orderType = _context.typeOfOrders.FirstOrDefault(x=>x.code == orderPostDto.orderType.ToString());
 
             if(orderType == null)
             {
@@ -104,7 +104,7 @@ namespace TimeSheet.Controllers
                 dbCode = orderPostDto.dbCode,
                 fin = orderPostDto.fin,
                 tin = orderPostDto.tin,
-                typeOfOrderId = orderPostDto.orderType,
+                typeOfOrderId = orderType.id,
                 date = orderPostDto.date,
                 dateEffective = orderPostDto.dateEffective,
                 dateExpired = orderPostDto.dateExpired,
