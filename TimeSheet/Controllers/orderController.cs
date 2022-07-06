@@ -79,7 +79,7 @@ namespace TimeSheet.Controllers
             {
                 return orderResult = new Answer<OrderPostDto>(400, "Order already exist", null);
             }
-            if (orderPostDto.orderType != 1 || orderPostDto.orderType != 2)
+            if (orderPostDto.orderType != 1 && orderPostDto.orderType != 2)
             {
                 Order order = _context.Orders
                                         .Include(x => x.Deprtment)
