@@ -54,6 +54,7 @@ namespace TimeSheet.Controllers
                 card.expireTime = CardPostDto.expireDate;
                 card.number = CardPostDto.number;
                 card.issiedBy = CardPostDto.issiedBy;
+                _context.SaveChanges();
                 return getFinishObject = new Answer<CardGetDto>(200, $"Card updated {user.fin}", null);
            }
 
