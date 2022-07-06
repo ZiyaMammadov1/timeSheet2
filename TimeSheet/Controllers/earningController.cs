@@ -49,6 +49,16 @@ namespace TimeSheet.Controllers
 
         }
 
-      
+        //[HttpGet]
+        //public ActionResult<List<EarningGetDto>> GetAll()
+        //{
+        //    List<EarningType> earningTypes = _context.typeOfEarning.ToList();
+        //    if(earningTypes.Count == 0)
+        //    {
+        //        return getFinishObject = new Answer<List<EarningGetDto>>(400, "EarninhType not found", null);
+        //    }
+
+
+        //}
     }
 }

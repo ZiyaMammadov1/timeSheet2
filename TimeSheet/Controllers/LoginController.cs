@@ -102,10 +102,6 @@ namespace TimeSheet.Controllers
 
             Contact contact = _context.Contacts.FirstOrDefault(x => x.employeeId == User.id && x.dbId == EmployeeList.First().Database.id && x.isDeleted == false);
 
-            if (contact == null)
-            {
-                return loginfinishObject = new Answer<UserLoginDto>(400, "Contact not found", null);
-            }
 
 
             tokenInUserInfo userinfo = new tokenInUserInfo()
@@ -118,7 +114,7 @@ namespace TimeSheet.Controllers
                 company = dbEmployee.Company.name,
                 department = dbEmployee.Depament.name,
                 salary = OrderForSalary.salaryTotal,
-                email = contact.email
+                email = contact.email??null
             };
             token.UserInfo = userinfo;
 
