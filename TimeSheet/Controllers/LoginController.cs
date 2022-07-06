@@ -100,7 +100,9 @@ namespace TimeSheet.Controllers
             }
             var OrderForSalary = _context.Orders.FirstOrDefault(x => x.fin == User.fin && x.dbCode == EmployeeList.First().Database.code && x.isDeleted == false);
 
-            Contact contact = _context.Contacts.FirstOrDefault(x => x.employeeId == User.id && x.dbId == EmployeeList.First().Database.id && x.isDeleted == false);
+            Contact contact = new Contact();
+                
+             contact =    _context.Contacts.FirstOrDefault(x => x.employeeId == User.id && x.dbId == EmployeeList.First().Database.id && x.isDeleted == false);
 
 
 
@@ -114,7 +116,7 @@ namespace TimeSheet.Controllers
                 company = dbEmployee.Company.name,
                 department = dbEmployee.Depament.name,
                 salary = OrderForSalary.salaryTotal,
-                email = contact.email??null
+                email = contact != null ? contact.email : ""
             };
             token.UserInfo = userinfo;
 
@@ -216,7 +218,7 @@ namespace TimeSheet.Controllers
                     firstName = card.firstName,
                     lastName = card.lastName,
                     photo = card.photo,
-                    email = contact.email ?? null,
+                    email = contact != null ? contact.email : "",
                     salary = order.salaryTotal,
                     Project = _mapper.Map<ProjectGetDto>(order.Project),
                     Department = _mapper.Map<DepartmentGetDto>(order.Deprtment),
