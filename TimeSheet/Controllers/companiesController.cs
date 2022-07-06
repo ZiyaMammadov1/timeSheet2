@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using TimeSheet.DatabaseContext;
@@ -28,21 +29,21 @@ namespace TimeSheet.Controllers
         [HttpGet]
         public ActionResult<Answer<CompanyGetDto>> GetAll()
         {
-            List<Company> companies = _context.Companies.Where(x => x.isDeleted == false).ToList();
+            List<Company> companies = _context.Companies.Include(x=>x.Database).Where(x => x.isDeleted == false).ToList();
 
             if (companies.Count > 0)
             {
                 List<CompanyGetDto> companyList = new List<CompanyGetDto>();
                 foreach (var company in companies)
                 {
-                    Database databases = _context.Database.FirstOrDefault(x => x.isDeleted == false);
+                  
 
                     CompanyGetDto GetDto = new CompanyGetDto()
                     {
                         uuid = company.uuid,
                         name = company.name,
                         tin = company.tin,
-                        dbCode = databases.code,
+                        dbCode = company.Database.code,
                         isActive = company.isActive
                     };
                     companyList.Add(GetDto);
