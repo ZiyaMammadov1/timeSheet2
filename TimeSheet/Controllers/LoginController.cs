@@ -216,7 +216,7 @@ namespace TimeSheet.Controllers
                     firstName = card.firstName,
                     lastName = card.lastName,
                     photo = card.photo,
-                    email = contact.email,
+                    email = contact.email ?? null,
                     salary = order.salaryTotal,
                     Project = _mapper.Map<ProjectGetDto>(order.Project),
                     Department = _mapper.Map<DepartmentGetDto>(order.Deprtment),

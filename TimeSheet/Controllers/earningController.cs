@@ -40,7 +40,9 @@ namespace TimeSheet.Controllers
             {
                 code = postDto.code,
                 dbCode = postDto.dbCode,
-                name = postDto.name
+                name = postDto.name,
+                description = postDto.descripntion,
+                earning = postDto.earning
             };
             _context.typeOfEarning.Add(newEarning);
             _context.SaveChanges();

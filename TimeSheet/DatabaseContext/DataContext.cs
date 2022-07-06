@@ -173,6 +173,10 @@ namespace TimeSheet.DatabaseContext
                 .HasIndex(x => x.code)
                 .IsUnique(true);
 
+            modelBuilder.Entity<EarningType>()
+                .Property(x => x.earning)
+                .HasDefaultValue(false);
+
 
             foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
             {
