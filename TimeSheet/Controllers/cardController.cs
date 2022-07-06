@@ -42,7 +42,7 @@ namespace TimeSheet.Controllers
 
             IdentityCard card = _context.IdentityCards.FirstOrDefault(x => x.employeeId == user.id && x.databaseId == db.id);
 
-           if(_context.IdentityCards.Any(x=>x.series == CardPostDto.seriya))
+           if(_context.IdentityCards.Any(x=>x.series == CardPostDto.seriya && x.databaseId != db.id))
            {
                 return getFinishObject = new Answer<CardGetDto>(400, "Card already exist", null);
            }
