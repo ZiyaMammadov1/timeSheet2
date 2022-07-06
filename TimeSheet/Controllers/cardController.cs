@@ -36,7 +36,7 @@ namespace TimeSheet.Controllers
             Database db = _context.Database.FirstOrDefault(x => x.code.ToLower() == CardPostDto.dbCode.ToLower());
             if (db == null)
             {
-                return getFinishObject = new Answer<CardGetDto>(400, "User not found", null);
+                return getFinishObject = new Answer<CardGetDto>(400, "Database not found", null);
             }
 
 
