@@ -19,7 +19,7 @@ namespace TimeSheet.Controllers
         private readonly DataContext _context;
         Answer<OrderGetDto> getFinishObject;
         Answer<OrderPostDto> orderResult;
-          
+
 
         public orderController(DataContext context)
         {
@@ -31,57 +31,42 @@ namespace TimeSheet.Controllers
         public ActionResult<Answer<OrderPostDto>> OrderPost(OrderPostDto orderPostDto)
         {
             #region CheckOrderPostDtoAllProperty
-            typeOfOrder orderType = _context.typeOfOrders.FirstOrDefault(x=>x.code == orderPostDto.orderType.ToString());
+            typeOfOrder orderType = _context.typeOfOrders.FirstOrDefault(x => x.code == orderPostDto.orderType.ToString());
 
-            if(orderType == null)
+            if (orderType == null)
             {
                 return orderResult = new Answer<OrderPostDto>(400, "Order type not found.", null);
             }
-            Employee user = _context.Employees.FirstOrDefault(x => x.fin.ToLower() == orderPostDto.fin.ToLower());
+            Employee user = _context.Employees.FirstOrDefault(x => x.fin == orderPostDto.fin);
 
             if (user == null)
             {
                 return orderResult = new Answer<OrderPostDto>(400, "User not found", null);
             }
 
-            Database database = _context.Database.FirstOrDefault(x => x.code.ToLower() == orderPostDto.dbCode.ToLower());
+            Database database = _context.Database.FirstOrDefault(x => x.code == orderPostDto.dbCode);
 
             if (database == null)
             {
                 return orderResult = new Answer<OrderPostDto>(400, "Database not found", null);
             }
 
-            Company company = _context.Companies.FirstOrDefault(x => x.tin.ToLower() == orderPostDto.tin.ToLower());
+            Company company = _context.Companies.FirstOrDefault(x => x.tin == orderPostDto.tin);
 
             if (company == null)
             {
                 return orderResult = new Answer<OrderPostDto>(400, "Company not found", null);
             }
 
-            Project project = _context.Projects.FirstOrDefault(x => x.code.ToLower() == orderPostDto.projectCode.ToLower());
+            Project project = new Project();
+            Department department = new Department();
+            Position position = new Position();
 
-            if (project == null)
-            {
-                return orderResult = new Answer<OrderPostDto>(400, "Project not found", null);
-            }
-
-            Department department = _context.Departments.FirstOrDefault(x => x.code.ToLower() == orderPostDto.departmentCode.ToLower());
-
-            if (department == null)
-            {
-                return orderResult = new Answer<OrderPostDto>(400, "Department not found", null);
-            }
-
-            Position position = _context.Positions.FirstOrDefault(x => x.code.ToLower() == orderPostDto.positionCode.ToLower());
-
-            if (position == null)
-            {
-                return orderResult = new Answer<OrderPostDto>(400, "Position not found", null);
-            }
+      
 
             List<Order> orders = _context.Orders.ToList();
 
-            if (orders.Any(x => x.code == orderPostDto.code))
+            if (orders.Any(x => x.code == orderPostDto.code && x.dbCode == database.code))
             {
                 return orderResult = new Answer<OrderPostDto>(400, "Order code is conflict.", null);
             }
@@ -94,6 +79,46 @@ namespace TimeSheet.Controllers
             {
                 return orderResult = new Answer<OrderPostDto>(400, "Order already exist", null);
             }
+            if (orderPostDto.orderType != 1 || orderPostDto.orderType != 2)
+            {
+                Order order = _context.Orders
+                                        .Include(x => x.Deprtment)
+                                        .Include(x => x.Position)
+                                        .Include(x => x.Project)
+                                        .FirstOrDefault(x => x.fin == user.fin && x.dbCode == database.code && x.typeOfOrder.code == "1" && x.isDeleted ==false);
+                if(order == null)
+                {
+                    return orderResult = new Answer<OrderPostDto>(400, "Order not found", null);
+                }
+
+                department = order.Deprtment;
+                project = order.Project;
+                position = order.Position;
+            }
+            else
+            {
+                project = _context.Projects.FirstOrDefault(x => x.code == orderPostDto.projectCode);
+
+                if ((orderPostDto.orderType == 2 || orderPostDto.orderType == 1) && project == null)
+                {
+                    return orderResult = new Answer<OrderPostDto>(400, "Project not found", null);
+                }
+
+                department = _context.Departments.FirstOrDefault(x => x.code == orderPostDto.departmentCode);
+
+                if ((orderPostDto.orderType == 2 || orderPostDto.orderType == 1) && department == null)
+                {
+                    return orderResult = new Answer<OrderPostDto>(400, "Department not found", null);
+                }
+
+                position = _context.Positions.FirstOrDefault(x => x.code == orderPostDto.positionCode);
+
+                if ((orderPostDto.orderType == 2 || orderPostDto.orderType == 1) && position == null)
+                {
+                    return orderResult = new Answer<OrderPostDto>(400, "Position not found", null);
+                }
+            }
+
 
             #endregion
 
@@ -124,7 +149,7 @@ namespace TimeSheet.Controllers
                 place = orderPostDto.place
             };
 
-            if(newOrder.typeOfOrderId == 3)
+            if (newOrder.typeOfOrderId == 3)
             {
                 if (newOrder.dateTo == null || newOrder.dateFrom == null || newOrder.totalDays == null || newOrder.days == null)
                 {
@@ -267,7 +292,7 @@ namespace TimeSheet.Controllers
 
             foreach (var item in orders)
             {
-              
+
                 OrderGetDto orderGetDto = new OrderGetDto()
                 {
                     Position = dbEmployee.Position.name,
