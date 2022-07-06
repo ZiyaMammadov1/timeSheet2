@@ -47,7 +47,14 @@ namespace TimeSheet.Controllers
 
            if(card != null)
            {
-                return getFinishObject = new Answer<CardGetDto>(400, "Card already exist", null);
+                card.photo = CardPostDto.photo;
+                card.address = CardPostDto.adress;
+                card.firstName = CardPostDto.firstName;
+                card.lastName = CardPostDto.lastName;
+                card.expireTime = CardPostDto.expireDate;
+                card.number = CardPostDto.number;
+                card.issiedBy = CardPostDto.issiedBy;
+                return getFinishObject = new Answer<CardGetDto>(200, $"Card updated {user.fin}", null);
            }
 
             if (card == null || CardPostDto.date != card.date)
