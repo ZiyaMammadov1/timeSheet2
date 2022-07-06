@@ -19,6 +19,7 @@ namespace TimeSheet.DatabaseContext
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<DBEmployee> dBEmployees { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<Earn> Earns { get; set; }
         //public DbSet<mainTimeSheet> MainTimeSheets { get; set; }
         //public DbSet<Salary> Salaries { get; set; }
         public DbSet<IdentityCard> IdentityCards { get; set; }
@@ -177,6 +178,17 @@ namespace TimeSheet.DatabaseContext
                 .Property(x => x.earning)
                 .HasDefaultValue(false);
 
+            modelBuilder.Entity<EarningType>()
+               .Property(x => x.isDeleted)
+               .HasDefaultValue(false);
+
+            modelBuilder.Entity<Earn>()
+               .Property(x => x.uuid)
+               .HasDefaultValueSql("NEWID()");
+
+            modelBuilder.Entity<Earn>()
+           .Property(x => x.isDeleted)
+           .HasDefaultValue(false);
 
             foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
             {

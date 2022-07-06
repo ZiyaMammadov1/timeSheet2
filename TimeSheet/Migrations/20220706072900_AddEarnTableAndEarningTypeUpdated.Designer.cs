@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TimeSheet.DatabaseContext;
 
 namespace TimeSheet.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220706072900_AddEarnTableAndEarningTypeUpdated")]
+    partial class AddEarnTableAndEarningTypeUpdated
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -250,11 +252,8 @@ namespace TimeSheet.Migrations
                     b.Property<decimal>("amount")
                         .HasColumnType("decimal(18, 2)");
 
-                    b.Property<string>("code")
+                    b.Property<string>("companyId")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("companyId")
-                        .HasColumnType("int");
 
                     b.Property<string>("dbCode")
                         .HasColumnType("nvarchar(max)");
@@ -262,8 +261,8 @@ namespace TimeSheet.Migrations
                     b.Property<int>("earningTypeId")
                         .HasColumnType("int");
 
-                    b.Property<int>("employeeId")
-                        .HasColumnType("int");
+                    b.Property<string>("employeeId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDeleted")
                         .ValueGeneratedOnAdd()
@@ -277,11 +276,7 @@ namespace TimeSheet.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("companyId");
-
                     b.HasIndex("earningTypeId");
-
-                    b.HasIndex("employeeId");
 
                     b.ToTable("Earns");
                 });
@@ -778,21 +773,9 @@ namespace TimeSheet.Migrations
 
             modelBuilder.Entity("TimeSheet.Entities.Earn", b =>
                 {
-                    b.HasOne("TimeSheet.Entities.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("companyId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("TimeSheet.Entities.EarningType", "EarningType")
                         .WithMany()
                         .HasForeignKey("earningTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("TimeSheet.Entities.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("employeeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
