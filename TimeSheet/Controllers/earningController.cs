@@ -69,5 +69,21 @@ namespace TimeSheet.Controllers
 
 
         }
+
+        [HttpPut]
+        public ActionResult <Answer<EarningGetDto>> UpdateEarning(EarningPutDto putdto)
+        {
+            EarningType type = _context.typeOfEarning.FirstOrDefault(x=>x.uuid == putdto.uuid.ToString());
+            if(type == null)
+            {
+                return getFinishObject = new Answer<EarningGetDto>(400, "Earn type not found. ", null);
+            }
+            
+            type.description = putdto.description;
+
+            _context.SaveChanges();
+
+            return getFinishObject = new Answer<EarningGetDto>(200, "Earn type updated", null);
+        }
     }
 }

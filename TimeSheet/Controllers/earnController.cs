@@ -86,20 +86,21 @@ namespace TimeSheet.Controllers
         }
 
         [HttpGet]
-        public ActionResult<Answer<Dictionary<string, decimal>>> GetEarn(string fin, Guid? uuid)
+        public ActionResult<Answer<DicEarnGetDto>> GetEarn(string fin, Guid? uuid)
         {
             Answer<Dictionary<string, decimal>> getFinishObjectForMethod;
+            Answer<DicEarnGetDto> getFinishObjectForDict;
 
             Employee employee = _context.Employees.FirstOrDefault(x => x.fin == fin && x.isDeleted == false);
             if (employee == null)
             {
-                return getFinishObjectForMethod = new Answer<Dictionary<string, decimal>>(200, "Employee not found", null);
+                //return getFinishObjectForMethod = new Answer<Dictionary<string, decimal>>(200, "Employee not found", null);
             }
             List<DBEmployee> dbEmployees = _context.dBEmployees.Include(x => x.Company).Include(x => x.Database).Where(a => a.employeeId == employee.id).ToList();
 
             if (dbEmployees == null || dbEmployees.Count <= 0)
             {
-                return getFinishObjectForMethod = new Answer<Dictionary<string, decimal>>(400, "DbEmployees not found.", null);
+                //return getFinishObjectForMethod = new Answer<Dictionary<string, decimal>>(400, "DbEmployees not found.", null);
             }
 
             DBEmployee dBEmployee = dbEmployees.FirstOrDefault();
@@ -112,6 +113,7 @@ namespace TimeSheet.Controllers
             List<Earn> earns = _context.Earns.Include(x => x.EarningType).Where(x => x.employeeId == employee.id && x.dbCode == dBEmployee.Database.code).ToList();
             Dictionary<string, decimal> dict = new Dictionary<string, decimal>();
             EarningType earntype = new EarningType();
+            DicEarnGetDto response = new DicEarnGetDto();
             foreach (var earn in earns)
             {
                 if (earntype.id != 0 && dict.Any(x => x.Key == earntype.name))
@@ -124,7 +126,19 @@ namespace TimeSheet.Controllers
                 }
                 earntype = earn.EarningType;
             }
-            return getFinishObjectForMethod = new Answer<Dictionary<string, decimal>>(200, "Earn founded", new List<Dictionary<string, decimal>>() { dict });
+
+            foreach (var item in earns)
+                if (item.Date.Year == 2022)
+                {
+                    response = new DicEarnGetDto()
+                    {
+                        date = item.Date,
+                        earningTypes = dict
+                    };
+                };
+
+
+            return getFinishObjectForDict = new Answer<DicEarnGetDto>(200, "Earn founded", new List<DicEarnGetDto> { response });
         }
     }
 }
