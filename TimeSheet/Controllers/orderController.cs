@@ -265,7 +265,6 @@ namespace TimeSheet.Controllers
 
             // burda yoxluyassan gelen tokenden ki bu tokenin fini ile burda gelen fin eynidise cavab qaytarassan
             Employee employee = _context.Employees.FirstOrDefault(a => a.fin == fin && a.isDeleted == false);
-            var datetime = DateTime.Now;
             if (employee == null)
             {
                 return getFinishObject = new Answer<OrderGetDto>(400, "Employee not found.", null);
@@ -288,7 +287,7 @@ namespace TimeSheet.Controllers
             if (uuid != null)
             {
 
-                company = companies.FirstOrDefault(x => x.uuid == uuid.ToString());
+                company = companies.FirstOrDefault(x => x.uuid.ToLower() == uuid.ToString());
                 if (company == null)
                 {
                     return getFinishObject = new Answer<OrderGetDto>(400, "Company not founded.", null);
