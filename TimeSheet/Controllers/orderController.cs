@@ -76,9 +76,9 @@ namespace TimeSheet.Controllers
                                 && x.fin == orderPostDto.fin
                                 && x.dbCode == orderPostDto.dbCode
                                 && x.Company.tin == orderPostDto.tin))
-            {
-                return orderResult = new Answer<OrderPostDto>(400, "Order already exist", null);
-            }
+                                {
+                                    return orderResult = new Answer<OrderPostDto>(400, "Order already exist", null);
+                                }
             if (orderPostDto.orderType != 1 && orderPostDto.orderType != 2)
             {
                 Order order = _context.Orders
@@ -238,9 +238,9 @@ namespace TimeSheet.Controllers
 
                 return 201;
             }
-            else if (CRDto.OrderPostDto.orderType == 3)
+            else if (CRDto.OrderPostDto.orderType == 6)
             {
-
+                
             }
 
             return 400;
@@ -257,34 +257,49 @@ namespace TimeSheet.Controllers
 
             // burda yoxluyassan gelen tokenden ki bu tokenin fini ile burda gelen fin eynidise cavab qaytarassan
             Employee employee = _context.Employees.FirstOrDefault(a => a.fin == fin && a.isDeleted == false);
-
+            var datetime = DateTime.Now;
             if (employee == null)
             {
                 return getFinishObject = new Answer<OrderGetDto>(400, "Employee not found.", null);
             }
 
-            List<DBEmployee> dbEmployees = _context.dBEmployees
-                                                    .Include(x => x.Database)
-                                                    .Include(x => x.Position)
-                                                    .Include(x => x.Depament)
-                                                    .Include(x => x.Project)
-                                                    .Include(x => x.Company)
-                                                    .Where(a => a.employeeId == employee.id).ToList();
+
+            List<DBEmployee> dbEmployees = _context.dBEmployees.Where(a => a.employeeId == employee.id).ToList();
+            List<Company> companies = _context.Companies.ToList();
 
 
-            if (dbEmployees.Count <= 0 && dbEmployees == null)
+
+            if (dbEmployees == null && dbEmployees.Count <= 0 )
             {
                 return getFinishObject = new Answer<OrderGetDto>(400, "DbEmployees not found.", null);
             }
             DBEmployee dbEmployee = dbEmployees.FirstOrDefault();
             int dbId;
+            Company company = companies.FirstOrDefault(x=>x.id == dbEmployee.companyId);
+
             if (uuid != null)
             {
-                dbEmployee = dbEmployees.FirstOrDefault(x => x.Company.uuid.ToLower() == uuid.ToString());
+
+                company = companies.FirstOrDefault(x => x.uuid == uuid.ToString());
+                if (company == null)
+                {
+                    return getFinishObject = new Answer<OrderGetDto>(400, "Company not founded.", null);
+                }
+                dbEmployee = dbEmployees.FirstOrDefault(x => x.companyId== company.id);
+                if(dbEmployee == null)
+                {
+                    return getFinishObject = new Answer<OrderGetDto>(400, "DbEmployee not found with uuid.", null);
+                }
             }
             dbId = dbEmployee.databaseId;
 
-            List<Order> orders = _context.Orders.Include(x => x.typeOfOrder).Where(x => x.fin == employee.fin && x.dbCode == dbEmployee.Database.code && x.isDeleted == false).ToList();
+            Database db = _context.Database.Find(dbId);
+            Project project = _context.Projects.Find(dbEmployee.projectId);
+            Department department = _context.Departments.Find(dbEmployee.departmentId);
+            Position position = _context.Positions.Find(dbEmployee.positionId);
+
+            List<Order> orders = _context.Orders.Include(x => x.typeOfOrder).Where(x => x.fin == employee.fin && x.dbCode == db.code && x.isDeleted == false).ToList();
+
 
             List<OrderGetDto> ordersGetDto = new List<OrderGetDto>();
 
@@ -295,16 +310,16 @@ namespace TimeSheet.Controllers
 
                 OrderGetDto orderGetDto = new OrderGetDto()
                 {
-                    Position = dbEmployee.Position.name,
-                    Company = dbEmployee.Company.name,
-                    Department = dbEmployee.Depament.name,
-                    Project = dbEmployee.Project.name,
+                    Position = position.name,
+                    Company = company.name,
+                    Department = department.name,
+                    Project = project.name,
                     code = item.code,
                     date = item.date,
                     dateEffective = item.dateEffective,
                     dateExpired = item.dateExpired,
                     dateTo = item.dateTo,
-                    dbCode = dbEmployee.Database.code,
+                    dbCode = db.code,
                     description = item.description,
                     fin = employee.fin,
                     salary1 = item.salary1,
@@ -312,6 +327,23 @@ namespace TimeSheet.Controllers
                     salaryTotal = item.salaryTotal,
                     tin = item.tin,
                     orderType = item.typeOfOrder
+                    //Position = position.name,
+                    //Company = null,
+                    //Department = null,
+                    //Project = null,
+                    //code = null,
+                    //date = DateTime.UtcNow,
+                    //dateEffective = DateTime.UtcNow,
+                    //dateExpired = DateTime.UtcNow,
+                    //dateTo = DateTime.UtcNow,
+                    //dbCode = null,
+                    //description = null,
+                    //fin = null,
+                    //salary1 = 0,
+                    //salary2 = 0,
+                    //salaryTotal = 0,
+                    //tin = null,
+                    //orderType = null
                 };
                 ordersGetDto.Add(orderGetDto);
             }

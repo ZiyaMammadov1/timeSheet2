@@ -51,16 +51,23 @@ namespace TimeSheet.Controllers
 
         }
 
-        //[HttpGet]
-        //public ActionResult<List<EarningGetDto>> GetAll()
-        //{
-        //    List<EarningType> earningTypes = _context.typeOfEarning.ToList();
-        //    if(earningTypes.Count == 0)
-        //    {
-        //        return getFinishObject = new Answer<List<EarningGetDto>>(400, "EarninhType not found", null);
-        //    }
+        [HttpGet]
+        public ActionResult<Answer<EarningGetDto>> GetAll()
+        {
+            List<EarningType> earningTypes = _context.typeOfEarning.ToList();
+            List<EarningGetDto> earningList = new List<EarningGetDto>();
+            if (earningTypes.Count == 0)
+            {
+                return getFinishObject = new Answer<EarningGetDto>(400, "EarningType not found", null);
+            }
+            if (earningTypes.Count > 0)
+            {
+                earningList = earningTypes.Select(x => new EarningGetDto() { uuid = x.uuid, dbCode = x.dbCode, description = x.description, name = x.name, code = x.code}).ToList();
+                return getFinishObject = new Answer<EarningGetDto>(200, "Contact founded", earningList);
+            }
+            return getFinishObject = new Answer<EarningGetDto>(400, "Earning list not found", null);
 
 
-        //}
+        }
     }
 }
