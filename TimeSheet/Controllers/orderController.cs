@@ -298,16 +298,19 @@ namespace TimeSheet.Controllers
             Department department = _context.Departments.Find(dbEmployee.departmentId);
             Position position = _context.Positions.Find(dbEmployee.positionId);
 
-            List<Order> orders = _context.Orders.Include(x => x.typeOfOrder).Where(x => x.fin == employee.fin && x.dbCode == db.code && x.isDeleted == false).ToList();
+            List<Order> orders = _context.Orders.Where(x => x.fin == employee.fin && x.dbCode == db.code && x.isDeleted == false).ToList();
 
 
             List<OrderGetDto> ordersGetDto = new List<OrderGetDto>();
 
             List<typeOfOrder> typeOrderList = _context.typeOfOrders.ToList();
 
+             var ordertypes = _context.typeOfOrders;
+            typeOfOrder orderType = new typeOfOrder();
             foreach (var item in orders)
             {
-
+                orderType = ordertypes.Find(item.typeOfOrderId);
+                
                 OrderGetDto orderGetDto = new OrderGetDto()
                 {
                     Position = position.name,
@@ -326,24 +329,8 @@ namespace TimeSheet.Controllers
                     salary2 = item.salary2,
                     salaryTotal = item.salaryTotal,
                     tin = item.tin,
-                    orderType = item.typeOfOrder
-                    //Position = position.name,
-                    //Company = null,
-                    //Department = null,
-                    //Project = null,
-                    //code = null,
-                    //date = DateTime.UtcNow,
-                    //dateEffective = DateTime.UtcNow,
-                    //dateExpired = DateTime.UtcNow,
-                    //dateTo = DateTime.UtcNow,
-                    //dbCode = null,
-                    //description = null,
-                    //fin = null,
-                    //salary1 = 0,
-                    //salary2 = 0,
-                    //salaryTotal = 0,
-                    //tin = null,
-                    //orderType = null
+                    orderType = orderType.description
+
                 };
                 ordersGetDto.Add(orderGetDto);
             }

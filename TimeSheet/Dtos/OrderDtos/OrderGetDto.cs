@@ -8,7 +8,7 @@ namespace TimeSheet.Dtos.OrderDtos
         public string dbCode { get; set; }
         public string fin { get; set; }
         public string tin { get; set; }
-        public typeOfOrder orderType { get; set; }
+        public string orderType { get; set; }
         public DateTime date { get; set; }
         public DateTime dateEffective { get; set; }
         public DateTime dateExpired { get; set; }
