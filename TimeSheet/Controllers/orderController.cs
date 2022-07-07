@@ -6,8 +6,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TimeSheet.DatabaseContext;
+using TimeSheet.Dtos.CompanyDtos;
 using TimeSheet.Dtos.CreateOrRemoveDtos;
+using TimeSheet.Dtos.DepartmentDtos;
 using TimeSheet.Dtos.OrderDtos;
+using TimeSheet.Dtos.PositionDtos;
+using TimeSheet.Dtos.ProjectDtos;
 using TimeSheet.Dtos.TypeOfOrderDtos;
 using TimeSheet.Entities;
 
@@ -307,18 +311,15 @@ namespace TimeSheet.Controllers
 
             List<OrderGetDto> ordersGetDto = new List<OrderGetDto>();
 
-            List<typeOfOrder> typeOrderList = _context.typeOfOrders.ToList();
-
             foreach (var item in orders)
             {
-                typeOfOrderGetDto end = _mapper.Map<typeOfOrderGetDto>(item.typeOfOrder);
 
                 OrderGetDto orderGetDto = new OrderGetDto()
                 {
-                    Position = position.name,
-                    Company = company.name,
-                    Department = department.name,
-                    Project = project.name,
+                    Position = _mapper.Map <PositionGetDto>(item.Position),
+                    Company = _mapper.Map<CompanyGetDto>(item.Company),
+                    Department = _mapper.Map<DepartmentGetDto>(item.Deprtment),
+                    Project= _mapper.Map<ProjectGetDto>(item.Project),
                     code = item.code,
                     date = item.date,
                     dateEffective = item.dateEffective,
@@ -331,9 +332,9 @@ namespace TimeSheet.Controllers
                     salary2 = item.salary2,
                     salaryTotal = item.salaryTotal,
                     tin = item.tin,
-                    orderType = end
+                    orderType = _mapper.Map<typeOfOrderGetDto>(item.typeOfOrder)
 
-                };
+            };
                 ordersGetDto.Add(orderGetDto);
             }
 

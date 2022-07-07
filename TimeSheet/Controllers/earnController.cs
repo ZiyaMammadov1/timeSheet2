@@ -80,5 +80,22 @@ namespace TimeSheet.Controllers
 
             return getFinishObject = new Answer<EarnGetDto>(200, "Earn created", null);
         }
+
+        //[HttpGet]
+    
     }
+
+    //public Dictionary<string, string> CalcEarn()
+    //    {
+    //        string a = "a";
+    //        string b = "b";
+    //        Dictionary<string, string> dict = new Dictionary<string, string>
+    //        {
+    //            {a,b},
+    //            {b,a}
+    //        };
+
+    //        return dict;
+    //    }
+    //}
 }

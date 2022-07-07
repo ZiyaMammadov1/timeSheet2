@@ -1,4 +1,8 @@
 ﻿using System;
+using TimeSheet.Dtos.CompanyDtos;
+using TimeSheet.Dtos.DepartmentDtos;
+using TimeSheet.Dtos.PositionDtos;
+using TimeSheet.Dtos.ProjectDtos;
 using TimeSheet.Dtos.TypeOfOrderDtos;
 using TimeSheet.Entities;
 
@@ -19,10 +23,9 @@ namespace TimeSheet.Dtos.OrderDtos
         public decimal salaryTotal { get; set; }
         public string description { get; set; }
         public string code { get; set; }
-
-        public string Project { get; set; }
-        public string Department { get; set; }
-        public string Position { get; set; }
-        public string Company { get; set; }
+        public ProjectGetDto Project { get; set; }
+        public DepartmentGetDto Department { get; set; }
+        public PositionGetDto Position { get; set; }
+        public CompanyGetDto Company { get; set; }
     }
 }
