@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Cors;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -7,6 +8,7 @@ using System.Linq;
 using TimeSheet.DatabaseContext;
 using TimeSheet.Dtos.CreateOrRemoveDtos;
 using TimeSheet.Dtos.OrderDtos;
+using TimeSheet.Dtos.TypeOfOrderDtos;
 using TimeSheet.Entities;
 
 namespace TimeSheet.Controllers
@@ -17,13 +19,15 @@ namespace TimeSheet.Controllers
     public class orderController : ControllerBase
     {
         private readonly DataContext _context;
+        private readonly IMapper _mapper;
         Answer<OrderGetDto> getFinishObject;
         Answer<OrderPostDto> orderResult;
 
 
-        public orderController(DataContext context)
+        public orderController(DataContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
 
@@ -305,12 +309,10 @@ namespace TimeSheet.Controllers
 
             List<typeOfOrder> typeOrderList = _context.typeOfOrders.ToList();
 
-             var ordertypes = _context.typeOfOrders;
-            typeOfOrder orderType = new typeOfOrder();
             foreach (var item in orders)
             {
-                orderType = ordertypes.Find(item.typeOfOrderId);
-                
+                typeOfOrderGetDto end = _mapper.Map<typeOfOrderGetDto>(item.typeOfOrder);
+
                 OrderGetDto orderGetDto = new OrderGetDto()
                 {
                     Position = position.name,
@@ -329,7 +331,7 @@ namespace TimeSheet.Controllers
                     salary2 = item.salary2,
                     salaryTotal = item.salaryTotal,
                     tin = item.tin,
-                    orderType = orderType.description
+                    orderType = end
 
                 };
                 ordersGetDto.Add(orderGetDto);

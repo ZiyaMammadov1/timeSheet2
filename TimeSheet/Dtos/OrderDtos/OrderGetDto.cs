@@ -1,4 +1,5 @@
 ﻿using System;
+using TimeSheet.Dtos.TypeOfOrderDtos;
 using TimeSheet.Entities;
 
 namespace TimeSheet.Dtos.OrderDtos
@@ -8,7 +9,7 @@ namespace TimeSheet.Dtos.OrderDtos
         public string dbCode { get; set; }
         public string fin { get; set; }
         public string tin { get; set; }
-        public string orderType { get; set; }
+        public typeOfOrderGetDto orderType { get; set; }
         public DateTime date { get; set; }
         public DateTime dateEffective { get; set; }
         public DateTime dateExpired { get; set; }
