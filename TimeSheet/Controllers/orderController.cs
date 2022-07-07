@@ -70,7 +70,7 @@ namespace TimeSheet.Controllers
             Department department = new Department();
             Position position = new Position();
 
-      
+
 
             List<Order> orders = _context.Orders.ToList();
 
@@ -84,17 +84,17 @@ namespace TimeSheet.Controllers
                                 && x.fin == orderPostDto.fin
                                 && x.dbCode == orderPostDto.dbCode
                                 && x.Company.tin == orderPostDto.tin))
-                                {
-                                    return orderResult = new Answer<OrderPostDto>(400, "Order already exist", null);
-                                }
+            {
+                return orderResult = new Answer<OrderPostDto>(400, "Order already exist", null);
+            }
             if (orderPostDto.orderType != 1 && orderPostDto.orderType != 2)
             {
                 Order order = _context.Orders
                                         .Include(x => x.Deprtment)
                                         .Include(x => x.Position)
                                         .Include(x => x.Project)
-                                        .FirstOrDefault(x => x.fin == user.fin && x.dbCode == database.code && x.typeOfOrder.code == "1" && x.isDeleted ==false);
-                if(order == null)
+                                        .FirstOrDefault(x => x.fin == user.fin && x.dbCode == database.code && x.typeOfOrder.code == "1" && x.isDeleted == false);
+                if (order == null)
                 {
                     return orderResult = new Answer<OrderPostDto>(400, "Order not found", null);
                 }
@@ -248,7 +248,7 @@ namespace TimeSheet.Controllers
             }
             else if (CRDto.OrderPostDto.orderType == 6)
             {
-                
+
             }
 
             return 400;
@@ -271,18 +271,23 @@ namespace TimeSheet.Controllers
             }
 
 
-            List<DBEmployee> dbEmployees = _context.dBEmployees.Where(a => a.employeeId == employee.id).ToList();
+            List<DBEmployee> dbEmployees = _context.dBEmployees
+                .Include(x => x.Database)
+                .Include(x => x.Depament)
+                .Include(x => x.Position)
+                .Include(x => x.Project)
+                .Where(a => a.employeeId == employee.id).ToList();
+
             List<Company> companies = _context.Companies.ToList();
 
 
-
-            if (dbEmployees == null && dbEmployees.Count <= 0 )
+            if (dbEmployees == null && dbEmployees.Count <= 0)
             {
                 return getFinishObject = new Answer<OrderGetDto>(400, "DbEmployees not found.", null);
             }
             DBEmployee dbEmployee = dbEmployees.FirstOrDefault();
             int dbId;
-            Company company = companies.FirstOrDefault(x=>x.id == dbEmployee.companyId);
+            Company company = companies.FirstOrDefault(x => x.id == dbEmployee.companyId);
 
             if (uuid != null)
             {
@@ -292,20 +297,15 @@ namespace TimeSheet.Controllers
                 {
                     return getFinishObject = new Answer<OrderGetDto>(400, "Company not founded.", null);
                 }
-                dbEmployee = dbEmployees.FirstOrDefault(x => x.companyId== company.id);
-                if(dbEmployee == null)
+                dbEmployee = dbEmployees.FirstOrDefault(x => x.companyId == company.id);
+                if (dbEmployee == null)
                 {
                     return getFinishObject = new Answer<OrderGetDto>(400, "DbEmployee not found with uuid.", null);
                 }
             }
             dbId = dbEmployee.databaseId;
 
-            Database db = _context.Database.Find(dbId);
-            Project project = _context.Projects.Find(dbEmployee.projectId);
-            Department department = _context.Departments.Find(dbEmployee.departmentId);
-            Position position = _context.Positions.Find(dbEmployee.positionId);
-
-            List<Order> orders = _context.Orders.Where(x => x.fin == employee.fin && x.dbCode == db.code && x.isDeleted == false).ToList();
+            List<Order> orders = _context.Orders.Include(x => x.typeOfOrder).Where(x => x.fin == employee.fin && x.dbCode == dbEmployee.Database.code && x.isDeleted == false).ToList();
 
 
             List<OrderGetDto> ordersGetDto = new List<OrderGetDto>();
@@ -315,25 +315,25 @@ namespace TimeSheet.Controllers
 
                 OrderGetDto orderGetDto = new OrderGetDto()
                 {
-                    Position = _mapper.Map <PositionGetDto>(item.Position),
+                    Position = _mapper.Map<PositionGetDto>(item.Position),
                     Company = _mapper.Map<CompanyGetDto>(item.Company),
                     Department = _mapper.Map<DepartmentGetDto>(item.Deprtment),
-                    Project= _mapper.Map<ProjectGetDto>(item.Project),
+                    Project = _mapper.Map<ProjectGetDto>(item.Project),
                     code = item.code,
                     date = item.date,
                     dateEffective = item.dateEffective,
                     dateExpired = item.dateExpired,
                     dateTo = item.dateTo,
-                    dbCode = db.code,
+                    dbCode = dbEmployee.Database.code,
                     description = item.description,
                     fin = employee.fin,
                     salary1 = item.salary1,
                     salary2 = item.salary2,
                     salaryTotal = item.salaryTotal,
                     tin = item.tin,
-                    orderType = _mapper.Map<typeOfOrderGetDto>(item.typeOfOrder)
+                    orderType = _mapper.Map<typeOfOrderGetDto>(item.typeOfOrder),
 
-            };
+                };
                 ordersGetDto.Add(orderGetDto);
             }
 
