@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TimeSheet.DatabaseContext;
@@ -86,9 +87,9 @@ namespace TimeSheet.Controllers
         }
 
         [HttpDelete]
-        public ActionResult<Answer<EarningGetDto>> DeleteEarning(string code)
+        public ActionResult<Answer<EarningGetDto>> DeleteEarning(Guid? uuid)
         {
-            EarningType type = _context.typeOfEarning.FirstOrDefault(x => x.code == code && x.isDeleted == false);
+            EarningType type = _context.typeOfEarning.FirstOrDefault(x => x.uuid == uuid.ToString() && x.isDeleted == false);
 
             if (type == null)
             {
