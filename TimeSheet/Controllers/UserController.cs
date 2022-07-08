@@ -115,7 +115,7 @@ namespace TimeSheet.Controllers
                 return getFinishObject = new Answer<UserGetDto>(400, "Employee not found", null);
             }
 
-            if(employee.password != Hashing.ToSHA256(ChangeDto.Password) || ChangeDto.Password == null)
+            if (employee.password != Hashing.ToSHA256(ChangeDto.Password) || ChangeDto.Password == null)
             {
                 return getFinishObject = new Answer<UserGetDto>(204, "Enter correct last code", null);
             }
@@ -124,7 +124,7 @@ namespace TimeSheet.Controllers
 
             _context.SaveChanges();
 
-            return getFinishObject = new Answer<UserGetDto>(204, "Password changed",null);
+            return getFinishObject = new Answer<UserGetDto>(204, "Password changed", null);
         }
     }
 }

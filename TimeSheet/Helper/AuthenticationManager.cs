@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using TimeSheet.DatabaseContext;
@@ -25,7 +24,7 @@ namespace TimeSheet.Helper
         public JwtSecurityToken CurrentClaim(string token)
         {
             var handler = new JwtSecurityTokenHandler();
-            var tokenS = new JwtSecurityToken(); 
+            var tokenS = new JwtSecurityToken();
             try
             {
                 var jsonToken = handler.ReadToken(token);
@@ -36,7 +35,7 @@ namespace TimeSheet.Helper
 
                 return null;
             }
-          
+
 
             if (tokenS == null)
             {

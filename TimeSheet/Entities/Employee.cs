@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace TimeSheet.Entities
 {
@@ -10,7 +9,7 @@ namespace TimeSheet.Entities
 
         public List<DBEmployee> DbEmployees { get; set; } = new List<DBEmployee>();
 
-       
+
     }
 
 }

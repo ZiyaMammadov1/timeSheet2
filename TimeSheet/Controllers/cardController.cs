@@ -38,15 +38,15 @@ namespace TimeSheet.Controllers
             {
                 return getFinishObject = new Answer<CardGetDto>(400, "Database not found", null);
             }
-              
+
 
 
             List<IdentityCard> cards = _context.IdentityCards.Where(x => x.employeeId == user.id).ToList();
 
-            IdentityCard card = cards.FirstOrDefault(x=>x.databaseId == db.id && x.series == CardPostDto.seriya);
+            IdentityCard card = cards.FirstOrDefault(x => x.databaseId == db.id && x.series == CardPostDto.seriya);
 
-           if(card != null)
-           {
+            if (card != null)
+            {
                 card.photo = CardPostDto.photo;
                 card.address = CardPostDto.adress;
                 card.firstName = CardPostDto.firstName;
@@ -56,7 +56,7 @@ namespace TimeSheet.Controllers
                 card.issiedBy = CardPostDto.issiedBy;
                 _context.SaveChanges();
                 return getFinishObject = new Answer<CardGetDto>(200, $"Card updated {user.fin}", null);
-           }
+            }
 
             if (card == null || CardPostDto.date != card.date)
             {
@@ -100,7 +100,7 @@ namespace TimeSheet.Controllers
                 return getFinishObject = new Answer<CardGetDto>(400, "Employee not found.", null);
             }
 
-            List<DBEmployee> dbEmployees = _context.dBEmployees.Include(x=>x.Company).Where(a => a.employeeId == employee.id).ToList();
+            List<DBEmployee> dbEmployees = _context.dBEmployees.Include(x => x.Company).Where(a => a.employeeId == employee.id).ToList();
 
             if (dbEmployees == null || dbEmployees.Count <= 0)
             {
@@ -109,7 +109,7 @@ namespace TimeSheet.Controllers
 
             DBEmployee dBEmployee = dbEmployees.FirstOrDefault();
             int dbId;
-            if(uuid != null)
+            if (uuid != null)
             {
                 dBEmployee = dbEmployees.FirstOrDefault(x => x.Company.uuid.ToLower() == uuid.ToString());
             }
@@ -118,7 +118,7 @@ namespace TimeSheet.Controllers
 
             List<IdentityCard> identityCards = _context.IdentityCards.Where(x => x.employeeId == employee.id && x.databaseId == dbId).ToList();
 
-            if(identityCards.Count == 0)
+            if (identityCards.Count == 0)
             {
                 return getFinishObject = new Answer<CardGetDto>(400, "Card not found.", null);
             }

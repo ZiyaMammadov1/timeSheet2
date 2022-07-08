@@ -23,14 +23,14 @@ namespace TimeSheet.Controllers
         Answer<StatusGetDto> getFinishObject;
 
         [HttpPost]
-        public ActionResult<Answer<StatusGetDto>>StatusPost(StatusPostDto postDto)
+        public ActionResult<Answer<StatusGetDto>> StatusPost(StatusPostDto postDto)
         {
-            if(postDto.code == null || postDto.name == null || postDto.description == null)
+            if (postDto.code == null || postDto.name == null || postDto.description == null)
             {
                 return getFinishObject = new Answer<StatusGetDto>(400, "All field required", null);
             }
 
-            Status newStatus = new Status() 
+            Status newStatus = new Status()
             {
                 code = postDto.code,
                 description = postDto.description,
@@ -41,21 +41,21 @@ namespace TimeSheet.Controllers
 
             return getFinishObject = new Answer<StatusGetDto>(200, "Status created", null);
 
-            
+
         }
 
         [HttpGet]
         public ActionResult<Answer<StatusGetDto>> GetStatus()
         {
             List<Status> statuses = _context.Statuses.ToList();
-            if(statuses == null && statuses.Count <= 0)
+            if (statuses == null && statuses.Count <= 0)
             {
-                return getFinishObject = new Answer<StatusGetDto>(400,"Statuses not found",null);
+                return getFinishObject = new Answer<StatusGetDto>(400, "Statuses not found", null);
             }
 
-            List<StatusGetDto> statusGetDtos = statuses.Select(x=> new StatusGetDto() {code = x.code, description = x.description, name = x.name }).ToList();
+            List<StatusGetDto> statusGetDtos = statuses.Select(x => new StatusGetDto() { code = x.code, description = x.description, name = x.name }).ToList();
 
-            return getFinishObject = new Answer<StatusGetDto>(200,"Statuses founded", statusGetDtos);
+            return getFinishObject = new Answer<StatusGetDto>(200, "Statuses founded", statusGetDtos);
         }
     }
 }

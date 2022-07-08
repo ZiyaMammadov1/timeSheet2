@@ -15,7 +15,7 @@ namespace TimeSheet.Entities
         public Company Company { get; set; }
         public DateTime Date { get; set; }
         public int earningTypeId { get; set; }
-        public EarningType EarningType{ get; set; }
+        public EarningType EarningType { get; set; }
 
         [Column(TypeName = "decimal(18, 2)")]
         public decimal amount { get; set; }

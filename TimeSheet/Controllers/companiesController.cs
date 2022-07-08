@@ -16,7 +16,7 @@ namespace TimeSheet.Controllers
     public class companyController : ControllerBase
     {
         private readonly DataContext _context;
-        private readonly IMapper _mapper; 
+        private readonly IMapper _mapper;
         Answer<CompanyGetDto> getFinishObject;
 
         public companyController(DataContext context, IMapper mapper)
@@ -29,14 +29,14 @@ namespace TimeSheet.Controllers
         [HttpGet]
         public ActionResult<Answer<CompanyGetDto>> GetAll()
         {
-            List<Company> companies = _context.Companies.Include(x=>x.Database).Where(x => x.isDeleted == false).ToList();
+            List<Company> companies = _context.Companies.Include(x => x.Database).Where(x => x.isDeleted == false).ToList();
 
             if (companies.Count > 0)
             {
                 List<CompanyGetDto> companyList = new List<CompanyGetDto>();
                 foreach (var company in companies)
                 {
-                  
+
 
                     CompanyGetDto GetDto = new CompanyGetDto()
                     {

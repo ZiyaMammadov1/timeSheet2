@@ -27,7 +27,7 @@ namespace TimeSheet.DatabaseContext
         public DbSet<Company> Companies { get; set; }
         public DbSet<typeOfOrder> typeOfOrders { get; set; }
         public DbSet<EarningType> typeOfEarning { get; set; }
-        public DbSet<Status> Statuses{ get; set; }
+        public DbSet<Status> Statuses { get; set; }
         public DbSet<RequestType> RequestTypes { get; set; }
         public DbSet<Request> Requests { get; set; }
 

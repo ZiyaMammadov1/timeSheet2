@@ -7,6 +7,6 @@ namespace TimeSheet.Dtos.EarnDtos
     {
         public DateTime date { get; set; }
 
-        public Dictionary<string, decimal> earningTypes{ get; set; }
+        public Dictionary<string, decimal> earningTypes { get; set; }
     }
 }

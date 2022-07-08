@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +25,7 @@ namespace TimeSheet.Controllers
         [HttpPost]
         public ActionResult<Answer<EarningGetDto>> EarningPost(EarningPostDto postDto)
         {
-            List<EarningType> earnList = _context.typeOfEarning.Where(x=>x.isDeleted == false).ToList();
+            List<EarningType> earnList = _context.typeOfEarning.Where(x => x.isDeleted == false).ToList();
             Database database = _context.Database.FirstOrDefault(x => x.code == postDto.dbCode && x.isDeleted == false);
             if (database == null)
             {
@@ -54,7 +53,7 @@ namespace TimeSheet.Controllers
         [HttpGet]
         public ActionResult<Answer<EarningGetDto>> GetAll()
         {
-            List<EarningType> earningTypes = _context.typeOfEarning.Where(x=>x.isDeleted == false).ToList();
+            List<EarningType> earningTypes = _context.typeOfEarning.Where(x => x.isDeleted == false).ToList();
             List<EarningGetDto> earningList = new List<EarningGetDto>();
             if (earningTypes.Count == 0)
             {
@@ -62,7 +61,7 @@ namespace TimeSheet.Controllers
             }
             if (earningTypes.Count > 0)
             {
-                earningList = earningTypes.Select(x => new EarningGetDto() { uuid = x.uuid, dbCode = x.dbCode, description = x.description, name = x.name, code = x.code}).ToList();
+                earningList = earningTypes.Select(x => new EarningGetDto() { uuid = x.uuid, dbCode = x.dbCode, description = x.description, name = x.name, code = x.code }).ToList();
                 return getFinishObject = new Answer<EarningGetDto>(200, "Contact founded", earningList);
             }
             return getFinishObject = new Answer<EarningGetDto>(400, "Earning list not found", null);
@@ -71,14 +70,14 @@ namespace TimeSheet.Controllers
         }
 
         [HttpPut]
-        public ActionResult <Answer<EarningGetDto>> UpdateEarning(EarningPutDto putdto)
+        public ActionResult<Answer<EarningGetDto>> UpdateEarning(EarningPutDto putdto)
         {
-            EarningType type = _context.typeOfEarning.FirstOrDefault(x=>x.uuid == putdto.uuid.ToString() && x.isDeleted == false);
-            if(type == null)
+            EarningType type = _context.typeOfEarning.FirstOrDefault(x => x.uuid == putdto.uuid.ToString() && x.isDeleted == false);
+            if (type == null)
             {
                 return getFinishObject = new Answer<EarningGetDto>(400, "Earn type not found. ", null);
             }
-            
+
             type.description = putdto.description;
 
             _context.SaveChanges();
@@ -89,17 +88,17 @@ namespace TimeSheet.Controllers
         [HttpDelete]
         public ActionResult<Answer<EarningGetDto>> DeleteEarning(string code)
         {
-            EarningType type = _context.typeOfEarning.FirstOrDefault(x=>x.code == code && x.isDeleted == false);
+            EarningType type = _context.typeOfEarning.FirstOrDefault(x => x.code == code && x.isDeleted == false);
 
-            if(type == null)
+            if (type == null)
             {
-                return getFinishObject = new Answer<EarningGetDto>(400,"type not found", null);
+                return getFinishObject = new Answer<EarningGetDto>(400, "type not found", null);
             }
 
             type.isDeleted = true;
             _context.SaveChanges();
 
-            return getFinishObject = new Answer<EarningGetDto>(200,"earn deleted", null);
+            return getFinishObject = new Answer<EarningGetDto>(200, "earn deleted", null);
         }
     }
 }

@@ -4,7 +4,6 @@ using TimeSheet.Dtos.DepartmentDtos;
 using TimeSheet.Dtos.PositionDtos;
 using TimeSheet.Dtos.ProjectDtos;
 using TimeSheet.Dtos.TypeOfOrderDtos;
-using TimeSheet.Entities;
 
 namespace TimeSheet.Dtos.OrderDtos
 {

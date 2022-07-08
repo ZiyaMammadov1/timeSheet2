@@ -9,7 +9,7 @@
         public string dbCode { get; set; }
         public string description { get; set; }
         public bool earning { get; set; }
-        public bool  isDeleted { get; set; }
+        public bool isDeleted { get; set; }
 
     }
 }

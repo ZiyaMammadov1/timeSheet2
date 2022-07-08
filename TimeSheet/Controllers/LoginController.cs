@@ -3,14 +3,12 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using TimeSheet.DatabaseContext;
 using TimeSheet.Dtos.CompanyDtos;
 using TimeSheet.Dtos.DepartmentDtos;
 using TimeSheet.Dtos.DtosForFront;
-using TimeSheet.Dtos.EmployeeInfoDtos;
 using TimeSheet.Dtos.LoginDtos;
 using TimeSheet.Dtos.PositionDtos;
 using TimeSheet.Dtos.ProjectDtos;
@@ -18,7 +16,6 @@ using TimeSheet.Dtos.RefreshTokenDtos;
 using TimeSheet.Dtos.TokenWithUserInfo;
 using TimeSheet.Dtos.UserDto;
 using TimeSheet.Entities;
-using TimeSheet.Helper;
 using TimeSheet.Helper;
 
 namespace TimeSheet.Controllers
@@ -101,8 +98,8 @@ namespace TimeSheet.Controllers
             var OrderForSalary = _context.Orders.FirstOrDefault(x => x.fin == User.fin && x.dbCode == EmployeeList.First().Database.code && x.isDeleted == false);
 
             Contact contact = new Contact();
-                
-             contact =    _context.Contacts.FirstOrDefault(x => x.employeeId == User.id && x.dbId == EmployeeList.First().Database.id && x.isDeleted == false);
+
+            contact = _context.Contacts.FirstOrDefault(x => x.employeeId == User.id && x.dbId == EmployeeList.First().Database.id && x.isDeleted == false);
 
 
 
@@ -177,7 +174,7 @@ namespace TimeSheet.Controllers
                 return companyfinishObject = new Answer<CommonInfoDto>(400, "Employee not found", null);
             }
 
-            List<DBEmployee> dbEmployees = _context.dBEmployees.Include(x=>x.Company).ThenInclude(x=>x.Database).Where(x => x.employeeId == employee.id && 
+            List<DBEmployee> dbEmployees = _context.dBEmployees.Include(x => x.Company).ThenInclude(x => x.Database).Where(x => x.employeeId == employee.id &&
                                                                             x.isActive == true &&
                                                                             x.isDelete == false)
                                                                             .ToList();
@@ -187,16 +184,16 @@ namespace TimeSheet.Controllers
                 return companyfinishObject = new Answer<CommonInfoDto>(400, "DbEmployees not found", null);
             }
 
-            List<IdentityCard> IdentityCard = _context.IdentityCards.Where(x=>x.employeeId == employee.id).ToList();
-            
-            List<Contact> Contacts = _context.Contacts.Where(x=>x.employeeId == employee.id).ToList();
+            List<IdentityCard> IdentityCard = _context.IdentityCards.Where(x => x.employeeId == employee.id).ToList();
+
+            List<Contact> Contacts = _context.Contacts.Where(x => x.employeeId == employee.id).ToList();
 
             List<Order> Orders = _context.Orders
-                                            .Include(x=>x.Position)
-                                            .Include(x=>x.Deprtment)
-                                            .Include(x=>x.Project)
-                                            .Include(x=>x.Company)
-                                            .Where(x=>x.fin == employee.fin).ToList();
+                                            .Include(x => x.Position)
+                                            .Include(x => x.Deprtment)
+                                            .Include(x => x.Project)
+                                            .Include(x => x.Company)
+                                            .Where(x => x.fin == employee.fin).ToList();
 
             List<CommonInfoDto> companiesGetDto = new List<CommonInfoDto>();
 
@@ -206,10 +203,10 @@ namespace TimeSheet.Controllers
                 IdentityCard card = IdentityCard.FirstOrDefault(x => x.employeeId == employee.id &&
                                                                    x.databaseId == item.databaseId &&
                                                                    x.isActive == true);
-                
-                Contact contact = Contacts.FirstOrDefault(x=>x.dbId == item.databaseId && x.isDeleted == false);
 
-                Order order = Orders.Find(x=>x.id==item.OrderId);
+                Contact contact = Contacts.FirstOrDefault(x => x.dbId == item.databaseId && x.isDeleted == false);
+
+                Order order = Orders.Find(x => x.id == item.OrderId);
 
                 CommonInfoDto company = new CommonInfoDto()
                 {
@@ -226,19 +223,19 @@ namespace TimeSheet.Controllers
                     Company = _mapper.Map<CompanyGetDto>(order.Company),
                     dateTo = order.dateTo
                 };
-               
+
                 companiesGetDto.Add(company);
 
             }
 
 
-       
+
 
             return companyfinishObject = new Answer<CommonInfoDto>(200, "Companies founded", companiesGetDto);
 
 
         }
 
-        
+
     }
 }

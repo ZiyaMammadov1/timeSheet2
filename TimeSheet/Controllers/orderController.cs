@@ -339,7 +339,7 @@ namespace TimeSheet.Controllers
                 ordersGetDto.Add(orderGetDto);
             }
 
-            return getFinishObject = new Answer<OrderGetDto>(200, "Orders founded", ordersGetDto.OrderByDescending(x=>x.date).ToList());
+            return getFinishObject = new Answer<OrderGetDto>(200, "Orders founded", ordersGetDto.OrderByDescending(x => x.date).ToList());
 
         }
 

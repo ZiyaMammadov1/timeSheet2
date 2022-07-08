@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using TimeSheet.DatabaseContext;
@@ -94,12 +93,12 @@ namespace TimeSheet.Controllers
         [HttpPut]
         public ActionResult<Answer<RequestPostDto>> UpdateRequest(RequestUpdateDto updateDto)
         {
-            Request req = _context.Requests.FirstOrDefault(x=>x.code == updateDto.code);
-            if(req == null)
+            Request req = _context.Requests.FirstOrDefault(x => x.code == updateDto.code);
+            if (req == null)
             {
-                return getFinishObject = new Answer<RequestPostDto>(400,"Request not found",null);
+                return getFinishObject = new Answer<RequestPostDto>(400, "Request not found", null);
             }
-            Status sta = _context.Statuses.FirstOrDefault(x=>x.code == updateDto.statusCode);
+            Status sta = _context.Statuses.FirstOrDefault(x => x.code == updateDto.statusCode);
             if (sta == null)
             {
                 return getFinishObject = new Answer<RequestPostDto>(400, "Status not found", null);

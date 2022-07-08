@@ -45,7 +45,7 @@ namespace TimeSheet.Controllers
 
             foreach (var member in existMembers)
             {
-                if (memberPostDto.fullName == null || memberPostDto.code == null )
+                if (memberPostDto.fullName == null || memberPostDto.code == null)
                 {
                     return getFinishObject = new Answer<MemberGetDto>(400, "Fullname and code can't be null", null);
                 }
@@ -62,7 +62,7 @@ namespace TimeSheet.Controllers
                     _context.SaveChanges();
                     return getFinishObject = new Answer<MemberGetDto>(201, "Member updated.", null);
                 }
-               
+
 
             }
 
@@ -96,7 +96,7 @@ namespace TimeSheet.Controllers
                 return getFinishObject = new Answer<MemberGetDto>(400, "Employee not found.", null);
             }
 
-            List<DBEmployee> dbEmployees = _context.dBEmployees.Include(a=>a.Company).Where(a => a.employeeId == employee.id && a.isActive ==true && a.isDelete==false).ToList();
+            List<DBEmployee> dbEmployees = _context.dBEmployees.Include(a => a.Company).Where(a => a.employeeId == employee.id && a.isActive == true && a.isDelete == false).ToList();
 
             if (dbEmployees.Count <= 0 && dbEmployees == null)
             {
@@ -105,12 +105,12 @@ namespace TimeSheet.Controllers
 
             DBEmployee dBEmployee = dbEmployees.FirstOrDefault();
             int dbId;
-            if(uuid != null)
+            if (uuid != null)
             {
                 dBEmployee = dbEmployees.FirstOrDefault(x => x.Company.uuid.ToLower() == uuid.ToString());
             }
-                dbId = dBEmployee.databaseId;
-        
+            dbId = dBEmployee.databaseId;
+
 
             List<FamilyMembers> familyMembers = _context.FamilyMembers.Where(x => x.fin == employee.fin && x.dbId == dbId).ToList();
             List<MemberGetDto> members = new List<MemberGetDto>();
