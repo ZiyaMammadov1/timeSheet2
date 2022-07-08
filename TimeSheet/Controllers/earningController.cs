@@ -41,7 +41,7 @@ namespace TimeSheet.Controllers
                 code = postDto.code,
                 dbCode = postDto.dbCode,
                 name = postDto.name,
-                description = postDto.descripntion,
+                description = postDto.description,
                 earning = postDto.earning
             };
             _context.typeOfEarning.Add(newEarning);
@@ -99,7 +99,7 @@ namespace TimeSheet.Controllers
             type.isDeleted = true;
             _context.SaveChanges();
 
-            return getFinishObject = new Answer<EarningGetDto>(200, "earn deleted", null);
+            return getFinishObject = new Answer<EarningGetDto>(200, "type of earn deleted", null);
         }
     }
 }
