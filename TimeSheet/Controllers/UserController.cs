@@ -117,7 +117,7 @@ namespace TimeSheet.Controllers
 
             if (employee.password != Hashing.ToSHA256(ChangeDto.Password) || ChangeDto.Password == null)
             {
-                return getFinishObject = new Answer<UserGetDto>(204, "Enter correct last code", null);
+                return getFinishObject = new Answer<UserGetDto>(200, "Enter correct last code", null);
             }
 
             employee.password = Hashing.ToSHA256(ChangeDto.newPassword);
