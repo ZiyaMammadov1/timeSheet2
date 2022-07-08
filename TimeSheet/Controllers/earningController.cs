@@ -26,8 +26,8 @@ namespace TimeSheet.Controllers
         [HttpPost]
         public ActionResult<Answer<EarningGetDto>> EarningPost(EarningPostDto postDto)
         {
-            List<EarningType> earnList = _context.typeOfEarning.ToList();
-            Database database = _context.Database.FirstOrDefault(x => x.code == postDto.dbCode);
+            List<EarningType> earnList = _context.typeOfEarning.Where(x=>x.isDeleted == false).ToList();
+            Database database = _context.Database.FirstOrDefault(x => x.code == postDto.dbCode && x.isDeleted == false);
             if (database == null)
             {
                 return getFinishObject = new Answer<EarningGetDto>(400, "Database not found", null);
@@ -54,7 +54,7 @@ namespace TimeSheet.Controllers
         [HttpGet]
         public ActionResult<Answer<EarningGetDto>> GetAll()
         {
-            List<EarningType> earningTypes = _context.typeOfEarning.ToList();
+            List<EarningType> earningTypes = _context.typeOfEarning.Where(x=>x.isDeleted == false).ToList();
             List<EarningGetDto> earningList = new List<EarningGetDto>();
             if (earningTypes.Count == 0)
             {
@@ -73,7 +73,7 @@ namespace TimeSheet.Controllers
         [HttpPut]
         public ActionResult <Answer<EarningGetDto>> UpdateEarning(EarningPutDto putdto)
         {
-            EarningType type = _context.typeOfEarning.FirstOrDefault(x=>x.uuid == putdto.uuid.ToString());
+            EarningType type = _context.typeOfEarning.FirstOrDefault(x=>x.uuid == putdto.uuid.ToString() && x.isDeleted == false);
             if(type == null)
             {
                 return getFinishObject = new Answer<EarningGetDto>(400, "Earn type not found. ", null);
@@ -84,6 +84,22 @@ namespace TimeSheet.Controllers
             _context.SaveChanges();
 
             return getFinishObject = new Answer<EarningGetDto>(200, "Earn type updated", null);
+        }
+
+        [HttpDelete]
+        public ActionResult<Answer<EarningGetDto>> DeleteEarning(string code)
+        {
+            EarningType type = _context.typeOfEarning.FirstOrDefault(x=>x.code == code && x.isDeleted == false);
+
+            if(type == null)
+            {
+                return getFinishObject = new Answer<EarningGetDto>(400,"type not found", null);
+            }
+
+            type.isDeleted = true;
+            _context.SaveChanges();
+
+            return getFinishObject = new Answer<EarningGetDto>(200,"earn deleted", null);
         }
     }
 }
