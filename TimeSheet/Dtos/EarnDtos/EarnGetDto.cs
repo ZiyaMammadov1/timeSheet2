@@ -25,7 +25,8 @@ namespace TimeSheet.Dtos.EarnDtos
     {
         public int year { get; set; }
         public int id { get; set; }
-        public bool earningtype { get; set; }
+
+        public Dictionary<string, decimal> earningTypes { get; set; }
 
         public string dbCode { get; set; }
         public DateTime date { get; set; }

@@ -88,22 +88,22 @@ namespace TimeSheet.Controllers
         }
 
         [HttpGet]
-        public ActionResult<Answer<yearDto>> GetEarn(string fin, Guid? uuid)
+        public ActionResult<Answer<monthDto>> GetEarn(string fin, Guid? uuid)
         {
             Answer<Dictionary<string, decimal>> getFinishObjectForMethod;
 
-            Answer<yearDto> getFinishObjectForDict;
+            Answer<monthDto> getFinishObjectForDict;
 
             Employee employee = _context.Employees.FirstOrDefault(x => x.fin == fin && x.isDeleted == false);
             if (employee == null)
             {
-                return getFinishObjectForDict = new Answer<yearDto>(200, "Employee not found", null);
+                return getFinishObjectForDict = new Answer<monthDto>(200, "Employee not found", null);
             }
             List<DBEmployee> dbEmployees = _context.dBEmployees.Include(x => x.Company).Include(x => x.Database).Where(a => a.employeeId == employee.id).ToList();
 
             if (dbEmployees == null || dbEmployees.Count <= 0)
             {
-                return getFinishObjectForDict = new Answer<yearDto>(400, "DbEmployees not found.", null);
+                return getFinishObjectForDict = new Answer<monthDto>(400, "DbEmployees not found.", null);
             }
 
             DBEmployee dBEmployee = dbEmployees.FirstOrDefault();
@@ -113,10 +113,17 @@ namespace TimeSheet.Controllers
                 dBEmployee = dbEmployees.FirstOrDefault(x => x.Company.uuid.ToLower() == uuid.ToString());
             }
             dbId = dBEmployee.databaseId;
+
             List<Earn> earns = _context.Earns.Include(x => x.EarningType).Where(x => x.employeeId == employee.id && x.dbCode == dBEmployee.Database.code).ToList();
+
             Dictionary<string, decimal> dict = new Dictionary<string, decimal>();
             EarningType earntype = new EarningType();
             DicEarnGetDto response = new DicEarnGetDto();
+
+            monthDto month = new monthDto();
+
+            List<monthDto> months = new List<monthDto>();
+
             foreach (var earn in earns)
             {
                 if (dict.ContainsKey(earn.EarningType.name))
@@ -127,70 +134,28 @@ namespace TimeSheet.Controllers
                 {
                     dict.Add(earn.EarningType.name, Math.Abs(earn.amount));
                 }
-            }
-
-            List<DicEarnGetDto> results = new List<DicEarnGetDto>();
-            List<yearDto> years = new List<yearDto>();
-
-            years = getYearArray(earns);
-
-
-            return getFinishObjectForDict = new Answer<yearDto>(200, "Earn founded", years);
-
-        }
-
-        public static List<yearDto> getYearArray(List<Earn> earn)
-        {
-            List<yearDto> years = new List<yearDto>();
-
-            yearDto year;
-            foreach (var item in earn)
-            {
-                year = new yearDto()
-                {
-                    id = item.Date.Year
-                };
-
-                if (years == null || years.Any(x => x.id != year.id))
-                {
-                    years.Add(year);
-
-                }
-
-
-            }
-
-            years = years.ToList();
-
-            return years;
-        }
-
-
-        private List<monthDto> getMonthsArray(List<Earn> earns)
-        {
-            List<monthDto> months = new List<monthDto>();
-
-            monthDto month = new monthDto();
-
-            foreach (var earn in earns)
-            {
-
                 month = new monthDto()
                 {
                     year = earn.Date.Year,
                     id = earn.Date.Month,
                     amount = earn.amount,
-                    earningtype = earn.EarningType.earning,
                     date = earn.Date,
                     dbCode = earn.dbCode,
+                    earningTypes = dict
                 };
+                dict = new Dictionary<string, decimal>();
                 months.Add(month);
             }
 
+            List<DicEarnGetDto> results = new List<DicEarnGetDto>();
+            List<yearDto> years = new List<yearDto>();
 
-            months = months.Distinct().ToList();
 
-            return months;
+
+            return getFinishObjectForDict = new Answer<monthDto>(200, "Earn founded", months);
+
         }
+
+
     }
 }
