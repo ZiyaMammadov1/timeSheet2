@@ -28,7 +28,7 @@ namespace TimeSheet.DatabaseContext
         public DbSet<typeOfOrder> typeOfOrders { get; set; }
         public DbSet<EarningType> typeOfEarning { get; set; }
         public DbSet<Status> Statuses{ get; set; }
-
+        public DbSet<RequestType> RequestTypes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

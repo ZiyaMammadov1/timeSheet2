@@ -1,8 +1,8 @@
 ﻿namespace TimeSheet.Entities
 {
-    public class RequestType
+    public class RequestType : BaseEntity
     {
-        public string code { get; set; }
-        public int MyProperty { get; set; }
+        public string name { get; set; }
+        public string description { get; set; }
     }
 }
