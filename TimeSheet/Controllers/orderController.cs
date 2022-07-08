@@ -332,6 +332,8 @@ namespace TimeSheet.Controllers
                     salaryTotal = item.salaryTotal,
                     tin = item.tin,
                     orderType = _mapper.Map<typeOfOrderGetDto>(item.typeOfOrder),
+                    days = item.days,
+                    totalDays = item.totalDays
 
                 };
                 ordersGetDto.Add(orderGetDto);

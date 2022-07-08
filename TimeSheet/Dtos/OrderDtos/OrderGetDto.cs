@@ -20,6 +20,8 @@ namespace TimeSheet.Dtos.OrderDtos
         public DateTime dateTo { get; set; }
         public decimal salary1 { get; set; }
         public decimal salary2 { get; set; }
+        public decimal? days { get; set; }
+        public decimal? totalDays { get; set; }
         public decimal salaryTotal { get; set; }
         public string description { get; set; }
         public string code { get; set; }
