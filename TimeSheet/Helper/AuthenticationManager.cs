@@ -1,81 +1,87 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.IdentityModel.Tokens.Jwt;
-//using System.Linq;
-//using TimeSheet.DatabaseContext;
-//using TimeSheet.Entities;
+﻿using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using TimeSheet.DatabaseContext;
+using TimeSheet.Entities;
 
-//namespace TimeSheet.Helper
-//{
-//    public interface IAuthenticationManager
-//    {
-//        JwtSecurityToken CurrentClaim(string token);
-//        User tokenOwner(JwtSecurityToken tokenS);
-//        Answer<string> Manager(User user, JwtSecurityToken tokenS);
-//    }
+namespace TimeSheet.Helper
+{
+    public interface IAuthenticationManager
+    {
+        JwtSecurityToken CurrentClaim(string token);
+        Employee tokenOwner(JwtSecurityToken tokenS);
+        Answer<string> Manager(Employee user, JwtSecurityToken tokenS);
+    }
 
-//    public class AuthenticationManager : IAuthenticationManager
-//    {
-//        private readonly DataContext _context;
-//        public AuthenticationManager(DataContext context)
-//        {
-//            _context = context;
-//        }
+    public class AuthenticationManager : IAuthenticationManager
+    {
+        private readonly DataContext _context;
+        public AuthenticationManager(DataContext context)
+        {
+            _context = context;
+        }
 
-//        public JwtSecurityToken CurrentClaim(string token)
-//        {
-//            var handler = new JwtSecurityTokenHandler();
-//            var jsonToken = handler.ReadToken(token);
-//            var tokenS = jsonToken as JwtSecurityToken;
+        public JwtSecurityToken CurrentClaim(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var tokenS = new JwtSecurityToken(); 
+            try
+            {
+                var jsonToken = handler.ReadToken(token);
+                tokenS = jsonToken as JwtSecurityToken;
+            }
+            catch (Exception)
+            {
 
-//            if (tokenS == null)
-//            {
-//                return null;
-//            }
-//            else
-//            {
-//                return tokenS;
-//            }
-//        }
+                return null;
+            }
+          
 
-//        public User tokenOwner(JwtSecurityToken tokenS)
-//        {
+            if (tokenS == null)
+            {
+                return null;
+            }
+            else
+            {
+                return tokenS;
+            }
+        }
 
-//            var claim = tokenS.Claims.FirstOrDefault(x => x.Type == "Key").Value;
+        public Employee tokenOwner(JwtSecurityToken tokenS)
+        {
 
-//            var user = _context.Employees.FirstOrDefault(x => x.fin == claim);
+            var claim = tokenS.Claims.FirstOrDefault(x => x.Type == "Key").Value;
 
-//            if (user == null)
-//            {
-//                user = _context.Employees.FirstOrDefault(x => x.email == claim);
-//            }
-//            if (user == null)
-//            {
-//                return null;
-//            }
-//            return user;
-//        }
+            var user = _context.Employees.FirstOrDefault(x => x.fin == claim);
 
-//        public Answer<string> Manager(User user, JwtSecurityToken tokenS)
-//        {
-//            Answer<string> getFinishObject;
+            if (user == null)
+            {
+                return null;
+            }
+            return user;
+        }
+
+        public Answer<string> Manager(Employee user, JwtSecurityToken tokenS)
+        {
+            Answer<string> getFinishObject;
 
 
-//            var currentRefreshToken = _context.RefreshTokens.FirstOrDefault(a => a.Userid == user.id);
+            var currentRefreshToken = _context.RefreshTokens.FirstOrDefault(a => a.employeeId == user.id);
 
-//            if (currentRefreshToken == null)
-//            {
-//                return getFinishObject = new Answer<string>(404, "Token not found", null);
-//            }
+            if (currentRefreshToken == null)
+            {
+                return getFinishObject = new Answer<string>(404, "Token not found", null);
+            }
 
-//            if (tokenS.ValidTo < DateTime.UtcNow)
-//            {
-//                return getFinishObject = new Answer<string>(401, "Unauthorized", null);
-//            }
+            if (tokenS.ValidTo < DateTime.UtcNow)
+            {
+                return getFinishObject = new Answer<string>(401, "Unauthorized", null);
+            }
 
-//            return getFinishObject = new Answer<string>(200, "Token is active", null);
-//        }
+            return getFinishObject = new Answer<string>(200, "Token is active", null);
+        }
 
-//    }
-//}
+    }
+}
 

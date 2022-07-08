@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace VoltekApi.Helper
+namespace TimeSheet.Helper
 {
     public static class Hashing
     {

@@ -6,7 +6,7 @@ using System.Linq;
 using TimeSheet.DatabaseContext;
 using TimeSheet.Dtos.UserDto;
 using TimeSheet.Entities;
-using VoltekApi.Helper;
+using TimeSheet.Helper;
 
 namespace TimeSheet.Controllers
 {
@@ -19,6 +19,7 @@ namespace TimeSheet.Controllers
         private readonly DataContext _context;
         private readonly IMapper _mapper;
         Answer<UserGetDto> getFinishObject;
+        AuthenticationManager auth;
         public userController(DataContext context, IMapper mapper)
         {
             _context = context;
@@ -97,23 +98,33 @@ namespace TimeSheet.Controllers
 
         [HttpPost]
         [Route("changePass")]
-        public ActionResult<Answer<UserGetDto>> ChangePassword(PasswordChangeDto ChangeDto)
+        public ActionResult<Answer<UserGetDto>> ChangePassword(PasswordChangeDto ChangeDto, [FromHeader] string token)
         {
-            Employee employee = _context.Employees.FirstOrDefault(x => x.code.ToLower() == ChangeDto.code.ToLower() && x.isDeleted == false);
+            auth = new AuthenticationManager(_context);
+            var claim = auth.CurrentClaim(token);
+            if (claim == null)
+            {
+                return getFinishObject = new Answer<UserGetDto>(400, "Enter correct token", null);
+            }
+            var owner = auth.tokenOwner(claim);
+
+            Employee employee = _context.Employees.FirstOrDefault(x => x.id == owner.id && x.isDeleted == false);
 
             if (employee == null)
             {
                 return getFinishObject = new Answer<UserGetDto>(400, "Employee not found", null);
             }
-            if (ChangeDto.NewPassword != ChangeDto.ConfirmPassword)
+
+            if(employee.password != Hashing.ToSHA256(ChangeDto.Password) || ChangeDto.Password == null)
             {
-                return getFinishObject = new Answer<UserGetDto>(409, "Password and ConfirmPassword isn't match", null);
+                return getFinishObject = new Answer<UserGetDto>(204, "Enter correct last code", null);
             }
-            employee.password = Hashing.ToSHA256(ChangeDto.NewPassword);
+
+            employee.password = Hashing.ToSHA256(ChangeDto.newPassword);
 
             _context.SaveChanges();
 
-            return getFinishObject = new Answer<UserGetDto>(204, "Password changed", null);
+            return getFinishObject = new Answer<UserGetDto>(204, "Password changed",null);
         }
     }
 }

@@ -2,9 +2,8 @@
 {
     public class PasswordChangeDto
     {
-        public string code { get; set; }
-        public string NewPassword { get; set; }
-        public string ConfirmPassword { get; set; }
+        public string Password { get; set; }
+        public string newPassword { get; set; }
     }
 
 
