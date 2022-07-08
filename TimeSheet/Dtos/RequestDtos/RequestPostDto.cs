@@ -9,7 +9,6 @@ namespace TimeSheet.Dtos.RequestDtos
         public string tin { get; set; }
         public string dbCode { get; set; }
         public string type { get; set; }
-        public string status { get; set; }
         public string code { get; set; }
         public DateTime date { get; set; }
         public DateTime dateTo { get; set; }

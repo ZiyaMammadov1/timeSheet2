@@ -64,13 +64,6 @@ namespace TimeSheet.Controllers
                 return getFinishObject = new Answer<RequestPostDto>(400, "Request Type not found.", null);
             }
 
-            Status status = _context.Statuses.FirstOrDefault(x => x.code == postDto.status);
-
-            if (status == null)
-            {
-                return getFinishObject = new Answer<RequestPostDto>(400, "Status not found.", null);
-            }
-
             if (allRequest.Any(x => x.code == postDto.code))
             {
                 return getFinishObject = new Answer<RequestPostDto>(409, "Code is conflict.", null);
@@ -82,7 +75,7 @@ namespace TimeSheet.Controllers
                 companyId = company.id,
                 databaseId = db.id,
                 requestTypeId = requestType.id,
-                statusId = status.id,
+                statusId = 1,
                 code = postDto.code,
                 createdDate = postDto.date,
                 dateTo = postDto.dateTo,
