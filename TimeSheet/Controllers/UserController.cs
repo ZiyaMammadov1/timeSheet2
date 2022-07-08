@@ -124,7 +124,7 @@ namespace TimeSheet.Controllers
 
             _context.SaveChanges();
 
-            return getFinishObject = new Answer<UserGetDto>(204, "Password changed", null);
+            return getFinishObject = new Answer<UserGetDto>(200, "Password changed", null);
         }
     }
 }
