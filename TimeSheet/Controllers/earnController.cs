@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Cors;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using TimeSheet.DatabaseContext;
+using TimeSheet.Dtos.CompanyDtos;
 using TimeSheet.Dtos.EarnDtos;
 using TimeSheet.Entities;
 
@@ -17,10 +19,12 @@ namespace TimeSheet.Controllers
     {
         private readonly DataContext _context;
         Answer<EarnGetDto> getFinishObject;
+        private readonly IMapper _mapper;
 
-        public earnController(DataContext context)
+        public earnController(DataContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpPost]
@@ -84,21 +88,22 @@ namespace TimeSheet.Controllers
         }
 
         [HttpGet]
-        public ActionResult<Answer<DicEarnGetDto>> GetEarn(string fin, Guid? uuid)
+        public ActionResult<Answer<yearDto>> GetEarn(string fin, Guid? uuid)
         {
             Answer<Dictionary<string, decimal>> getFinishObjectForMethod;
-            Answer<DicEarnGetDto> getFinishObjectForDict;
+
+            Answer<yearDto> getFinishObjectForDict;
 
             Employee employee = _context.Employees.FirstOrDefault(x => x.fin == fin && x.isDeleted == false);
             if (employee == null)
             {
-                //return getFinishObjectForMethod = new Answer<Dictionary<string, decimal>>(200, "Employee not found", null);
+                return getFinishObjectForDict = new Answer<yearDto>(200, "Employee not found", null);
             }
             List<DBEmployee> dbEmployees = _context.dBEmployees.Include(x => x.Company).Include(x => x.Database).Where(a => a.employeeId == employee.id).ToList();
 
             if (dbEmployees == null || dbEmployees.Count <= 0)
             {
-                //return getFinishObjectForMethod = new Answer<Dictionary<string, decimal>>(400, "DbEmployees not found.", null);
+                return getFinishObjectForDict = new Answer<yearDto>(400, "DbEmployees not found.", null);
             }
 
             DBEmployee dBEmployee = dbEmployees.FirstOrDefault();
@@ -114,29 +119,78 @@ namespace TimeSheet.Controllers
             DicEarnGetDto response = new DicEarnGetDto();
             foreach (var earn in earns)
             {
-                if (earntype.id != 0 && dict.Any(x => x.Key == earntype.name))
+                if (dict.ContainsKey(earn.EarningType.name))
                 {
-                    dict[earntype.name] += earn.amount;
+                    dict[earn.EarningType.name] += Math.Abs(earn.amount);
                 }
                 else
                 {
-                    dict.Add(earn.EarningType.name, earn.amount);
+                    dict.Add(earn.EarningType.name, Math.Abs(earn.amount));
                 }
-                earntype = earn.EarningType;
             }
 
-            foreach (var item in earns)
-                if (item.Date.Year == 2022)
+            List<DicEarnGetDto> results = new List<DicEarnGetDto>();
+            List<yearDto> years = new List<yearDto>();
+
+            years = getYearArray(earns);
+
+
+            return getFinishObjectForDict = new Answer<yearDto>(200, "Earn founded", years);
+
+        }
+
+        public static List<yearDto> getYearArray(List<Earn> earn)
+        {
+            List<yearDto> years = new List<yearDto>();
+
+            yearDto year;
+            foreach (var item in earn)
+            {
+                year = new yearDto()
                 {
-                    response = new DicEarnGetDto()
-                    {
-                        date = item.Date,
-                        earningTypes = dict
-                    };
+                    id = item.Date.Year
                 };
 
+                if (years == null || years.Any(x => x.id != year.id))
+                {
+                    years.Add(year);
 
-            return getFinishObjectForDict = new Answer<DicEarnGetDto>(200, "Earn founded", new List<DicEarnGetDto> { response });
+                }
+
+
+            }
+
+            years = years.ToList();
+
+            return years;
+        }
+
+
+        private List<monthDto> getMonthsArray(List<Earn> earns)
+        {
+            List<monthDto> months = new List<monthDto>();
+
+            monthDto month = new monthDto();
+
+            foreach (var earn in earns)
+            {
+
+                month = new monthDto()
+                {
+                    year = earn.Date.Year,
+                    id = earn.Date.Month,
+                    amount = earn.amount,
+                    earningtype = earn.EarningType.earning,
+                    date = earn.Date,
+                    dbCode = earn.dbCode,
+                };
+                months.Add(month);
+            }
+
+
+            months = months.Distinct().ToList();
+
+            return months;
         }
     }
 }

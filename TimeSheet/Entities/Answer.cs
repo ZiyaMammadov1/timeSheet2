@@ -8,7 +8,7 @@ namespace TimeSheet.Entities
         public string Message { get; set; }
 
 #nullable enable
-        public List<T> Result { get; set; }
+        public List<T> Result {     get; set; }
 
         public Answer(int statusCode, string message, List<T>? result)
         {
